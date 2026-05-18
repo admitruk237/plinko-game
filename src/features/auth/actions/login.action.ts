@@ -1,0 +1,34 @@
+'use server'
+
+import { authApi } from '@/shared/api/auth.api'
+import { setRefreshToken } from '@/shared/lib/session'
+import { isApiError } from '@/shared/lib/api-error'
+import { LoginFormValues } from '@/features/auth/model/schemas'
+import { User } from '@/entities/session/model/types'
+
+export interface LoginSuccess {
+  ok: true
+  accessToken: string
+  user: User
+}
+
+export interface LoginError {
+  ok: false
+  error: string
+}
+
+export type LoginActionResult = LoginSuccess | LoginError
+
+export async function loginAction(values: LoginFormValues): Promise<LoginActionResult> {
+  try {
+    const { accessToken, refreshToken } = await authApi.login(values)
+    await setRefreshToken(refreshToken)
+    const user = await authApi.getMe(accessToken)
+    return { ok: true, accessToken, user }
+  } catch (err: unknown) {
+    if (isApiError(err) && err.status === 401) {
+      return { ok: false, error: 'Invalid credentials' }
+    }
+    return { ok: false, error: 'Server error, try again' }
+  }
+}
