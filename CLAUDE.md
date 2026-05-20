@@ -49,6 +49,8 @@ entities  → business entities and stores         → see src/entities/CLAUDE.m
 shared    → generic UI, utils, API clients       → see src/shared/CLAUDE.md
 ```
 
+> **Before working in any layer** — read its `CLAUDE.md` first. Each file contains layer-specific rules, structure, and constraints that override general guidelines.
+
 ---
 
 # 🚫 Strict TypeScript Rules
