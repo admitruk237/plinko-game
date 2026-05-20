@@ -5,6 +5,7 @@ import { headers, cookies } from 'next/headers'
 import './globals.css'
 import { QueryProvider } from './providers/QueryProvider'
 import { SessionProvider } from './providers/SessionProvider'
+import { SettingsProvider } from './providers/SettingsProvider'
 import type { User } from '@/entities/session/model/types'
 
 const inter = Inter({ variable: '--font-inter', subsets: ['latin', 'cyrillic'] })
@@ -15,18 +16,19 @@ export const metadata: Metadata = {
   description: 'Plinko Game',
 }
 
-export default async function RootLayout({
+const RootLayout = async ({
   children,
 }: {
   children: ReactNode
-}) {
+}) => {
   let accessToken: string | null = null
   let user: User | null = null
 
   const cookieStore = await cookies()
   const hasRefreshToken = !!cookieStore.get('refreshToken')?.value
+  const hasAccessToken = !!cookieStore.get('accessToken')?.value
 
-  if (hasRefreshToken) {
+  if (hasAccessToken || hasRefreshToken) {
     try {
       const headersList = await headers()
       const host = headersList.get('host') ?? 'localhost:3000'
@@ -44,9 +46,11 @@ export default async function RootLayout({
         user = data.user
       }
     } catch {
-      // мережева помилка — продовжуємо без сесії
     }
   }
+
+  const soundEffectsEnabled = cookieStore.get('soundEffectsEnabled')?.value !== 'false'
+  const animationsEnabled = cookieStore.get('animationsEnabled')?.value !== 'false'
 
   return (
     <html
@@ -55,15 +59,22 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <QueryProvider>
-          {accessToken && user ? (
-            <SessionProvider accessToken={accessToken} user={user}>
-              {children}
-            </SessionProvider>
-          ) : (
-            children
-          )}
+          <SettingsProvider
+            soundEffectsEnabled={soundEffectsEnabled}
+            animationsEnabled={animationsEnabled}
+          >
+            {accessToken && user ? (
+              <SessionProvider accessToken={accessToken} user={user}>
+                {children}
+              </SessionProvider>
+            ) : (
+              children
+            )}
+          </SettingsProvider>
         </QueryProvider>
       </body>
     </html>
   )
 }
+
+export default RootLayout
