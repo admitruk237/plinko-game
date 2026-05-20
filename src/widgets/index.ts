@@ -1,2 +1,6 @@
-// Large autonomous blocks composed of features and entities
-export {};
+export { GameClient } from './game-client/GameClient'
+export { HistoryClient } from './history-client/HistoryClient'
+export { PlinkoBoard } from './game-board/PlinkoBoard'
+export { GameHeader } from './game-header/GameHeader'
+export { GameSidebar } from './game-sidebar/GameSidebar'
+export { RecentResults } from './recent-results/RecentResults'
