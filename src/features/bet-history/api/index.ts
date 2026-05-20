@@ -1,0 +1,1 @@
+export { useBetHistory } from './useBetHistory'
