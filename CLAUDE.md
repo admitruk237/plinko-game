@@ -19,12 +19,7 @@ npm run start    # production server
 npm run lint     # ESLint check
 ```
 
-Add shadcn components (auto-installs to `src/shared/ui`):
-```bash
-npx shadcn@latest add [component-name]
-```
-
-> ⚠️ **AGENTS.md warning**: This is Next.js 16 with breaking changes. Read `node_modules/next/dist/docs/` before writing Next.js-specific code.
+> ⚠️ **Next.js 16 breaking changes**: Read `node_modules/next/dist/docs/` before writing Next.js-specific code.
 
 ---
 
@@ -41,45 +36,18 @@ npx shadcn@latest add [component-name]
 
 ---
 
-# 📁 Path Aliases
-
-`@/*` maps to `src/*`. Use it everywhere — no relative `../` climbing.
-
-```ts
-import { cn } from '@/shared/lib/utils';
-import { Button } from '@/shared/ui';
-```
-
-shadcn component aliases (from `components.json`):
-- `@/shared/ui` — UI components
-- `@/shared/lib/utils` — `cn()` utility
-- `@/shared/lib/hooks` — custom hooks
-
----
-
 # 🏗 Architecture (FSD)
 
 Layers (top → bottom, imports go downward only):
 
 ```
-app       → Next.js App Router (layout, page, globals.css)
+app       → routing, layout, global styles       → see src/app/CLAUDE.md
 pages     → page-level compositions
-widgets   → complex UI blocks
-features  → interactive features (bets, chat, etc.)
-entities  → business entities (session, player) — NEVER import other entities
-shared    → generic UI, lib utils, API clients
+widgets   → complex UI blocks                    → see src/widgets/CLAUDE.md
+features  → interactive features                 → see src/features/CLAUDE.md
+entities  → business entities and stores         → see src/entities/CLAUDE.md
+shared    → generic UI, utils, API clients       → see src/shared/CLAUDE.md
 ```
-
-- Business logic MUST NOT be inside UI components → move to hooks or `model/`
-- **Layer Isolation**: Entities MUST NOT import from other entities
-- **Feature Layer**: coordinate cross-entity logic in `features/`, not in entities
-- **Shared UI Purity**: `shared/ui` components must be generic (no game-specific side-effects)
-
-### Next.js App Router specifics
-
-- `src/app/` is the router root — use `layout.tsx` / `page.tsx` / `loading.tsx`
-- Server Components by default; add `'use client'` only when needed (hooks, events, browser APIs)
-- Do NOT put Zustand stores or `useState` in Server Components
 
 ---
 
@@ -116,21 +84,12 @@ React.useState(...)
 
 ---
 
-# 📦 State Management
-
-- Use Zustand; keep stores modular and fully typed
-- Session store (`useSessionStore`) uses `persist` middleware — stored as `'session-storage'`
-- Do not duplicate logic between store and components
-
----
-
 # 🎨 Styling
 
 - Tailwind CSS ONLY — no inline styles
-- Colors use **OKLCH** via CSS variables (`--primary`, `--background`, etc.) — use semantic classes, not raw `oklch(...)` values
+- Colors use **OKLCH** via CSS variables — use semantic classes (`bg-primary`, `text-foreground`), not raw `oklch(...)` values
 - NEVER hardcode hex/rgb/hsl/oklch in components UNLESS manually added by the USER
 - **Respect User Styling**: NEVER revert manual UI/UX changes by the user — they are ground truth
-- Prefer semantic Tailwind classes (`bg-primary`, `text-foreground`) over arbitrary values
 
 ---
 
@@ -138,6 +97,7 @@ React.useState(...)
 
 - Prefer simple solutions; avoid over-engineering
 - Avoid code duplication
+- NO magic strings or hardcoded literals — use constants or enums
 - Before writing code: check simplicity → check architecture → check types
 
 ---
