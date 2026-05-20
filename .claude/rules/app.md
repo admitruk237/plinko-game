@@ -1,3 +1,6 @@
+---
+paths: ["src/app/**"]
+---
 # Layer: app
 
 Next.js App Router root. Contains routing, global layout, and global styles only.

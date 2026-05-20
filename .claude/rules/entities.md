@@ -1,3 +1,6 @@
+---
+paths: ["src/entities/**"]
+---
 # Layer: entities
 
 Business entities — data shapes and their isolated state.

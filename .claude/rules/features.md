@@ -1,3 +1,6 @@
+---
+paths: ["src/features/**"]
+---
 # Layer: features
 
 Interactive features — user actions that involve business logic and may coordinate multiple entities.

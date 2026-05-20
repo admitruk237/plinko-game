@@ -1,3 +1,6 @@
+---
+paths: ["src/widgets/**"]
+---
 # Layer: widgets
 
 Complex UI blocks composed from features and entities — ready-to-place sections of a page.

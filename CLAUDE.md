@@ -41,15 +41,21 @@ npm run lint     # ESLint check
 Layers (top → bottom, imports go downward only):
 
 ```
-app       → routing, layout, global styles       → see src/app/CLAUDE.md
+app       → routing, layout, global styles
 pages     → page-level compositions
-widgets   → complex UI blocks                    → see src/widgets/CLAUDE.md
-features  → interactive features                 → see src/features/CLAUDE.md
-entities  → business entities and stores         → see src/entities/CLAUDE.md
-shared    → generic UI, utils, API clients       → see src/shared/CLAUDE.md
+widgets   → complex UI blocks
+features  → interactive features
+entities  → business entities and stores
+shared    → generic UI, utils, API clients
 ```
 
-> **Before working in any layer** — read its `CLAUDE.md` first. Each file contains layer-specific rules, structure, and constraints that override general guidelines.
+Layer-specific rules (auto-loaded by Claude Code when working in matching paths):
+
+@.claude/rules/app.md
+@.claude/rules/shared.md
+@.claude/rules/entities.md
+@.claude/rules/features.md
+@.claude/rules/widgets.md
 
 ---
 
