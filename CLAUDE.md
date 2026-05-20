@@ -46,7 +46,7 @@ onClick: () => void
 
 # 🧩 Components Rules
 
-- Functional components ONLY
+- Arrow functional components ONLY (e.g., `export const Component = () => {}`)
 - Keep components small and focused
 - No heavy logic inside components
 - Extract logic into hooks
@@ -83,6 +83,7 @@ onClick: () => void
 - Avoid over-engineering
 - Avoid code duplication
 - Follow project architecture strictly
+- NO magic strings or hardcoded string/number literals in code (e.g., `'auto'`, `'manual'`, `'HIGH'`, `12`). Use constants, enums, or configuration files instead.
 
 Before writing code:
 
