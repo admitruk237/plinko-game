@@ -1,9 +1,9 @@
 'use server'
 
 import { authApi } from '@/shared/api/auth.api'
-import { setRefreshToken } from '@/shared/lib/session'
+import { setRefreshToken, setAccessToken } from '@/shared/lib/session'
 import { isApiError } from '@/shared/lib/api-error'
-import { LoginFormValues } from '@/features/auth/model/schemas'
+import { LoginFormValues } from '../model/schemas'
 import { User } from '@/entities/session/model/types'
 
 export interface LoginSuccess {
@@ -23,6 +23,7 @@ export async function loginAction(values: LoginFormValues): Promise<LoginActionR
   try {
     const { accessToken, refreshToken } = await authApi.login(values)
     await setRefreshToken(refreshToken)
+    await setAccessToken(accessToken)
     const user = await authApi.getMe(accessToken)
     return { ok: true, accessToken, user }
   } catch (err: unknown) {

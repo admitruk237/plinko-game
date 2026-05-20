@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { authApi } from '@/shared/api/auth.api'
-import { getRefreshToken, setRefreshToken, deleteRefreshToken } from '@/shared/lib/session'
+import { getRefreshToken, setRefreshToken, deleteRefreshToken, getAccessToken, setAccessToken, deleteAccessToken } from '@/shared/lib/session'
 import type { User } from '@/entities/session/model/types'
 
 interface SessionData {
@@ -9,19 +9,32 @@ interface SessionData {
 }
 
 export async function GET(): Promise<NextResponse<SessionData> | NextResponse<null>> {
+  const accessToken = await getAccessToken()
   const refreshToken = await getRefreshToken()
 
+  if (accessToken) {
+    try {
+      const user = await authApi.getMe(accessToken)
+      return NextResponse.json({ accessToken, user })
+    } catch {
+
+    }
+  }
+
   if (!refreshToken) {
+    await deleteAccessToken()
     return NextResponse.json(null, { status: 401 })
   }
 
   try {
     const refreshed = await authApi.refresh(refreshToken)
     await setRefreshToken(refreshed.refreshToken)
+    await setAccessToken(refreshed.accessToken)
     const user = await authApi.getMe(refreshed.accessToken)
     return NextResponse.json({ accessToken: refreshed.accessToken, user })
   } catch {
     await deleteRefreshToken()
+    await deleteAccessToken()
     return NextResponse.json(null, { status: 401 })
   }
 }

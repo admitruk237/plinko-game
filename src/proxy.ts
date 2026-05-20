@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { ROUTES } from '@/shared/config'
 
-const protectedRoutes = ['/game', '/history', '/fair']
-const publicRoutes = ['/login', '/register']
+const protectedRoutes = [ROUTES.GAME, ROUTES.HISTORY]
+const publicRoutes = [ROUTES.LOGIN, ROUTES.REGISTER]
 
 export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
@@ -11,11 +12,11 @@ export default function middleware(req: NextRequest) {
   const isPublic = publicRoutes.some((r) => pathname.startsWith(r))
 
   if (isProtected && !refreshToken) {
-    return NextResponse.redirect(new URL('/login', req.url))
+    return NextResponse.redirect(new URL(ROUTES.LOGIN, req.url))
   }
 
   if (isPublic && refreshToken) {
-    return NextResponse.redirect(new URL('/game', req.url))
+    return NextResponse.redirect(new URL(ROUTES.GAME, req.url))
   }
 
   return NextResponse.next()

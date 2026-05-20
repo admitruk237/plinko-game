@@ -1,9 +1,9 @@
 'use server'
 
 import { authApi } from '@/shared/api/auth.api'
-import { setRefreshToken } from '@/shared/lib/session'
+import { setRefreshToken, setAccessToken } from '@/shared/lib/session'
 import { isApiError } from '@/shared/lib/api-error'
-import { RegisterFormValues } from '@/features/auth/model/schemas'
+import { RegisterFormValues } from '../model/schemas'
 import { User } from '@/entities/session/model/types'
 
 export interface RegisterSuccess {
@@ -24,6 +24,7 @@ export async function registerAction(values: RegisterFormValues): Promise<Regist
   try {
     const { accessToken, refreshToken } = await authApi.register(values)
     await setRefreshToken(refreshToken)
+    await setAccessToken(accessToken)
     const user = await authApi.getMe(accessToken)
     return { ok: true, accessToken, user }
   } catch (err: unknown) {

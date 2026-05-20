@@ -1,9 +1,6 @@
-export interface User {
-  id: string
-  email: string
-  balance: string
-  createdAt: string
-}
+import type { UserDto as User } from '@/shared/api/types'
+
+export type { User }
 
 export interface SessionState {
   accessToken: string | null

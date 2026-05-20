@@ -19,8 +19,9 @@ import { registerSchema, RegisterFormValues } from '../model/schemas'
 import { registerAction } from '../actions/register.action'
 import { useSessionStore } from '@/entities/session/model/store'
 import { AuthCard } from './AuthCard'
+import { ROUTES } from '@/shared/config'
 
-export function RegisterForm() {
+export const RegisterForm = () => {
   const router = useRouter()
   const setSession = useSessionStore((s) => s.setSession)
 
@@ -41,7 +42,7 @@ export function RegisterForm() {
         return
       }
       setSession(result.accessToken, result.user)
-      router.push('/game')
+      router.push(ROUTES.GAME)
     },
   })
 
@@ -102,7 +103,7 @@ export function RegisterForm() {
 
           <p className="text-center text-[14px] font-normal leading-[20px] tracking-[-0.15px] text-auth-text-muted mt-[25px]">
             Already have an account?{' '}
-            <Link href="/login" className="text-brand-green-start hover:text-brand-green-start/80 font-medium transition-colors">
+            <Link href={ROUTES.LOGIN} className="text-brand-green-start hover:text-brand-green-start/80 font-medium transition-colors">
               Sign In
             </Link>
           </p>

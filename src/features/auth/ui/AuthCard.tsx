@@ -6,7 +6,7 @@ interface Props {
   children: ReactNode
 }
 
-export function AuthCard({ subtitle, children }: Props) {
+export const AuthCard = ({ subtitle, children }: Props) => {
   return (
     <main className="min-h-screen bg-transparent flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-[448px]">

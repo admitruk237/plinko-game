@@ -1,7 +1,8 @@
 import 'server-only'
 import { cookies } from 'next/headers'
 
-const KEY = 'refreshToken'
+const REFRESH_KEY = 'refreshToken'
+const ACCESS_KEY = 'accessToken'
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -14,7 +15,7 @@ const COOKIE_OPTIONS = {
 export async function setRefreshToken(token: string): Promise<void> {
   try {
     const store = await cookies()
-    store.set(KEY, token, COOKIE_OPTIONS)
+    store.set(REFRESH_KEY, token, COOKIE_OPTIONS)
   } catch (error) {
     console.warn('Could not set refresh token cookie (likely read-only context):', error)
   }
@@ -22,14 +23,37 @@ export async function setRefreshToken(token: string): Promise<void> {
 
 export async function getRefreshToken(): Promise<string | undefined> {
   const store = await cookies()
-  return store.get(KEY)?.value
+  return store.get(REFRESH_KEY)?.value
 }
 
 export async function deleteRefreshToken(): Promise<void> {
   try {
     const store = await cookies()
-    store.delete(KEY)
+    store.delete(REFRESH_KEY)
   } catch (error) {
     console.warn('Could not delete refresh token cookie (likely read-only context):', error)
+  }
+}
+
+export async function setAccessToken(token: string): Promise<void> {
+  try {
+    const store = await cookies()
+    store.set(ACCESS_KEY, token, COOKIE_OPTIONS)
+  } catch (error) {
+    console.warn('Could not set access token cookie (likely read-only context):', error)
+  }
+}
+
+export async function getAccessToken(): Promise<string | undefined> {
+  const store = await cookies()
+  return store.get(ACCESS_KEY)?.value
+}
+
+export async function deleteAccessToken(): Promise<void> {
+  try {
+    const store = await cookies()
+    store.delete(ACCESS_KEY)
+  } catch (error) {
+    console.warn('Could not delete access token cookie (likely read-only context):', error)
   }
 }
