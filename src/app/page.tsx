@@ -1,7 +1,10 @@
 import { redirect } from 'next/navigation'
 import { getRefreshToken } from '@/shared/lib/session'
+import { ROUTES } from '@/shared/config'
 
-export default async function HomePage() {
+const HomePage = async () => {
   const refreshToken = await getRefreshToken()
-  redirect(refreshToken ? '/game' : '/login')
+  redirect(refreshToken ? ROUTES.GAME : ROUTES.LOGIN)
 }
+
+export default HomePage
