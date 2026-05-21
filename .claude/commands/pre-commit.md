@@ -1,46 +1,69 @@
 # Pre-commit
 
-Виконай перевірку перед комітом: lint, тести, аналіз змін, оновлення rules якщо потрібно.
+Run pre-commit checks: lint, tests, doc freshness, and commit.
 
-## Кроки
+## Steps
 
-1. **Переглянь що змінилось**
+1. **Check what changed**
    ```bash
    git diff --staged --name-only
    git diff --name-only
    ```
-   Запам'ятай список змінених файлів — він потрібен для кроків нижче.
 
-2. **Запусти lint**
+2. **Run lint**
    ```bash
    npm run lint
    ```
-   Якщо є помилки — виправ їх перед тим як продовжувати.
+   If errors — fix them before continuing.
 
-3. **Запусти тести** (якщо є)
+3. **Run tests** (if any exist)
    ```bash
-   npm test --if-present
+   npm run test:related
    ```
-   Якщо тести падають — зупинись, поясни які і чому.
+   If tests fail — stop and explain which ones and why.
 
-4. **Перевір чи потрібно оновити rules**
-
-   Проаналізуй змінені файли і визнач:
-   - Якщо змінились файли в `src/entities/**` → перевір `.claude/rules/entities.md`
-   - Якщо змінились файли в `src/features/**` → перевір `.claude/rules/features.md`
-   - Якщо змінились файли в `src/widgets/**` → перевір `.claude/rules/widgets.md`
-   - Якщо змінились файли в `src/shared/**` → перевір `.claude/rules/shared.md`
-   - Якщо змінились файли в `src/app/**` → перевір `.claude/rules/app.md`
-
-   Запитай себе: чи з'явились нові патерни, конвенції або обмеження яких немає в rules?
-   Якщо так — запропонуй оновлення і дочекайся підтвердження від користувача.
-
-5. **Зроби коміт**
-
-   Тільки після того як lint і тести пройшли успішно:
+4. **Check doc freshness** (automated)
    ```bash
-   git add -A
-   git commit -m "<описовий commit message>"
+   npm run doc:check
    ```
+   This script automatically:
+   - Compares changed `src/` files against `.claude/doc-mapping.json`
+   - Calls `claude "Update file [doc] based on [src]"` for any stale doc or rules file
+   - Stages updated documentation files via `git add`
+   - Checks that `CLAUDE.md` does not exceed 200 lines; shortens it via Claude CLI if needed
 
-   Commit message має описувати ЩО і ЧОМУ змінилось, не HOW.
+   **Environment flags:**
+   - `SKIP_DOC_CHECK=1 git commit` — bypass the hook entirely for one commit
+   - `SKIP_AI_UPDATE=1 npm run doc:check` — dry-run: reports stale docs without calling Claude
+
+5. **Commit**
+
+   Only after lint and tests pass:
+   ```bash
+   git commit -m "<type(scope): description>"
+   ```
+   Message describes WHAT and WHY, not HOW. Follow Conventional Commits.
+
+---
+
+## Automatic git hook
+
+`.git/hooks/pre-commit` calls `scripts/check-doc-freshness.sh` before every commit.
+
+The hook is **non-blocking for missing claude CLI** — it warns but does not abort the commit. It only aborts if the script itself crashes.
+
+---
+
+## Manual audit
+
+For a full integrity report (CI or manual):
+
+```bash
+npm run doc:audit
+```
+
+Reports:
+- Missing doc/rules files listed in `doc-mapping.json`
+- `src/` directories not covered by any mapping pattern
+- Orphan rule files in `.claude/rules/` not referenced in the mapping
+- `CLAUDE.md` line count vs 200-line limit

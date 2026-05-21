@@ -1,26 +1,38 @@
 import { useCallback, useState } from 'react';
 import type { GameConfig, Risk } from '@/entities/game/model/types';
 import { useAutoBet, useBetForm } from '@/features/place-bet';
-import { BET_MODES, type BetMode, RISK_LEVELS } from '@/shared/config';
+import { BET_MODES, type BetMode } from '@/shared/config';
 
 interface Props {
   config: GameConfig;
   balance: string;
   isPlaying: boolean;
+  rows: number;
+  risk: Risk;
+  onRowsChange: (rows: number) => void;
   onPlaceBet: (amount: string, rows: number, risk: Risk) => void;
 }
 
-export const useGameSidebar = ({ config: _config, balance, isPlaying, onPlaceBet }: Props) => {
+export const useGameSidebar = ({
+  config: _config,
+  balance,
+  isPlaying,
+  rows,
+  risk,
+  onRowsChange,
+  onPlaceBet,
+}: Props) => {
   const [mode, setMode] = useState<BetMode>(BET_MODES.MANUAL);
-  const [risk, setRisk] = useState<Risk>(RISK_LEVELS.HIGH);
-  const [rows, setRows] = useState<number>(12);
 
-  const handleRowsChange = useCallback((val: number | readonly number[]) => {
-    const v = Array.isArray(val) ? val[0] : val;
-    if (typeof v === 'number') {
-      setRows(v);
-    }
-  }, []);
+  const handleRowsChange = useCallback(
+    (val: number | readonly number[]) => {
+      const v = Array.isArray(val) ? val[0] : val;
+      if (typeof v === 'number') {
+        onRowsChange(v);
+      }
+    },
+    [onRowsChange]
+  );
 
   const handleFullscreenToggle = useCallback(() => {
     if (!document.fullscreenElement) {
@@ -58,9 +70,6 @@ export const useGameSidebar = ({ config: _config, balance, isPlaying, onPlaceBet
   return {
     mode,
     setMode,
-    risk,
-    setRisk,
-    rows,
     handleRowsChange,
     handleFullscreenToggle,
     form,

@@ -1,94 +1,94 @@
 # Layer: shared
 
-**Відповідальність:** Доменно-нейтральні будівельні блоки — UI компоненти, утиліти, API-клієнт, конфігурація.
+**Responsibility:** Domain-agnostic building blocks — UI components, utilities, API client, configuration.
 
 ---
 
-## Структура
+## Structure
 
 ```
 src/shared/
-  ui/             ← shadcn/ui компоненти (base-nova стиль)
-  api/            ← BFF клієнт і типи
-  lib/            ← утиліти і хелпери
-  config/         ← константи, роути, типи конфігу
+  ui/             ← shadcn/ui components (base-nova style)
+  api/            ← BFF client and types
+  lib/            ← utilities and helpers
+  config/         ← constants, routes, config types
 ```
 
 ---
 
-## ui/ — shadcn компоненти
+## ui/ — shadcn components
 
-| Компонент | Файл | Використання |
-|-----------|------|--------------|
+| Component | File | Usage |
+|-----------|------|-------|
 | `Button` | `button.tsx` | Variants: `primary`, `icon`, default |
-| `Input` | `input.tsx` | Текстові поля |
+| `Input` | `input.tsx` | Text fields |
 | `Card` | `card.tsx` | Variants: `sidebar`, default |
-| `Dialog` / `DialogPopup` / `DialogTrigger` | `dialog.tsx` | Модальні вікна (base-ui) |
-| `Form` / `FormField` / `FormItem` / `FormLabel` / `FormControl` / `FormMessage` | `form.tsx` | react-hook-form інтеграція |
+| `Dialog` / `DialogPopup` / `DialogTrigger` | `dialog.tsx` | Modals (base-ui) |
+| `Form` / `FormField` / `FormItem` / `FormLabel` / `FormControl` / `FormMessage` | `form.tsx` | react-hook-form integration |
 | `Switch` | `switch.tsx` | Toggle |
-| `Tabs` / `TabsList` / `TabsTrigger` | `tabs.tsx` | Перемикач режимів |
-| `Label` | `label.tsx` | Мітки форм |
-| `Separator` | `separator.tsx` | Розділювач |
-| `Slider` | `slider.tsx` | Слайдер (rows selector) |
-| `CurrencyIcon` | `currency-icon.tsx` | Іконка валюти |
-| `SettingsIcon` | `settings-icon.tsx` | Анімована іконка налаштувань (motion/react) |
-| `Field` | `field.tsx` | Поле з валідацією |
+| `Tabs` / `TabsList` / `TabsTrigger` | `tabs.tsx` | Mode switcher |
+| `Label` | `label.tsx` | Form labels |
+| `Separator` | `separator.tsx` | Divider |
+| `Slider` | `slider.tsx` | Slider (rows selector) |
+| `CurrencyIcon` | `currency-icon.tsx` | Currency icon |
+| `SettingsIcon` | `settings-icon.tsx` | Animated settings icon (motion/react) |
+| `Field` | `field.tsx` | Field with validation |
 
-Всі імпортуються через barrel: `import { Button, Input } from '@/shared/ui'`
+All imported via barrel: `import { Button, Input } from '@/shared/ui'`
 
 ---
 
 ## api/
 
-### `bff.api.ts` — BFF клієнт (client-side)
+### `bff.api.ts` — BFF client (client-side)
 
-Fetch-функції що викликають `/api/*` роути (Next.js BFF), не бекенд напряму.
+Fetch functions calling `/api/*` routes (Next.js BFF), not the backend directly.
 
 ```ts
-bffApi.getGameConfig()           // GET /api/game/config
-bffApi.getMe()                   // GET /api/user/me
-bffApi.placeBet(dto)             // POST /api/bets
-bffApi.getBets({ limit, cursor, rows }) // GET /api/bets
-bffApi.logout()                  // POST /api/auth/logout
+bffApi.getGameConfig()                   // GET /api/game/config
+bffApi.getMe()                           // GET /api/user/me
+bffApi.placeBet(dto)                     // POST /api/bets
+bffApi.getBets({ limit, cursor, rows })  // GET /api/bets
+bffApi.logout()                          // POST /api/auth/logout
 ```
 
-Кидає `BffError(status, message)` якщо response не ok.
+Throws `BffError(status, message)` when response is not ok.
 
-### `auth.api.ts` — Auth клієнт (server-side only)
+### `auth.api.ts` — Auth client (server-side only)
 
-Прямі запити до бекенду — тільки для використання в route handlers і server actions.
+Direct requests to the backend — only for use in route handlers and server actions.
 
-### `types.ts` — DTO типи
+### `types.ts` — DTO types
 
-Всі request/response типи для API. Entity шар re-exportує і розширює ці типи.
+All request/response types for the API. The entities layer re-exports and extends these types.
 
 ---
 
 ## lib/
 
-| Файл | Експортує | Призначення |
-|------|-----------|-------------|
+| File | Exports | Purpose |
+|------|---------|---------|
 | `utils.ts` | `cn()` | clsx + tailwind-merge |
-| `credits.ts` | `parseCredits`, `formatCredits`, `MIN_BET`, `MAX_BET` | BigInt арифметика для балансу |
+| `credits.ts` | `parseCredits`, `formatCredits`, `MIN_BET`, `MAX_BET` | BigInt arithmetic for balance |
 | `session.ts` | `get/set/delete AccessToken/RefreshToken` | Cookie ops (server-only) |
-| `auth-proxy.ts` | `getValidAccessToken()` | Access token з авто-refresh (server-only) |
-| `api-error.ts` | `ApiError` | Базовий клас помилок |
-| `multiplier-color.ts` | `getMultiplierColor()` | Колір за множником |
-| `risk-styles.ts` | `getRiskStyles()` | Стилі за рівнем ризику |
-| `format-date.ts` | `formatDate()` | Форматування дат |
+| `auth-proxy.ts` | `getValidAccessToken()` | Access token with auto-refresh (server-only) |
+| `api-error.ts` | `ApiError` | Base error class |
+| `multiplier-color.ts` | `getMultiplierColor()` | Color by multiplier value |
+| `risk-styles.ts` | `getRiskStyles()` | Styles by risk level |
+| `format-date.ts` | `formatDate()` | Date formatting |
 
 ---
 
 ## config/
 
-| Файл | Експортує |
-|------|-----------|
+| File | Exports |
+|------|---------|
 | `constants.ts` | `DEFAULT_BET_AMOUNT`, `DEFAULT_NUM_BETS`, `BET_MODES`, `RISK_LEVELS`, `DEFAULT_PAGE_LIMIT` |
-| `routes.ts` | `ROUTES` — всі шляхи додатку |
+| `routes.ts` | `ROUTES` — all app paths |
 | `index.ts` | barrel export |
 
 ---
 
-## Залежності
+## Dependencies
 
-`shared` не імпортує жоден інший шар проекту.
+`shared` does not import from any other project layer.

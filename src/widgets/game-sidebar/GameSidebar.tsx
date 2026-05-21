@@ -19,16 +19,26 @@ interface Props {
   config: GameConfig;
   balance: string;
   isPlaying: boolean;
+  rows: number;
+  risk: Risk;
+  onRowsChange: (rows: number) => void;
+  onRiskChange: (risk: Risk) => void;
   onPlaceBet: (amount: string, rows: number, risk: Risk) => void;
 }
 
-export const GameSidebar = ({ config, balance, isPlaying, onPlaceBet }: Props) => {
+export const GameSidebar = ({
+  config,
+  balance,
+  isPlaying,
+  rows,
+  risk,
+  onRowsChange,
+  onRiskChange,
+  onPlaceBet,
+}: Props) => {
   const {
     mode,
     setMode,
-    risk,
-    setRisk,
-    rows,
     handleRowsChange,
     handleFullscreenToggle,
     form,
@@ -45,7 +55,7 @@ export const GameSidebar = ({ config, balance, isPlaying, onPlaceBet }: Props) =
     handleNumBetsChange,
     handleStopProfitChange,
     handleStopLossChange,
-  } = useGameSidebar({ config, balance, isPlaying, onPlaceBet });
+  } = useGameSidebar({ config, balance, isPlaying, rows, risk, onRowsChange, onPlaceBet });
 
   const isManualDisabled = isPlaying;
   const isAutoDisabled = isAutoBetting ? false : isPlaying;
@@ -94,7 +104,7 @@ export const GameSidebar = ({ config, balance, isPlaying, onPlaceBet }: Props) =
           <RiskSelector
             risks={config.risks}
             currentRisk={risk}
-            onChange={setRisk}
+            onChange={onRiskChange}
             disabled={isAutoBetting}
           />
           <RowsSelector

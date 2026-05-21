@@ -1,62 +1,72 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { Risk } from '@/entities/game/model/types';
-import { multiplierBorderColor, multiplierColor } from '@/shared/lib/multiplier-color';
-
-interface PegHit {
-  row: number;
-  col: number;
-  time: number;
-}
-
-interface BallAnimation {
-  path: string;
-  bucketIndex: number;
-  startTime: number;
-}
+import type { BallAnimation, Risk } from '@/entities/game/model/types';
+import { getMultiplierHex } from '@/shared/lib/multiplier-color';
 
 interface Props {
   rows: number;
   risk: Risk;
   payoutTable: number[];
-  currentAnimation: BallAnimation | null;
-  onAnimationEnd: () => void;
+  currentAnimations: BallAnimation[];
+  onAnimationEnd: (id: string) => void;
 }
 
-const PEG_SIZE = 8;
-const BALL_SIZE = 14;
-const STEP_DURATION = 80;
-const SETTLE_DURATION = 200;
-const BUCKET_FLASH_DURATION = 300;
+const SIDE_MARGIN = 280;
+const BADGE_HEIGHT = 56;
+const TOP_PADDING = 24;
+const PEG_RADIUS = 4;
+const BALL_RADIUS = 6;
+const BOTTOM_GAP = 16;
+const SETTLE_DURATION = 320;
+const BUCKET_FLASH_DURATION = 500;
+
+const BASE_STEP_MS = 340;
+function getStepDuration(row: number): number {
+  return BASE_STEP_MS / Math.sqrt(row + 1);
+}
+
+function getCumulativeTime(upToRow: number): number {
+  let t = 0;
+  for (let r = 0; r < upToRow; r++) t += getStepDuration(r);
+  return t;
+}
+
+// Shared column spacing — same formula for pegs and badges
+function getColSpacing(width: number, rows: number): number {
+  return (width - SIDE_MARGIN) / (rows + 1);
+}
+
+interface BallState {
+  x: number;
+  y: number;
+  opacity: number;
+  bounceFactor: number;
+  nearPeg: { row: number; col: number } | null;
+  done: boolean;
+}
 
 export const PlinkoBoard = ({
   rows,
   risk,
   payoutTable,
-  currentAnimation,
+  currentAnimations,
   onAnimationEnd,
 }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animFrameRef = useRef<number>(0);
-  const [pegHits, setPegHits] = useState<PegHit[]>([]);
-  const [flashBucket, setFlashBucket] = useState<number | null>(null);
+  const [flashBuckets, setFlashBuckets] = useState<Map<number, number>>(new Map());
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        setDimensions({
-          width: entry.contentRect.width,
-          height: entry.contentRect.height,
-        });
+        setDimensions({ width: entry.contentRect.width, height: entry.contentRect.height });
       }
     });
-
     observer.observe(container);
     return () => observer.disconnect();
   }, []);
@@ -65,103 +75,110 @@ export const PlinkoBoard = ({
     (row: number, col: number) => {
       const { width, height } = dimensions;
       if (!width || !height) return { x: 0, y: 0 };
-
-      const bucketBarHeight = 50;
-      const availableHeight = height - bucketBarHeight - 40;
-      const rowSpacing = availableHeight / (rows + 1);
-
+      // Divide by rows (not rows+1) so last peg sits right at the badge bar top
+      const availableHeight = height - BADGE_HEIGHT - TOP_PADDING - BOTTOM_GAP;
+      const rowSpacing = availableHeight / rows;
+      const colSpacing = getColSpacing(width, rows);
       const pegsInRow = row + 2;
-      const maxPegs = rows + 2;
-      const colSpacing = (width - 80) / (maxPegs - 1);
-
       const rowWidth = (pegsInRow - 1) * colSpacing;
       const startX = (width - rowWidth) / 2;
-
-      return {
-        x: startX + col * colSpacing,
-        y: 30 + (row + 1) * rowSpacing,
-      };
+      return { x: startX + col * colSpacing, y: TOP_PADDING + (row + 1) * rowSpacing };
     },
     [dimensions, rows]
   );
 
+  // Bucket center is inside the badge bar so ball visually falls into it
   const getBucketPosition = useCallback(
     (index: number) => {
       const { width, height } = dimensions;
-      if (!width || !height) return { x: 0, y: 0, w: 0 };
-
-      const numBuckets = rows + 1;
-      const totalWidth = width - 40;
-      const bucketWidth = totalWidth / numBuckets;
-
-      return {
-        x: 20 + index * bucketWidth + bucketWidth / 2,
-        y: height - 30,
-        w: bucketWidth,
-      };
+      if (!width || !height) return { x: 0, y: 0 };
+      const colSpacing = getColSpacing(width, rows);
+      const startX = SIDE_MARGIN / 2;
+      return { x: startX + index * colSpacing, y: height - BADGE_HEIGHT / 2 };
     },
     [dimensions, rows]
   );
 
-  // Draw pegs
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || !dimensions.width || !dimensions.height) return;
+  const getBallState = useCallback(
+    (anim: BallAnimation, now: number): BallState => {
+      const { path, bucketIndex, startTime } = anim;
+      const elapsed = now - startTime;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = dimensions.width * 2;
-    canvas.height = dimensions.height * 2;
-    ctx.scale(2, 2);
-
-    ctx.clearRect(0, 0, dimensions.width, dimensions.height);
-
-    const now = Date.now();
-
-    for (let row = 0; row < rows; row++) {
-      const pegsInRow = row + 2;
-      for (let col = 0; col < pegsInRow; col++) {
-        const pos = getPegPosition(row, col);
-        const hit = pegHits.find((h) => h.row === row && h.col === col);
-        const hitAge = hit ? now - hit.time : Infinity;
-
-        let scale = 1;
-        if (hitAge < 120) {
-          const t = hitAge / 120;
-          scale = 1 + 0.15 * Math.sin(t * Math.PI);
-        }
-
-        const radius = (PEG_SIZE / 2) * scale;
-
-        ctx.beginPath();
-        ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
-        ctx.fillStyle = hitAge < 120 ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.4)';
-        ctx.fill();
-
-        if (hitAge < 120) {
-          ctx.beginPath();
-          ctx.arc(pos.x, pos.y, radius + 4 * (1 - hitAge / 120), 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(255,255,255,${0.5 * (1 - hitAge / 120)})`;
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
-        }
+      if (!dimensions.width || !dimensions.height) {
+        return { x: 0, y: 0, opacity: 1, bounceFactor: 0, nearPeg: null, done: false };
       }
-    }
-  }, [dimensions, rows, pegHits, getPegPosition]);
 
-  // Animate ball
+      let timeAccum = 0;
+
+      for (let r = 0; r < path.length; r++) {
+        const dur = getStepDuration(r);
+
+        if (timeAccum + dur > elapsed) {
+          const localT = (elapsed - timeAccum) / dur;
+
+          let curCol = 0;
+          for (let i = 0; i < r; i++) curCol += path[i] === 'R' ? 1 : 0;
+
+          const nextCol = curCol + (path[r] === 'R' ? 1 : 0);
+          const toPeg = getPegPosition(r, nextCol);
+
+          let fromX: number;
+          let fromY: number;
+
+          if (r === 0) {
+            fromX = dimensions.width / 2;
+            fromY = 10;
+          } else {
+            const prevPeg = getPegPosition(r - 1, curCol);
+            const deflectDir = path[r] === 'R' ? 1 : -1;
+            fromX = prevPeg.x + deflectDir * (PEG_RADIUS + 2);
+            fromY = prevPeg.y + PEG_RADIUS + 2;
+          }
+
+          const x = fromX + (toPeg.x - fromX) * localT;
+          const y = fromY + (toPeg.y - fromY) * (localT * localT);
+          const bounceFactor = r > 0 ? Math.max(0, 1 - localT / 0.18) : 0;
+          const nearPeg = localT > 0.7 ? { row: r, col: nextCol } : null;
+
+          return { x, y, opacity: 1, bounceFactor, nearPeg, done: false };
+        }
+
+        timeAccum += dur;
+      }
+
+      // Settling into bucket — ball fades as it "enters" the badge
+      const settleElapsed = elapsed - getCumulativeTime(path.length);
+      const settleT = Math.min(settleElapsed / SETTLE_DURATION, 1);
+      const settleEased = 1 - Math.pow(1 - settleT, 3);
+
+      let lastCol = 0;
+      for (let i = 0; i < path.length; i++) lastCol += path[i] === 'R' ? 1 : 0;
+      const lastPeg = getPegPosition(path.length - 1, lastCol);
+      const bucket = getBucketPosition(bucketIndex);
+
+      // Fade out in last 40% of settle so ball disappears into badge
+      const opacity = settleT > 0.6 ? 1 - (settleT - 0.6) / 0.4 : 1;
+
+      return {
+        x: lastPeg.x + (bucket.x - lastPeg.x) * settleEased,
+        y: lastPeg.y + (bucket.y - lastPeg.y) * settleEased,
+        opacity,
+        bounceFactor: 0,
+        nearPeg: null,
+        done: elapsed >= getCumulativeTime(path.length) + SETTLE_DURATION,
+      };
+    },
+    [dimensions, getPegPosition, getBucketPosition]
+  );
+
   useEffect(() => {
-    if (!currentAnimation || !dimensions.width) return;
+    if (!dimensions.width || !dimensions.height) return;
 
-    const { path, bucketIndex: animBucketIndex, startTime } = currentAnimation;
-    const totalDuration = path.length * STEP_DURATION + SETTLE_DURATION;
-    const newPegHits: PegHit[] = [];
+    const finishedIds = new Set<string>();
 
-    const animate = () => {
+    const render = () => {
       const canvas = canvasRef.current;
       if (!canvas) return;
-
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
@@ -171,173 +188,122 @@ export const PlinkoBoard = ({
       ctx.clearRect(0, 0, dimensions.width, dimensions.height);
 
       const now = Date.now();
-      const elapsed = now - startTime;
+
+      const glowPegs = new Set<string>();
+      const ballStatesMap = new Map<string, BallState>();
+
+      for (const anim of currentAnimations) {
+        if (finishedIds.has(anim.id)) continue;
+        const state = getBallState(anim, now);
+        ballStatesMap.set(anim.id, state);
+        if (state.nearPeg) {
+          glowPegs.add(`${state.nearPeg.row}-${state.nearPeg.col}`);
+        }
+      }
 
       // Draw pegs
       for (let row = 0; row < rows; row++) {
         const pegsInRow = row + 2;
         for (let col = 0; col < pegsInRow; col++) {
           const pos = getPegPosition(row, col);
-          const hit = newPegHits.find((h) => h.row === row && h.col === col);
-          const hitAge = hit ? now - hit.time : Infinity;
+          const isGlowing = glowPegs.has(`${row}-${col}`);
 
-          let scale = 1;
-          if (hitAge < 120) {
-            const t = hitAge / 120;
-            scale = 1 + 0.15 * Math.sin(t * Math.PI);
+          if (isGlowing) {
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, PEG_RADIUS + 5, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255,255,255,0.18)';
+            ctx.fill();
           }
-
-          const radius = (PEG_SIZE / 2) * scale;
 
           ctx.beginPath();
-          ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
-          ctx.fillStyle = hitAge < 120 ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.4)';
+          ctx.arc(pos.x, pos.y, PEG_RADIUS, 0, Math.PI * 2);
+          ctx.fillStyle = isGlowing ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.4)';
           ctx.fill();
-
-          if (hitAge < 120) {
-            ctx.beginPath();
-            ctx.arc(pos.x, pos.y, radius + 4 * (1 - hitAge / 120), 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(255,255,255,${0.5 * (1 - hitAge / 120)})`;
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-          }
         }
       }
 
-      // Calculate ball position
-      const stepIndex = Math.min(Math.floor(elapsed / STEP_DURATION), path.length);
-      const stepProgress = Math.min((elapsed % STEP_DURATION) / STEP_DURATION, 1);
-      const eased = 1 - Math.pow(1 - stepProgress, 2);
+      // Draw balls
+      for (const anim of currentAnimations) {
+        if (finishedIds.has(anim.id)) continue;
 
-      let ballX: number;
-      let ballY: number;
+        const state = ballStatesMap.get(anim.id);
+        if (!state) continue;
 
-      if (stepIndex >= path.length) {
-        // Settling into bucket
-        const bucketPos = getBucketPosition(animBucketIndex);
-        const lastPegRow = rows - 1;
-        let lastCol = 0;
-        for (let i = 0; i < path.length; i++) {
-          lastCol += path[i] === 'R' ? 1 : 0;
-        }
-        const lastPegPos = getPegPosition(
-          lastPegRow,
-          lastCol + (path[path.length - 1] === 'R' ? 0 : 0)
-        );
-
-        const settleProgress = Math.min(
-          (elapsed - path.length * STEP_DURATION) / SETTLE_DURATION,
-          1
-        );
-        const settleEased = 1 - Math.pow(1 - settleProgress, 3);
-
-        ballX = lastPegPos.x + (bucketPos.x - lastPegPos.x) * settleEased;
-        ballY = lastPegPos.y + (bucketPos.y - lastPegPos.y) * settleEased;
-      } else {
-        // Moving between pegs
-        let currentCol = 0;
-        for (let i = 0; i < stepIndex; i++) {
-          currentCol += path[i] === 'R' ? 1 : 0;
+        if (state.done && !finishedIds.has(anim.id)) {
+          finishedIds.add(anim.id);
+          setFlashBuckets((prev) => {
+            const next = new Map(prev);
+            next.set(anim.bucketIndex, Date.now());
+            return next;
+          });
+          setTimeout(() => {
+            setFlashBuckets((prev) => {
+              const next = new Map(prev);
+              next.delete(anim.bucketIndex);
+              return next;
+            });
+            onAnimationEnd(anim.id);
+          }, BUCKET_FLASH_DURATION);
+          continue;
         }
 
-        if (stepIndex === 0) {
-          // From top center to first peg
-          const startPos = {
-            x: dimensions.width / 2,
-            y: 20,
-          };
-          const nextCol = path[0] === 'R' ? 1 : 0;
-          const targetPos = getPegPosition(0, nextCol);
+        const { x, y, opacity, bounceFactor } = state;
+        const r = BALL_RADIUS * (1 + bounceFactor * 0.4);
 
-          ballX = startPos.x + (targetPos.x - startPos.x) * eased;
-          ballY = startPos.y + (targetPos.y - startPos.y) * eased;
+        ctx.save();
+        ctx.globalAlpha = opacity;
+        ctx.globalCompositeOperation = 'screen';
 
-          if (eased > 0.8 && !newPegHits.find((h) => h.row === 0 && h.col === nextCol)) {
-            newPegHits.push({ row: 0, col: nextCol, time: now });
-            setPegHits([...newPegHits]);
-          }
-        } else {
-          const currentPos = getPegPosition(stepIndex - 1, currentCol);
-          const nextCol = currentCol + (path[stepIndex] === 'R' ? 1 : 0);
-          const targetPos = getPegPosition(stepIndex, nextCol);
+        const gradient = ctx.createRadialGradient(x, y, 0, x, y, r * 2.5);
+        gradient.addColorStop(0, 'rgba(255,255,255,0.85)');
+        gradient.addColorStop(0.4, 'rgba(255,255,255,0.4)');
+        gradient.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.beginPath();
+        ctx.arc(x, y, r * 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
 
-          ballX = currentPos.x + (targetPos.x - currentPos.x) * eased;
-          ballY = currentPos.y + (targetPos.y - currentPos.y) * eased;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = 'white';
+        ctx.fill();
 
-          if (eased > 0.8 && !newPegHits.find((h) => h.row === stepIndex && h.col === nextCol)) {
-            newPegHits.push({ row: stepIndex, col: nextCol, time: now });
-            setPegHits([...newPegHits]);
-          }
-        }
+        ctx.restore();
       }
 
-      // Draw ball with glow
-      ctx.save();
-      ctx.globalCompositeOperation = 'screen';
-
-      const gradient = ctx.createRadialGradient(ballX, ballY, 0, ballX, ballY, BALL_SIZE);
-      gradient.addColorStop(0, 'rgba(255,255,255,0.9)');
-      gradient.addColorStop(0.5, 'rgba(255,255,255,0.6)');
-      gradient.addColorStop(1, 'rgba(255,255,255,0)');
-
-      ctx.beginPath();
-      ctx.arc(ballX, ballY, BALL_SIZE, 0, Math.PI * 2);
-      ctx.fillStyle = gradient;
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.arc(ballX, ballY, BALL_SIZE / 2, 0, Math.PI * 2);
-      ctx.fillStyle = 'white';
-      ctx.fill();
-
-      ctx.restore();
-
-      if (elapsed < totalDuration) {
-        animFrameRef.current = requestAnimationFrame(animate);
-      } else {
-        setFlashBucket(animBucketIndex);
-        setTimeout(() => {
-          setFlashBucket(null);
-          setPegHits([]);
-          onAnimationEnd();
-        }, BUCKET_FLASH_DURATION);
-      }
+      animFrameRef.current = requestAnimationFrame(render);
     };
 
-    animFrameRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      if (animFrameRef.current) {
-        cancelAnimationFrame(animFrameRef.current);
-      }
-    };
-  }, [currentAnimation, dimensions, rows, getPegPosition, getBucketPosition, onAnimationEnd]);
+    animFrameRef.current = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(animFrameRef.current);
+  }, [dimensions, rows, currentAnimations, getPegPosition, getBallState, onAnimationEnd]);
 
   return (
     <div ref={containerRef} className="relative flex-1 flex flex-col">
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full"
-        style={{ height: 'calc(100% - 50px)' }}
-      />
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
-      {/* Multiplier bar */}
-      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-1 px-4 h-[50px]">
+      {/* Badge bar — aligned with peg columns via SIDE_MARGIN */}
+      <div
+        className="absolute bottom-0 left-0 right-0 flex items-center gap-px"
+        style={{
+          height: BADGE_HEIGHT,
+          paddingLeft: SIDE_MARGIN / 2,
+          paddingRight: SIDE_MARGIN / 2,
+        }}
+      >
         {payoutTable.map((multiplier, index) => {
-          const isFlashing = flashBucket === index;
-          const colorClass = multiplierColor(multiplier);
-          const borderColorClass = multiplierBorderColor(multiplier);
+          const isFlashing = flashBuckets.has(index);
+          const hex = getMultiplierHex(multiplier);
 
           return (
             <div
               key={`${risk}-${rows}-${index}`}
-              className={`
-                flex items-center justify-center rounded-sm text-xs font-bold
-                border px-1 py-1 min-w-[36px] h-[28px]
-                transition-all duration-300
-                ${borderColorClass}
-                ${isFlashing ? `${colorClass} text-white scale-110` : 'bg-transparent text-white/90'}
-              `}
+              className={`flex flex-1 items-center justify-center rounded-[10px] border-2 h-[40px] px-3 py-2 text-[14px] font-bold leading-[20px] tracking-[-0.15px] transition-all duration-200 ${isFlashing ? 'scale-105 brightness-125' : ''}`}
+              style={{
+                backgroundColor: `${hex}33`,
+                borderColor: hex,
+                color: hex,
+              }}
             >
               {multiplier}x
             </div>

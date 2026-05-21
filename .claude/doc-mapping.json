@@ -106,6 +106,27 @@
       "rules": ".claude/rules/widgets.md",
       "layer": "widgets/history-client",
       "description": "History page: filter by rows, infinite scroll table, bet detail drawer"
+    },
+    {
+      "pattern": "src/**",
+      "doc": null,
+      "rules": ".claude/rules/pitfalls.md",
+      "layer": "global",
+      "description": "Project-specific gotchas: credits BigInt, balance update, server-only imports, animation promise"
+    },
+    {
+      "pattern": "src/**/*.test.ts",
+      "doc": null,
+      "rules": ".claude/rules/testing.md",
+      "layer": "tests",
+      "description": "Test patterns: renderHook, bffApi mocks, Zustand mocks, pure function tests"
+    },
+    {
+      "pattern": "src/**/*.test.tsx",
+      "doc": null,
+      "rules": ".claude/rules/testing.md",
+      "layer": "tests",
+      "description": "Test patterns: renderHook, bffApi mocks, Zustand mocks, component interaction tests"
     }
   ]
 }

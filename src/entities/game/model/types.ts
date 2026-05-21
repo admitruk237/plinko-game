@@ -33,6 +33,7 @@ export interface BetResult {
 }
 
 export interface BallAnimation {
+  id: string;
   path: string;
   bucketIndex: number;
   startTime: number;

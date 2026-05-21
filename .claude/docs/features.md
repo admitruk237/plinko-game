@@ -1,77 +1,77 @@
 # Layer: features
 
-**Відповідальність:** Інтерактивні фічі — координують entities, викликають API, містять бізнес-логіку.
+**Responsibility:** Interactive features — coordinate entities, call APIs, contain business logic.
 
 ---
 
-## Слайси
+## Slices
 
-### `auth` — автентифікація
+### `auth` — authentication
 
 ```
 features/auth/
   actions/
     login.action.ts      ← Server Action: POST credentials → set cookies → return { ok, accessToken, user }
     register.action.ts   ← Server Action: POST register → set cookies → return { ok, accessToken, user }
-    logout.action.ts     ← Server Action: DELETE cookies → redirect /login
+    logout.action.ts     ← Server Action: delete cookies → redirect /login
   model/
-    schemas.ts           ← zod: loginSchema, registerSchema + типи LoginFormValues, RegisterFormValues
+    schemas.ts           ← zod: loginSchema, registerSchema + LoginFormValues, RegisterFormValues types
   ui/
     LoginForm.tsx        ← 'use client', react-hook-form + useMutation
     RegisterForm.tsx     ← 'use client', react-hook-form + useMutation
-    AuthCard.tsx         ← обгортка картки для auth форм
+    AuthCard.tsx         ← card wrapper for auth forms
   index.ts
 ```
 
-**Важливо:** Server Actions повертають `{ ok: true, accessToken, user }` або `{ ok: false, error: string }` — не кидають виняток.
+**Important:** Server Actions return `{ ok: true, accessToken, user }` or `{ ok: false, error: string }` — they never throw.
 
 ---
 
-### `game` — ігровий процес
+### `game` — gameplay orchestration
 
 ```
 features/game/
   api/
     useGameConfig.ts     ← useQuery: GET /api/game/config → GameConfig
     usePlaceBet.ts       ← useMutation: POST /api/bets → BetResponseDto
-    useCurrentUser.ts    ← useQuery: GET /api/user/me → User (ключ: ['me'])
+    useCurrentUser.ts    ← useQuery: GET /api/user/me → User (key: ['me'])
     useLogout.ts         ← useMutation: POST /api/auth/logout → clearSession
     index.ts
   model/
-    useGamePlay.ts       ← оркеструє ставку: bet → анімація (Promise) → результат → баланс
+    useGamePlay.ts       ← orchestrates bet: place → animation (Promise) → result → balance
   index.ts
 ```
 
-**`useGamePlay`** — центральний хук геймплею:
-- Приймає `{ isPlaying, setPlaying }`
-- `handlePlaceBet(amount, rows, risk)` → мутація → чекає `animResolveRef` → `addResult` → `queryClient.setQueryData(['me'])`
-- `handleAnimationEnd()` → резолвить Promise анімації
-- Баланс оновлюється через `queryClient.setQueryData` без рефетчу
+**`useGamePlay`** — central gameplay hook:
+- Accepts `{ isPlaying, setPlaying }`
+- `handlePlaceBet(amount, rows, risk)` → mutation → awaits `animResolveRef` → `addResult` → `queryClient.setQueryData(['me'])`
+- `handleAnimationEnd()` → resolves the animation Promise
+- Balance updated via `queryClient.setQueryData` without refetch
 
 ---
 
-### `place-bet` — форма ставки
+### `place-bet` — bet form
 
 ```
 features/place-bet/
   model/
     useBetForm.ts    ← react-hook-form: betInput, handleHalf/Double/Max
-    useAutoBet.ts    ← авто-режим: loop ставок з stop-profit/loss/count
+    useAutoBet.ts    ← auto mode: bet loop with stop-profit/loss/count
   ui/
-    QuickBetControls.tsx  ← кнопки ½ × Max
+    QuickBetControls.tsx  ← ½ × Max buttons
   index.ts
 ```
 
-**`useBetForm`:** Всі суми — BigInt через `parseCredits/formatCredits`. Клампінг до `[MIN_BET, min(balance, MAX_BET)]`.
+**`useBetForm`:** All amounts use BigInt via `parseCredits/formatCredits`. Clamped to `[MIN_BET, min(balance, MAX_BET)]`.
 
-**`useAutoBet`:** Ефект-цикл що запускає ставки поки `isAutoBetting = true`. Зупиняється по:
-- Досягнення `numBets` кількості
-- `stopProfit` або `stopLoss` порогу
-- Помилці валідації суми
+**`useAutoBet`:** Effect-loop that places bets while `isAutoBetting = true`. Stops on:
+- Reaching `numBets` count
+- `stopProfit` or `stopLoss` threshold
+- Amount validation error
 
 ---
 
-### `bet-mode` — перемикач режиму ставки
+### `bet-mode` — bet mode toggle
 
 ```
 features/bet-mode/
@@ -80,11 +80,11 @@ features/bet-mode/
   index.ts
 ```
 
-Проста UI фіча. Пропускає `value: BetMode` і `onChange` через props.
+Simple UI feature. Passes `value: BetMode` and `onChange` via props.
 
 ---
 
-### `bet-history` — список ставок
+### `bet-history` — bet list
 
 ```
 features/bet-history/
@@ -94,23 +94,23 @@ features/bet-history/
   index.ts
 ```
 
-**`useBetHistory(rows?: number)`:** Infinite query з `cursor`-based пагінацією. `nextCursor` від попередньої сторінки → параметр наступного запиту.
+**`useBetHistory(rows?: number)`:** Infinite query with cursor-based pagination. `nextCursor` from previous page → parameter for next request.
 
 ---
 
-### `game-settings` — налаштування геймплею
+### `game-settings` — gameplay settings
 
 ```
 features/game-settings/
   ui/
-    SettingsDialog.tsx  ← Dialog з Switch для sound/animations
+    SettingsDialog.tsx  ← Dialog with Switch for sound/animations
   index.ts
 ```
 
-Читає і пише `useSettings()` з `entities/settings`. Відображає версію і режим (`Demo (Mock API)`).
+Reads and writes `useSettings()` from `entities/settings`. Displays version and mode (`Demo (Mock API)`).
 
 ---
 
-## Залежності
+## Dependencies
 
-`features` → `entities`, `shared`. НЕ імпортує `widgets` або `pages`.
+`features` → `entities`, `shared`. Must NOT import from `widgets` or `pages`.

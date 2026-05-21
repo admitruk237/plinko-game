@@ -6,6 +6,7 @@ import './globals.css';
 import { QueryProvider } from './providers/QueryProvider';
 import { SessionProvider } from './providers/SessionProvider';
 import { SettingsProvider } from './providers/SettingsProvider';
+import { Toaster } from '@/shared/ui/sonner';
 import type { User } from '@/entities/session/model/types';
 
 const inter = Inter({ variable: '--font-inter', subsets: ['latin', 'cyrillic'] });
@@ -66,6 +67,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
               children
             )}
           </SettingsProvider>
+          <Toaster position="bottom-right" />
         </QueryProvider>
       </body>
     </html>

@@ -1,26 +1,29 @@
 'use client';
 
+import { useState } from 'react';
 import { GameHeader } from '@/widgets/game-header/GameHeader';
 import { GameSidebar } from '@/widgets/game-sidebar/GameSidebar';
 import { PlinkoBoard } from '@/widgets/game-board/PlinkoBoard';
-import { RecentResults } from '@/widgets/recent-results/RecentResults';
 import { useGameStore } from '@/entities/game/model/store';
 import { useSessionStore } from '@/entities/session/model/store';
+import type { Risk } from '@/entities/game/model/types';
 import { useCurrentUser, useGameConfig, useGamePlay, useLogout } from '@/features/game';
+import { RISK_LEVELS } from '@/shared/config';
 
 export const GameClient = () => {
   const user = useSessionStore((s) => s.user);
 
-  const recentResults = useGameStore((s) => s.recentResults);
   const isPlaying = useGameStore((s) => s.isPlaying);
   const setPlaying = useGameStore((s) => s.setPlaying);
+
+  const [rows, setRows] = useState<number>(12);
+  const [risk, setRisk] = useState<Risk>(RISK_LEVELS.HIGH);
 
   const { data: config } = useGameConfig();
   const { data: freshUser } = useCurrentUser();
   const logoutMutation = useLogout();
 
-  const { currentAnimation, selectedRows, selectedRisk, handlePlaceBet, handleAnimationEnd } =
-    useGamePlay({ isPlaying, setPlaying });
+  const { currentAnimations, handlePlaceBet, handleAnimationEnd } = useGamePlay({ setPlaying });
 
   const balance = freshUser?.balance ?? user?.balance ?? '0';
 
@@ -50,7 +53,7 @@ export const GameClient = () => {
     );
   }
 
-  const payoutTable = config.payoutTables[selectedRisk]?.[selectedRows.toString()] ?? [];
+  const payoutTable = config.payoutTables[risk]?.[rows.toString()] ?? [];
 
   return (
     <div className="flex h-screen overflow-hidden max-md:flex-col">
@@ -58,6 +61,10 @@ export const GameClient = () => {
         config={config}
         balance={balance}
         isPlaying={isPlaying}
+        rows={rows}
+        risk={risk}
+        onRowsChange={setRows}
+        onRiskChange={setRisk}
         onPlaceBet={handlePlaceBet}
       />
 
@@ -65,13 +72,11 @@ export const GameClient = () => {
         <GameHeader balance={balance} onLogout={() => logoutMutation.mutate()} />
 
         <div className="relative flex-1 flex flex-col">
-          <RecentResults results={recentResults} />
-
           <PlinkoBoard
-            rows={selectedRows}
-            risk={selectedRisk}
+            rows={rows}
+            risk={risk}
             payoutTable={payoutTable}
-            currentAnimation={currentAnimation}
+            currentAnimations={currentAnimations}
             onAnimationEnd={handleAnimationEnd}
           />
         </div>

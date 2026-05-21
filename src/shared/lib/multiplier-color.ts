@@ -1,23 +1,20 @@
-export function multiplierColor(m: number): string {
-  if (m >= 10) return 'bg-red-500';
-  if (m >= 3) return 'bg-orange-500';
-  if (m >= 1) return 'bg-yellow-500';
-  if (m >= 0.5) return 'bg-green-500';
-  return 'bg-green-800';
+// Exactly the 3 risk-button colors: HIGH=red, MEDIUM=yellow, LOW=green
+export function getMultiplierHex(m: number): string {
+  if (m >= 5) return '#FB2C36'; // big win  → HIGH (red)
+  if (m >= 1) return '#F0B100'; // small win → MEDIUM (yellow)
+  return '#00C950'; // loss      → LOW (green)
 }
 
+// Legacy text-color classes
 export function multiplierTextColor(m: number): string {
-  if (m >= 10) return 'text-red-500';
-  if (m >= 3) return 'text-orange-500';
-  if (m >= 1) return 'text-yellow-500';
-  if (m >= 0.5) return 'text-green-500';
-  return 'text-green-800';
+  if (m >= 5) return 'text-[#FB2C36]';
+  if (m >= 1) return 'text-[#F0B100]';
+  return 'text-[#00C950]';
 }
 
-export function multiplierBorderColor(m: number): string {
-  if (m >= 10) return 'border-red-500';
-  if (m >= 3) return 'border-orange-500';
-  if (m >= 1) return 'border-yellow-500';
-  if (m >= 0.5) return 'border-green-500';
-  return 'border-green-800';
-}
+// Legacy exports
+export { getMultiplierHex as multiplierColor };
+export { getMultiplierHex as multiplierBorderColor };
+export { getMultiplierHex as multiplierBg };
+export { getMultiplierHex as multiplierBorder };
+export { getMultiplierHex as multiplierText };

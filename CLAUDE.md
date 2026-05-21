@@ -63,6 +63,8 @@ Domain rules (auto-loaded by path):
 @.claude/rules/auth.md
 @.claude/rules/game.md
 @.claude/rules/components.md
+@.claude/rules/pitfalls.md
+@.claude/rules/testing.md
 
 Layer documentation (detailed slice descriptions, real examples):
 
@@ -108,6 +110,8 @@ interface Props {
 - Avoid code duplication
 - NO magic strings or hardcoded literals — use constants or enums
 - Before writing code: check simplicity → check architecture → check types
+- Keep CLAUDE.md under 200 lines (if it gets close, refactor and shorten it)
+
 
 ---
 

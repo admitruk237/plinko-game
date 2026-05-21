@@ -1,79 +1,79 @@
 # Layer: app
 
-**Відповідальність:** Next.js App Router — роутинг, глобальний layout, SSR-ініціалізація стору, API-проксі (BFF).
+**Responsibility:** Next.js App Router — routing, global layout, SSR store initialization, BFF API proxy.
 
 ---
 
-## Структура
+## Structure
 
 ```
 src/app/
   layout.tsx              ← root layout: SSR session + settings hydration
   page.tsx                ← redirect / → /game
-  not-found.tsx           ← 404 сторінка
+  not-found.tsx           ← 404 page
   globals.css             ← Tailwind imports, OKLCH CSS variables
-  game/page.tsx           ← захищена сторінка гри
-  history/page.tsx        ← захищена сторінка історії ставок
-  login/page.tsx          ← публічна сторінка логіну
-  register/page.tsx       ← публічна сторінка реєстрації
+  game/page.tsx           ← protected game page
+  history/page.tsx        ← protected bet history page
+  login/page.tsx          ← public login page
+  register/page.tsx       ← public register page
   providers/
     QueryProvider.tsx     ← @tanstack/react-query client
-    SessionProvider.tsx   ← ініціалізує useSessionStore з SSR-даних
-    SettingsProvider.tsx  ← ініціалізує useSettingsStore з cookie
+    SessionProvider.tsx   ← initializes useSessionStore from SSR data
+    SettingsProvider.tsx  ← initializes useSettingsStore from cookies
   api/
-    auth/session/route.ts ← GET: валідація + refresh токенів
-    auth/logout/route.ts  ← POST: очистка cookies
-    bets/route.ts         ← GET (список) + POST (нова ставка)
-    bets/[id]/route.ts    ← GET: деталі ставки
-    game/config/route.ts  ← GET: конфіг гри (rows, risks, payoutTables)
+    auth/session/route.ts ← GET: token validation + refresh
+    auth/logout/route.ts  ← POST: clear cookies
+    bets/route.ts         ← GET (list) + POST (place bet)
+    bets/[id]/route.ts    ← GET: bet details
+    game/config/route.ts  ← GET: game config (rows, risks, payoutTables)
     seeds/route.ts        ← GET (active seed) + POST (client/rotate)
-    seeds/[id]/route.ts   ← GET: деталі seed
-    user/me/route.ts      ← GET: поточний юзер
+    seeds/[id]/route.ts   ← GET: revealed seed details
+    user/me/route.ts      ← GET: current user
 ```
 
 ---
 
 ## SSR Hydration Flow (layout.tsx)
 
-При кожному запиті `RootLayout` (Server Component):
+On every request `RootLayout` (Server Component):
 
-1. Читає cookies `accessToken` + `refreshToken`
-2. Якщо є хоча б один → робить fetch на `/api/auth/session`
-3. Отримує `{ accessToken, user }` або null
-4. Читає `soundEffectsEnabled` + `animationsEnabled` з cookies
-5. Рендерить провайдери у порядку: `QueryProvider → SettingsProvider → SessionProvider → children`
+1. Reads `accessToken` + `refreshToken` cookies
+2. If at least one exists → fetches `/api/auth/session`
+3. Gets `{ accessToken, user }` or null
+4. Reads `soundEffectsEnabled` + `animationsEnabled` from cookies
+5. Renders providers in order: `QueryProvider → SettingsProvider → SessionProvider → children`
 
-`SessionProvider` та `SettingsProvider` — Client Components що ініціалізують Zustand стори через render-phase sync (`if (initialized.current == null)`).
+`SessionProvider` and `SettingsProvider` are Client Components that initialize Zustand stores via render-phase sync (`if (initialized.current == null)`).
 
 ---
 
 ## API Routes (BFF)
 
-Всі захищені route handlers використовують `getValidAccessToken()` з `@/shared/lib/auth-proxy`.
+All protected route handlers use `getValidAccessToken()` from `@/shared/lib/auth-proxy`.
 
-| Route | Method | Опис |
-|-------|--------|------|
-| `/api/auth/session` | GET | Валідація access token, refresh якщо expired |
-| `/api/auth/logout` | POST | DELETE cookies accessToken + refreshToken |
-| `/api/bets` | GET | Список ставок з пагінацією (cursor-based) |
-| `/api/bets` | POST | Створити ставку |
-| `/api/bets/[id]` | GET | Деталі ставки |
-| `/api/game/config` | GET | Конфіг: rows[], risks[], minBet, maxBet, payoutTables |
-| `/api/seeds` | GET | Активний seed |
-| `/api/seeds` | POST | `?action=client` оновити clientSeed, `?action=rotate` ротація |
-| `/api/seeds/[id]` | GET | Деталі réveilé seed |
-| `/api/user/me` | GET | Поточний юзер (proxied через getValidAccessToken) |
+| Route | Method | Description |
+|-------|--------|-------------|
+| `/api/auth/session` | GET | Validate access token, refresh if expired |
+| `/api/auth/logout` | POST | Delete accessToken + refreshToken cookies |
+| `/api/bets` | GET | Bet list with cursor-based pagination |
+| `/api/bets` | POST | Place a bet |
+| `/api/bets/[id]` | GET | Bet details |
+| `/api/game/config` | GET | Config: rows[], risks[], minBet, maxBet, payoutTables |
+| `/api/seeds` | GET | Active seed |
+| `/api/seeds` | POST | `?action=client` update clientSeed, `?action=rotate` rotate |
+| `/api/seeds/[id]` | GET | Revealed seed details |
+| `/api/user/me` | GET | Current user (proxied via getValidAccessToken) |
 
 ---
 
 ## Middleware (src/proxy.ts)
 
-Перевіряє `refreshToken` cookie (без запиту до бекенду):
-- Protected routes (`/game`, `/history`) без refreshToken → redirect `/login`
-- Public routes (`/login`, `/register`) з refreshToken → redirect `/game`
+Checks `refreshToken` cookie only (no backend call):
+- Protected routes (`/game`, `/history`) without refreshToken → redirect `/login`
+- Public routes (`/login`, `/register`) with refreshToken → redirect `/game`
 
 ---
 
-## Залежності
+## Dependencies
 
 `app` → `pages` → `widgets` → `features` → `entities` → `shared`

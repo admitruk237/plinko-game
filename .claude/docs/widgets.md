@@ -1,109 +1,108 @@
 # Layer: widgets
 
-**Відповідальність:** Складні UI блоки що компонують features і entities у готові секції сторінок.
+**Responsibility:** Complex UI blocks that compose features and entities into ready-to-use page sections.
 
 ---
 
-## Слайси
+## Slices
 
-### `game-client` — головний клієнтський блок гри
+### `game-client` — main client game block
 
 ```
 widgets/game-client/
-  GameClient.tsx   ← 'use client', оркеструє всю гру
+  GameClient.tsx   ← 'use client', orchestrates the entire game
 ```
 
-**Головний композитний компонент гри.** Збирає разом:
-- `useGameConfig()` — завантажує конфіг
-- `useCurrentUser()` — баланс юзера
+**Main composite game component.** Wires together:
+- `useGameConfig()` — loads game config
+- `useCurrentUser()` — user balance
 - `useGameStore` — `isPlaying`, `setPlaying`
-- `useGamePlay()` — логіка ставки
+- `useGamePlay()` — bet logic
 - `GameSidebar` + `PlinkoBoard` + `GameHeader` + `RecentResults`
 
-Передає `handlePlaceBet`, `currentAnimation`, `handleAnimationEnd` до дочірніх компонентів.
+Passes `handlePlaceBet`, `currentAnimation`, `handleAnimationEnd` down to child components.
 
 ---
 
-### `game-board` — Plinko дошка
+### `game-board` — Plinko board
 
 ```
 widgets/game-board/
-  PlinkoBoard.tsx  ← Canvas-анімація кулі
+  PlinkoBoard.tsx  ← Canvas ball animation
 ```
 
-Рендерить Plinko сітку на `<canvas>`. Анімує кулю по `path` (L/R рядок). При завершенні анімації викликає `onAnimationEnd()` що резолвить Promise в `useGamePlay`.
+Renders the Plinko grid on `<canvas>`. Animates the ball along `path` (L/R string). On animation end calls `onAnimationEnd()` which resolves the Promise in `useGamePlay`.
 
 **Props:**
-- `rows: number` — кількість рядів
-- `risk: Risk` — для підсвічування бакетів
+- `rows: number` — number of rows
+- `risk: Risk` — for bucket highlighting
 - `currentAnimation: BallAnimation | null`
 - `onAnimationEnd: () => void`
-- `payoutTable: number[]` — множники для відображення
+- `payoutTable: number[]` — multipliers for display
 
 ---
 
-### `game-sidebar` — бічна панель керування
+### `game-sidebar` — game control panel
 
 ```
 widgets/game-sidebar/
-  GameSidebar.tsx           ← основний компонент
+  GameSidebar.tsx           ← main component
   model/
-    useGameSidebar.ts       ← агрегує useBetForm + useAutoBet
+    useGameSidebar.ts       ← aggregates useBetForm + useAutoBet
     constants.ts            ← LABELS, STYLES, ZERO
   ui/
-    BetModeToggle wrapper
-    RiskSelector.tsx        ← вибір ризику (LOW/MEDIUM/HIGH)
-    RowsSelector.tsx        ← Slider для кількості рядів
-    AutoBetSettings.tsx     ← поля numBets, stopProfit, stopLoss
-    BetButton.tsx           ← кнопка Bet/Start/Stop з лоадером
-    SidebarFooter.tsx       ← fullscreen + settings кнопки
+    RiskSelector.tsx        ← risk picker (LOW/MEDIUM/HIGH)
+    RowsSelector.tsx        ← Slider for row count
+    AutoBetSettings.tsx     ← numBets, stopProfit, stopLoss fields
+    BetButton.tsx           ← Bet/Start/Stop button with loader
+    SidebarFooter.tsx       ← fullscreen + settings buttons
 ```
 
-**`useGameSidebar`:** Агрегує `useBetForm` і `useAutoBet` в єдиний інтерфейс для `GameSidebar`.
+**`useGameSidebar`:** Aggregates `useBetForm` and `useAutoBet` into a single interface for `GameSidebar`.
 
 ---
 
-### `game-header` — шапка гри
+### `game-header` — game header
 
 ```
 widgets/game-header/
   GameHeader.tsx
 ```
 
-Відображає логотип, баланс юзера і кнопку logout. Читає `user.balance` через props.
+Displays logo, user balance, and logout button. Reads `user.balance` via props.
 
 ---
 
-### `recent-results` — останні результати
+### `recent-results` — recent results strip
 
 ```
 widgets/recent-results/
   RecentResults.tsx
 ```
 
-Показує останні 4 результати ставок (`useGameStore.recentResults`). Кольори по множнику через `getMultiplierColor()`.
+Shows last 4 bet results (`useGameStore.recentResults`). Colors by multiplier via `getMultiplierColor()`.
 
 ---
 
-### `history-client` — клієнт сторінки історії
+### `history-client` — history page client
 
 ```
 widgets/history-client/
-  HistoryClient.tsx     ← фільтр + infinite scroll + таблиця
-  BetTable.tsx          ← таблиця ставок
-  BetDetailDrawer.tsx   ← drawer з деталями ставки
+  HistoryClient.tsx     ← filter + infinite scroll + table
+  BetTable.tsx          ← bet table
+  BetDetailDrawer.tsx   ← sliding drawer with bet details
 ```
 
 **`HistoryClient`:**
-- Фільтр по кількості рядів (select: all / 8–16)
+- Filter by row count (select: all / 8–16)
 - `useBetHistory(rowsParam)` — infinite query
-- Load More кнопка з `hasNextPage` / `isFetchingNextPage`
-- Клік на рядок → `BetDetailDrawer`
+- Load More button with `hasNextPage` / `isFetchingNextPage`
+- Row click → `BetDetailDrawer`
 
-**`BetDetailDrawer`:** Sliding панель з деталями: multiplier, payout, path, seed info.
+**`BetDetailDrawer`:** Sliding panel with details: multiplier, payout, path, seed info.
 
 ---
 
-## Залежності
+## Dependencies
 
-`widgets` → `features`, `entities`, `shared`. НЕ імпортує `pages` або `app`.
+`widgets` → `features`, `entities`, `shared`. Must NOT import from `pages` or `app`.

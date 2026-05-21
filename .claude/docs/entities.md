@@ -1,65 +1,65 @@
 # Layer: entities
 
-**Відповідальність:** Бізнес-сутності — ізольований стан і типи без міжсутнісних залежностей.
+**Responsibility:** Business entities — isolated state and types with no cross-entity dependencies.
 
 ---
 
-## Слайси
+## Slices
 
-### `session` — стан авторизації
+### `session` — auth state
 
 ```
 entities/session/
   model/
     store.ts   ← useSessionStore
-    types.ts   ← SessionState, User (re-export з shared/api/types)
-  index.ts     ← публічне API
+    types.ts   ← SessionState, User (re-export from shared/api/types)
+  index.ts     ← public API
 ```
 
-**Store:** `useSessionStore` (Zustand, без persist — навмисно)
+**Store:** `useSessionStore` (Zustand, no persist — intentional)
 
-| Поле | Тип | Опис |
-|------|-----|------|
-| `accessToken` | `string \| null` | JWT токен доступу |
-| `user` | `User \| null` | Поточний юзер |
-| `setSession(token, user)` | action | Встановлюється після логіну або SSR hydration |
-| `clearSession()` | action | Встановлюється після logout |
+| Field | Type | Description |
+|-------|------|-------------|
+| `accessToken` | `string \| null` | JWT access token |
+| `user` | `User \| null` | Current user |
+| `setSession(token, user)` | action | Called after login or SSR hydration |
+| `clearSession()` | action | Called after logout |
 
-`User` тип: `{ id, email, balance, createdAt }`
+`User` type: `{ id, email, balance, createdAt }`
 
-**Примітка:** Store не persist бо токен зберігається в httpOnly cookie — стор лише дзеркалить серверний стан для клієнта.
+**Note:** No persist because the token lives in an httpOnly cookie — the store merely mirrors server state for the client.
 
 ---
 
-### `game` — стан геймплею
+### `game` — gameplay state
 
 ```
 entities/game/
   model/
     store.ts   ← useGameStore
-    types.ts   ← BetResult, BallAnimation + re-exports з shared/api/types
+    types.ts   ← BetResult, BallAnimation + re-exports from shared/api/types
   index.ts
 ```
 
-**Store:** `useGameStore` (Zustand, без persist)
+**Store:** `useGameStore` (Zustand, no persist)
 
-| Поле | Тип | Опис |
-|------|-----|------|
-| `recentResults` | `BetResult[]` | Останні 4 результати (новий додається в початок) |
-| `isPlaying` | `boolean` | Чи грає зараз куля |
-| `addResult(result)` | action | Додає результат, обрізає до 4 |
-| `setPlaying(bool)` | action | Керується з `useGamePlay` |
-| `clearResults()` | action | Очищення при виході |
+| Field | Type | Description |
+|-------|------|-------------|
+| `recentResults` | `BetResult[]` | Last 4 results, newest first |
+| `isPlaying` | `boolean` | Whether the ball is currently animating |
+| `addResult(result)` | action | Prepends result, trims to 4 |
+| `setPlaying(bool)` | action | Controlled by `useGamePlay` |
+| `clearResults()` | action | Reset on exit |
 
-**Типи:**
+**Types:**
 
 ```ts
 interface BetResult {
   betId: string
-  multiplier: number   // число, не рядок
-  payout: string       // рядок-кредити
-  path: string         // бінарний рядок L/R ходів
-  bucketIndex: number  // 0-based індекс бакету
+  multiplier: number   // number, not string
+  payout: string       // credit string
+  path: string         // binary L/R string
+  bucketIndex: number  // 0-based bucket index
   rows: number
   risk: Risk
 }
@@ -73,7 +73,7 @@ interface BallAnimation {
 
 ---
 
-### `settings` — налаштування гравця
+### `settings` — player settings
 
 ```
 entities/settings/
@@ -82,20 +82,20 @@ entities/settings/
   index.ts
 ```
 
-**Store:** `useSettingsStore` (Zustand, persist через cookies — для SSR доступності)
+**Store:** `useSettingsStore` (Zustand, persisted via cookies — for SSR accessibility)
 
-| Поле | Тип | Default |
-|------|-----|---------|
+| Field | Type | Default |
+|-------|------|---------|
 | `soundEffectsEnabled` | `boolean` | `true` |
 | `animationsEnabled` | `boolean` | `true` |
 
-Зміна налаштувань одразу пише в cookie (`soundEffectsEnabled`, `animationsEnabled`) щоб layout.tsx міг зчитати при наступному SSR.
+Changing a setting immediately writes to cookie (`soundEffectsEnabled`, `animationsEnabled`) so `layout.tsx` can read it on the next SSR request.
 
-**Хук:** `useSettings()` — зручна обгортка для доступу до стору.
+**Hook:** `useSettings()` — convenience wrapper for store access.
 
 ---
 
-## Публічне API (index.ts)
+## Public API (index.ts)
 
 ```ts
 // entities/session
@@ -117,6 +117,6 @@ export * from './settings'
 
 ---
 
-## Залежності
+## Dependencies
 
-`entities` → `shared` тільки. Сутності не імпортують одна одну.
+`entities` → `shared` only. Entities do not import each other.
