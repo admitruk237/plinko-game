@@ -112,7 +112,6 @@ interface Props {
 - Before writing code: check simplicity → check architecture → check types
 - Keep CLAUDE.md under 200 lines (if it gets close, refactor and shorten it)
 
-
 ---
 
 # 🧠 Complex Tasks Rule
