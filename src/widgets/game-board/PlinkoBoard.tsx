@@ -12,12 +12,17 @@ interface Props {
   onAnimationEnd: (id: string) => void;
 }
 
-const SIDE_MARGIN = 280;
 const BADGE_HEIGHT = 56;
 const TOP_PADDING = 24;
 const PEG_RADIUS = 4;
 const BALL_RADIUS = 6;
 const BOTTOM_GAP = 16;
+
+function getSideMargin(width: number): number {
+  if (width < 480) return 40;
+  if (width < 768) return 120;
+  return 280;
+}
 const SETTLE_DURATION = 320;
 const BUCKET_FLASH_DURATION = 500;
 
@@ -34,7 +39,7 @@ function getCumulativeTime(upToRow: number): number {
 
 // Shared column spacing — same formula for pegs and badges
 function getColSpacing(width: number, rows: number): number {
-  return (width - SIDE_MARGIN) / (rows + 1);
+  return (width - getSideMargin(width)) / (rows + 1);
 }
 
 interface BallState {
@@ -93,7 +98,7 @@ export const PlinkoBoard = ({
       const { width, height } = dimensions;
       if (!width || !height) return { x: 0, y: 0 };
       const colSpacing = getColSpacing(width, rows);
-      const startX = SIDE_MARGIN / 2;
+      const startX = getSideMargin(width) / 2;
       return { x: startX + index * colSpacing, y: height - BADGE_HEIGHT / 2 };
     },
     [dimensions, rows]
@@ -287,8 +292,8 @@ export const PlinkoBoard = ({
         className="absolute bottom-0 left-0 right-0 flex items-center gap-px"
         style={{
           height: BADGE_HEIGHT,
-          paddingLeft: SIDE_MARGIN / 2,
-          paddingRight: SIDE_MARGIN / 2,
+          paddingLeft: getSideMargin(dimensions.width) / 2,
+          paddingRight: getSideMargin(dimensions.width) / 2,
         }}
       >
         {payoutTable.map((multiplier, index) => {

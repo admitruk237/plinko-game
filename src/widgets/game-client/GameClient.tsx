@@ -56,22 +56,26 @@ export const GameClient = () => {
   const payoutTable = config.payoutTables[risk]?.[rows.toString()] ?? [];
 
   return (
-    <div className="flex h-screen overflow-hidden max-md:flex-col">
-      <GameSidebar
-        config={config}
-        balance={balance}
-        isPlaying={isPlaying}
-        rows={rows}
-        risk={risk}
-        onRowsChange={setRows}
-        onRiskChange={setRisk}
-        onPlaceBet={handlePlaceBet}
-      />
+    <div className="flex h-[100dvh] overflow-hidden md:flex-row flex-col">
+      {/* Sidebar: bottom on mobile, left on desktop */}
+      <div className="order-2 md:order-1 md:h-full max-md:h-[45dvh] max-md:overflow-y-auto shrink-0">
+        <GameSidebar
+          config={config}
+          balance={balance}
+          isPlaying={isPlaying}
+          rows={rows}
+          risk={risk}
+          onRowsChange={setRows}
+          onRiskChange={setRisk}
+          onPlaceBet={handlePlaceBet}
+        />
+      </div>
 
-      <div className="flex-1 flex flex-col overflow-hidden relative">
+      {/* Board area: top on mobile, right on desktop */}
+      <div className="order-1 md:order-2 flex-1 flex flex-col overflow-hidden relative min-h-0">
         <GameHeader balance={balance} onLogout={() => logoutMutation.mutate()} />
 
-        <div className="relative flex-1 flex flex-col">
+        <div className="relative flex-1 flex flex-col min-h-0">
           <PlinkoBoard
             rows={rows}
             risk={risk}

@@ -38,7 +38,7 @@ export const GameHeader = ({ balance, onLogout }: Props) => {
             <circle cx="12" cy="12" r="10" />
             <polyline points="12,6 12,12 16,14" />
           </svg>
-          History
+          <span className="max-sm:hidden">History</span>
         </Link>
         <button
           onClick={onLogout}
@@ -56,7 +56,7 @@ export const GameHeader = ({ balance, onLogout }: Props) => {
             <polyline points="16,17 21,12 16,7" />
             <line x1="21" y1="12" x2="9" y2="12" />
           </svg>
-          Logout
+          <span className="max-sm:hidden">Logout</span>
         </button>
       </div>
     </header>
