@@ -1,4 +1,4 @@
-import type { Risk } from '@/entities/game/model/types';
+import type { Risk } from '@/entities/game';
 import { Label } from '@/shared/ui/label';
 import { Button } from '@/shared/ui/button';
 import { RISK_LEVELS } from '@/shared/config';

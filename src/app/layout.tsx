@@ -7,7 +7,7 @@ import { QueryProvider } from './providers/QueryProvider';
 import { SessionProvider } from './providers/SessionProvider';
 import { SettingsProvider } from './providers/SettingsProvider';
 import { Toaster } from '@/shared/ui/sonner';
-import type { User } from '@/entities/session/model/types';
+import type { User } from '@/entities/session';
 
 const inter = Inter({ variable: '--font-inter', subsets: ['latin', 'cyrillic'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });

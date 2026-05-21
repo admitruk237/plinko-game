@@ -1,6 +1,6 @@
 'use client';
 
-import type { BetResult } from '@/entities/game/model/types';
+import type { BetResult } from '@/entities/game';
 import { multiplierTextColor } from '@/shared/lib/multiplier-color';
 import { formatCredits } from '@/shared/lib/credits';
 

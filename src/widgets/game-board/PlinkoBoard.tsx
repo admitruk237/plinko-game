@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { BallAnimation, Risk } from '@/entities/game/model/types';
+import type { BallAnimation, Risk } from '@/entities/game';
 import { getMultiplierHex } from '@/shared/lib/multiplier-color';
 
 interface Props {

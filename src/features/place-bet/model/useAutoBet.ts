@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { Risk } from '@/entities/game/model/types';
+import type { Risk } from '@/entities/game';
 import { MAX_BET, MIN_BET, parseCredits } from '@/shared/lib/credits';
 import {
   BET_MODES,

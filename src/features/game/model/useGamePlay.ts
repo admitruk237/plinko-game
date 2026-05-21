@@ -1,9 +1,9 @@
 import { useCallback, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import type { BallAnimation, Risk } from '@/entities/game/model/types';
-import type { User } from '@/entities/session/model/types';
-import { useGameStore } from '@/entities/game/model/store';
+import type { BallAnimation, Risk } from '@/entities/game';
+import type { User } from '@/entities/session';
+import { useGameStore } from '@/entities/game';
 import { formatCredits } from '@/shared/lib/credits';
 import { usePlaceBet } from '../api/usePlaceBet';
 

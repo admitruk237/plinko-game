@@ -1,4 +1,4 @@
-import type { BetResponse } from '@/entities/game/model/types';
+import type { BetResponse } from '@/entities/game';
 import { formatCredits } from '@/shared/lib/credits';
 import { multiplierTextColor } from '@/shared/lib/multiplier-color';
 import { RISK_BADGE_STYLES } from '@/shared/lib/risk-styles';

@@ -4,7 +4,7 @@ import { authApi } from '@/shared/api/auth.api';
 import { setAccessToken, setRefreshToken } from '@/shared/lib/session';
 import { isApiError } from '@/shared/lib/api-error';
 import type { LoginFormValues } from '../model/schemas';
-import type { User } from '@/entities/session/model/types';
+import type { User } from '@/entities/session';
 
 export interface LoginSuccess {
   ok: true;

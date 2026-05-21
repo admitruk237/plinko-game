@@ -1,4 +1,4 @@
-import type { BetResponse } from '@/entities/game/model/types';
+import type { BetResponse } from '@/entities/game';
 import { formatCredits } from '@/shared/lib/credits';
 import { multiplierTextColor } from '@/shared/lib/multiplier-color';
 import { formatFullTimestamp, formatTimestamp } from '@/shared/lib/format-date';
