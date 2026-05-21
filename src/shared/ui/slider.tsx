@@ -1,6 +1,6 @@
-import * as React from "react"
-import { Slider as SliderPrimitive } from "@base-ui/react/slider"
-import { cn } from "@/shared/lib/utils"
+import * as React from 'react';
+import { Slider as SliderPrimitive } from '@base-ui/react/slider';
+import { cn } from '@/shared/lib/utils';
 
 const Slider = React.forwardRef<
   HTMLDivElement,
@@ -8,10 +8,7 @@ const Slider = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SliderPrimitive.Root
     ref={ref}
-    className={cn(
-      "relative flex w-full touch-none select-none items-center",
-      className
-    )}
+    className={cn('relative flex w-full touch-none select-none items-center', className)}
     {...props}
   >
     <SliderPrimitive.Control className="relative flex w-full items-center h-4 cursor-pointer">
@@ -21,7 +18,7 @@ const Slider = React.forwardRef<
       </SliderPrimitive.Track>
     </SliderPrimitive.Control>
   </SliderPrimitive.Root>
-))
-Slider.displayName = "Slider"
+));
+Slider.displayName = 'Slider';
 
-export { Slider }
+export { Slider };

@@ -1,15 +1,15 @@
-import { create } from 'zustand'
-import type { BetResult } from './types'
+import { create } from 'zustand';
+import type { BetResult } from './types';
 
 interface GameState {
-  recentResults: BetResult[]
-  isPlaying: boolean
-  addResult: (result: BetResult) => void
-  setPlaying: (playing: boolean) => void
-  clearResults: () => void
+  recentResults: BetResult[];
+  isPlaying: boolean;
+  addResult: (result: BetResult) => void;
+  setPlaying: (playing: boolean) => void;
+  clearResults: () => void;
 }
 
-const MAX_RECENT_RESULTS = 4
+const MAX_RECENT_RESULTS = 4;
 
 export const useGameStore = create<GameState>()((set) => ({
   recentResults: [],
@@ -20,4 +20,4 @@ export const useGameStore = create<GameState>()((set) => ({
     })),
   setPlaying: (playing) => set({ isPlaying: playing }),
   clearResults: () => set({ recentResults: [] }),
-}))
+}));

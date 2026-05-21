@@ -1,25 +1,25 @@
-'use client'
-import type { Risk, GameConfig } from '@/entities/game/model/types'
-import { Card } from '@/shared/ui/card'
-import { BetModeToggle } from '@/features/bet-mode'
-import { CurrencyIcon } from '@/shared/ui/currency-icon'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form'
-import { Input } from '@/shared/ui/input'
-import { QuickBetControls } from '@/features/place-bet'
-import { BET_MODES } from '@/shared/config'
-import { useGameSidebar } from './model/useGameSidebar'
-import { RiskSelector } from './ui/RiskSelector'
-import { RowsSelector } from './ui/RowsSelector'
-import { AutoBetSettings } from './ui/AutoBetSettings'
-import { SidebarFooter } from './ui/SidebarFooter'
-import { BetButton } from './ui/BetButton'
-import { ZERO, LABELS } from './model/constants'
+'use client';
+import type { GameConfig, Risk } from '@/entities/game/model/types';
+import { Card } from '@/shared/ui/card';
+import { BetModeToggle } from '@/features/bet-mode';
+import { CurrencyIcon } from '@/shared/ui/currency-icon';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
+import { Input } from '@/shared/ui/input';
+import { QuickBetControls } from '@/features/place-bet';
+import { BET_MODES } from '@/shared/config';
+import { useGameSidebar } from './model/useGameSidebar';
+import { RiskSelector } from './ui/RiskSelector';
+import { RowsSelector } from './ui/RowsSelector';
+import { AutoBetSettings } from './ui/AutoBetSettings';
+import { SidebarFooter } from './ui/SidebarFooter';
+import { BetButton } from './ui/BetButton';
+import { LABELS, ZERO } from './model/constants';
 
 interface Props {
-  config: GameConfig
-  balance: string
-  isPlaying: boolean
-  onPlaceBet: (amount: string, rows: number, risk: Risk) => void
+  config: GameConfig;
+  balance: string;
+  isPlaying: boolean;
+  onPlaceBet: (amount: string, rows: number, risk: Risk) => void;
 }
 
 export const GameSidebar = ({ config, balance, isPlaying, onPlaceBet }: Props) => {
@@ -45,13 +45,13 @@ export const GameSidebar = ({ config, balance, isPlaying, onPlaceBet }: Props) =
     handleNumBetsChange,
     handleStopProfitChange,
     handleStopLossChange,
-  } = useGameSidebar({ config, balance, isPlaying, onPlaceBet })
+  } = useGameSidebar({ config, balance, isPlaying, onPlaceBet });
 
-  const isManualDisabled = isPlaying
-  const isAutoDisabled = isAutoBetting ? false : isPlaying
-  const isBetButtonDisabled = mode === BET_MODES.AUTO ? isAutoDisabled : isManualDisabled
+  const isManualDisabled = isPlaying;
+  const isAutoDisabled = isAutoBetting ? false : isPlaying;
+  const isBetButtonDisabled = mode === BET_MODES.AUTO ? isAutoDisabled : isManualDisabled;
 
-  const limitNumBets = parseInt(numBetsInput)
+  const limitNumBets = parseInt(numBetsInput, 10);
 
   return (
     <Card
@@ -128,5 +128,5 @@ export const GameSidebar = ({ config, balance, isPlaying, onPlaceBet }: Props) =
         </form>
       </Form>
     </Card>
-  )
-}
+  );
+};

@@ -6,7 +6,7 @@ import { PlinkoBoard } from '@/widgets/game-board/PlinkoBoard';
 import { RecentResults } from '@/widgets/recent-results/RecentResults';
 import { useGameStore } from '@/entities/game/model/store';
 import { useSessionStore } from '@/entities/session/model/store';
-import { useGameConfig, useCurrentUser, useLogout, useGamePlay } from '@/features/game';
+import { useCurrentUser, useGameConfig, useGamePlay, useLogout } from '@/features/game';
 
 export const GameClient = () => {
   const user = useSessionStore((s) => s.user);
@@ -19,13 +19,8 @@ export const GameClient = () => {
   const { data: freshUser } = useCurrentUser();
   const logoutMutation = useLogout();
 
-  const {
-    currentAnimation,
-    selectedRows,
-    selectedRisk,
-    handlePlaceBet,
-    handleAnimationEnd,
-  } = useGamePlay({ isPlaying, setPlaying });
+  const { currentAnimation, selectedRows, selectedRisk, handlePlaceBet, handleAnimationEnd } =
+    useGamePlay({ isPlaying, setPlaying });
 
   const balance = freshUser?.balance ?? user?.balance ?? '0';
 

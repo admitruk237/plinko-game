@@ -1,1 +1,1 @@
-export { useBetHistory } from './useBetHistory'
+export { useBetHistory } from './useBetHistory';

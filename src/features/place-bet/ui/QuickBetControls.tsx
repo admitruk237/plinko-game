@@ -1,10 +1,10 @@
-import { Button } from '@/shared/ui/button'
+import { Button } from '@/shared/ui/button';
 
 interface Props {
-  onHalf: () => void
-  onDouble: () => void
-  onMax: () => void
-  disabled?: boolean
+  onHalf: () => void;
+  onDouble: () => void;
+  onMax: () => void;
+  disabled?: boolean;
 }
 
 export const QuickBetControls = ({ onHalf, onDouble, onMax, disabled }: Props) => {
@@ -38,5 +38,5 @@ export const QuickBetControls = ({ onHalf, onDouble, onMax, disabled }: Props) =
         MAX
       </Button>
     </div>
-  )
-}
+  );
+};

@@ -1,29 +1,23 @@
-import { Label } from '@/shared/ui/label'
-import { Slider } from '@/shared/ui/slider'
+import { Label } from '@/shared/ui/label';
+import { Slider } from '@/shared/ui/slider';
 
 const LABELS = {
   TITLE: 'Rows',
-} as const
+} as const;
 
 const CONFIG = {
   SLIDER_STEP: 1,
-} as const
+} as const;
 
 interface Props {
-  rows: number
-  min: number
-  max: number
-  onChange: (val: number | readonly number[]) => void
-  disabled: boolean
+  rows: number;
+  min: number;
+  max: number;
+  onChange: (val: number | readonly number[]) => void;
+  disabled: boolean;
 }
 
-export const RowsSelector = ({
-  rows,
-  min,
-  max,
-  onChange,
-  disabled,
-}: Props) => {
+export const RowsSelector = ({ rows, min, max, onChange, disabled }: Props) => {
   return (
     <div className="flex flex-col gap-3 shrink-0">
       <div className="flex items-center justify-between">
@@ -45,5 +39,5 @@ export const RowsSelector = ({
         <span>{max}</span>
       </div>
     </div>
-  )
-}
+  );
+};

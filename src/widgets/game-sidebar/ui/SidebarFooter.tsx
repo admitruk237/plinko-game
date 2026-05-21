@@ -1,13 +1,13 @@
-import { Maximize2 } from 'lucide-react'
-import { Button } from '@/shared/ui/button'
-import { SettingsIcon } from '@/shared/ui/settings-icon'
-import { SettingsDialog } from '@/features/game-settings'
+import { Maximize2 } from 'lucide-react';
+import { Button } from '@/shared/ui/button';
+import { SettingsIcon } from '@/shared/ui/settings-icon';
+import { SettingsDialog } from '@/features/game-settings';
 
-const ICON_SIZE = 16
-const STROKE_WIDTH = 2
+const ICON_SIZE = 16;
+const STROKE_WIDTH = 2;
 
 interface Props {
-  onFullscreenToggle: () => void
+  onFullscreenToggle: () => void;
 }
 
 export const SidebarFooter = ({ onFullscreenToggle }: Props) => {
@@ -30,5 +30,5 @@ export const SidebarFooter = ({ onFullscreenToggle }: Props) => {
         }
       />
     </div>
-  )
-}
+  );
+};

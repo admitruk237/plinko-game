@@ -1,11 +1,11 @@
-import type { BetResponse } from '@/entities/game/model/types'
-import { formatCredits } from '@/shared/lib/credits'
-import { multiplierTextColor } from '@/shared/lib/multiplier-color'
-import { RISK_BADGE_STYLES } from '@/shared/lib/risk-styles'
+import type { BetResponse } from '@/entities/game/model/types';
+import { formatCredits } from '@/shared/lib/credits';
+import { multiplierTextColor } from '@/shared/lib/multiplier-color';
+import { RISK_BADGE_STYLES } from '@/shared/lib/risk-styles';
 
 interface Props {
-  bet: BetResponse
-  onClose: () => void
+  bet: BetResponse;
+  onClose: () => void;
 }
 
 export const BetDetailDrawer = ({ bet, onClose }: Props) => {
@@ -31,7 +31,9 @@ export const BetDetailDrawer = ({ bet, onClose }: Props) => {
 
           <div className="text-white/50">Risk</div>
           <div>
-            <span className={`text-xs font-bold px-2 py-0.5 rounded border ${RISK_BADGE_STYLES[bet.risk]}`}>
+            <span
+              className={`text-xs font-bold px-2 py-0.5 rounded border ${RISK_BADGE_STYLES[bet.risk]}`}
+            >
               {bet.risk}
             </span>
           </div>
@@ -74,5 +76,5 @@ export const BetDetailDrawer = ({ bet, onClose }: Props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

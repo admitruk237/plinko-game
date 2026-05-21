@@ -1,10 +1,10 @@
-import * as React from "react"
-import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
-import { cn } from "@/shared/lib/utils"
+import * as React from 'react';
+import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
+import { cn } from '@/shared/lib/utils';
 
-const Dialog = DialogPrimitive.Root
-const DialogTrigger = DialogPrimitive.Trigger
-const DialogPortal = DialogPrimitive.Portal
+const Dialog = DialogPrimitive.Root;
+const DialogTrigger = DialogPrimitive.Trigger;
+const DialogPortal = DialogPrimitive.Portal;
 
 const DialogBackdrop = React.forwardRef<
   HTMLDivElement,
@@ -13,13 +13,13 @@ const DialogBackdrop = React.forwardRef<
   <DialogPrimitive.Backdrop
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-all duration-200",
+      'fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-all duration-200',
       className
     )}
     {...props}
   />
-))
-DialogBackdrop.displayName = "DialogBackdrop"
+));
+DialogBackdrop.displayName = 'DialogBackdrop';
 
 const DialogPopup = React.forwardRef<
   HTMLDivElement,
@@ -30,7 +30,7 @@ const DialogPopup = React.forwardRef<
     <DialogPrimitive.Popup
       ref={ref}
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 w-full max-w-[440px] translate-x-[-50%] translate-y-[-50%] rounded-[16px] bg-[#191C26] border border-[#2A2F3E] p-6 shadow-2xl transition-all duration-200 focus:outline-none focus-visible:outline-none",
+        'fixed left-[50%] top-[50%] z-50 w-full max-w-[440px] translate-x-[-50%] translate-y-[-50%] rounded-[16px] bg-[#191C26] border border-[#2A2F3E] p-6 shadow-2xl transition-all duration-200 focus:outline-none focus-visible:outline-none',
         className
       )}
       {...props}
@@ -38,8 +38,8 @@ const DialogPopup = React.forwardRef<
       {children}
     </DialogPrimitive.Popup>
   </DialogPortal>
-))
-DialogPopup.displayName = "DialogPopup"
+));
+DialogPopup.displayName = 'DialogPopup';
 
 const DialogTitle = React.forwardRef<
   HTMLHeadingElement,
@@ -47,14 +47,11 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn(
-      "text-2xl font-bold leading-none tracking-tight text-white",
-      className
-    )}
+    className={cn('text-2xl font-bold leading-none tracking-tight text-white', className)}
     {...props}
   />
-))
-DialogTitle.displayName = "DialogTitle"
+));
+DialogTitle.displayName = 'DialogTitle';
 
 const DialogDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -62,13 +59,13 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-[#99A1AF]", className)}
+    className={cn('text-sm text-[#99A1AF]', className)}
     {...props}
   />
-))
-DialogDescription.displayName = "DialogDescription"
+));
+DialogDescription.displayName = 'DialogDescription';
 
-const DialogClose = DialogPrimitive.Close
+const DialogClose = DialogPrimitive.Close;
 
 export {
   Dialog,
@@ -79,4 +76,4 @@ export {
   DialogTitle,
   DialogDescription,
   DialogClose,
-}
+};

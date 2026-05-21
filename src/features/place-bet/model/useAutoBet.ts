@@ -1,37 +1,36 @@
-import { useState, useEffect, useCallback } from 'react'
-import type { Risk } from '@/entities/game/model/types'
-import { parseCredits, MIN_BET, MAX_BET } from '@/shared/lib/credits'
-import type { BetMode } from '@/shared/config'
+import { useCallback, useEffect, useState } from 'react';
+import type { Risk } from '@/entities/game/model/types';
+import { MAX_BET, MIN_BET, parseCredits } from '@/shared/lib/credits';
+import {
+  BET_MODES,
+  type BetMode,
+  DEFAULT_BET_COUNT,
+  DEFAULT_NUM_BETS,
+  DEFAULT_STOP_LOSS,
+  DEFAULT_STOP_PROFIT,
+} from '@/shared/config';
 
 interface Props {
-  balance: string
-  isPlaying: boolean
-  betInput: string
-  rows: number
-  risk: Risk
-  onPlaceBet: (amount: string, rows: number, risk: Risk) => void
-  mode: BetMode
+  balance: string;
+  isPlaying: boolean;
+  betInput: string;
+  rows: number;
+  risk: Risk;
+  onPlaceBet: (amount: string, rows: number, risk: Risk) => void;
+  mode: BetMode;
 }
 
 interface UseAutoBetResult {
-  numBetsInput: string
-  stopProfitInput: string
-  stopLossInput: string
-  isAutoBetting: boolean
-  currentBetCount: number
-  handleBet: () => void
-  handleNumBetsChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  handleStopProfitChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  handleStopLossChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  numBetsInput: string;
+  stopProfitInput: string;
+  stopLossInput: string;
+  isAutoBetting: boolean;
+  currentBetCount: number;
+  handleBet: () => void;
+  handleNumBetsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleStopProfitChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleStopLossChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
-
-import {
-  DEFAULT_NUM_BETS,
-  DEFAULT_STOP_PROFIT,
-  DEFAULT_STOP_LOSS,
-  DEFAULT_BET_COUNT,
-  BET_MODES,
-} from '@/shared/config'
 
 export const useAutoBet = ({
   balance,
@@ -42,64 +41,61 @@ export const useAutoBet = ({
   onPlaceBet,
   mode,
 }: Props): UseAutoBetResult => {
-  const [numBetsInput, setNumBetsInput] = useState<string>(DEFAULT_NUM_BETS)
-  const [stopProfitInput, setStopProfitInput] = useState<string>(DEFAULT_STOP_PROFIT)
-  const [stopLossInput, setStopLossInput] = useState<string>(DEFAULT_STOP_LOSS)
-  const [isAutoBetting, setIsAutoBetting] = useState<boolean>(false)
-  const [currentBetCount, setCurrentBetCount] = useState<number>(DEFAULT_BET_COUNT)
-  const [startBalance, setStartBalance] = useState<bigint | null>(null)
+  const [numBetsInput, setNumBetsInput] = useState<string>(DEFAULT_NUM_BETS);
+  const [stopProfitInput, setStopProfitInput] = useState<string>(DEFAULT_STOP_PROFIT);
+  const [stopLossInput, setStopLossInput] = useState<string>(DEFAULT_STOP_LOSS);
+  const [isAutoBetting, setIsAutoBetting] = useState<boolean>(false);
+  const [currentBetCount, setCurrentBetCount] = useState<number>(DEFAULT_BET_COUNT);
+  const [startBalance, setStartBalance] = useState<bigint | null>(null);
 
-  const balanceBigInt = BigInt(balance || '0')
+  const balanceBigInt = BigInt(balance || '0');
 
+  if (mode === BET_MODES.MANUAL && isAutoBetting) {
+    setIsAutoBetting(false);
+  }
+
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    if (mode === BET_MODES.MANUAL && isAutoBetting) {
-      setIsAutoBetting(false)
-    }
-  }, [mode, isAutoBetting])
+    if (!isAutoBetting) return;
 
-  useEffect(() => {
-    if (!isAutoBetting) return
-
-    const betsLeft = parseInt(numBetsInput)
+    const betsLeft = parseInt(numBetsInput, 10);
     if (!isNaN(betsLeft) && betsLeft > 0 && currentBetCount >= betsLeft) {
-      setIsAutoBetting(false)
-      return
+      setIsAutoBetting(false);
+      return;
     }
 
-    if (isPlaying) return
+    if (isPlaying) return;
 
     if (startBalance !== null) {
       try {
-        const stopProfit = parseCredits(stopProfitInput)
-        const stopLoss = parseCredits(stopLossInput)
+        const stopProfit = parseCredits(stopProfitInput);
+        const stopLoss = parseCredits(stopLossInput);
 
-        const diff = balanceBigInt - startBalance
+        const diff = balanceBigInt - startBalance;
 
         if (stopProfit > 0n && diff >= stopProfit) {
-          setIsAutoBetting(false)
-          return
+          setIsAutoBetting(false);
+          return;
         }
 
         if (stopLoss > 0n && diff <= -stopLoss) {
-          setIsAutoBetting(false)
-          return
+          setIsAutoBetting(false);
+          return;
         }
-      } catch (e) {
-
-      }
+      } catch {}
     }
 
     try {
-      const amount = parseCredits(betInput)
+      const amount = parseCredits(betInput);
       if (amount < MIN_BET || amount > MAX_BET || amount > balanceBigInt) {
-        setIsAutoBetting(false)
-        return
+        setIsAutoBetting(false);
+        return;
       }
 
-      onPlaceBet(betInput, rows, risk)
-      setCurrentBetCount((c) => c + 1)
-    } catch (e) {
-      setIsAutoBetting(false)
+      onPlaceBet(betInput, rows, risk);
+      setCurrentBetCount((c) => c + 1);
+    } catch {
+      setIsAutoBetting(false);
     }
   }, [
     isAutoBetting,
@@ -114,54 +110,55 @@ export const useAutoBet = ({
     rows,
     risk,
     onPlaceBet,
-  ])
+  ]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleNumBetsChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setNumBetsInput(e.target.value.replace(/[^0-9]/g, ''))
-  }, [])
+    setNumBetsInput(e.target.value.replace(/[^0-9]/g, ''));
+  }, []);
 
   const handleStopProfitChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    let clean = e.target.value.replace(/[^0-9.]/g, '')
-    const dots = clean.split('.')
+    let clean = e.target.value.replace(/[^0-9.]/g, '');
+    const dots = clean.split('.');
     if (dots.length > 2) {
-      clean = dots[0] + '.' + dots.slice(1).join('')
+      clean = `${dots[0]}.${dots.slice(1).join('')}`;
     }
-    setStopProfitInput(clean)
-  }, [])
+    setStopProfitInput(clean);
+  }, []);
 
   const handleStopLossChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    let clean = e.target.value.replace(/[^0-9.]/g, '')
-    const dots = clean.split('.')
+    let clean = e.target.value.replace(/[^0-9.]/g, '');
+    const dots = clean.split('.');
     if (dots.length > 2) {
-      clean = dots[0] + '.' + dots.slice(1).join('')
+      clean = `${dots[0]}.${dots.slice(1).join('')}`;
     }
-    setStopLossInput(clean)
-  }, [])
+    setStopLossInput(clean);
+  }, []);
 
   const handleBet = useCallback(() => {
-    if (isPlaying && !isAutoBetting) return
+    if (isPlaying && !isAutoBetting) return;
 
-    let amount = 0n
+    let amount = 0n;
     try {
-      amount = parseCredits(betInput)
-      if (amount < MIN_BET || amount > MAX_BET) return
-    } catch (e) {
-      return
+      amount = parseCredits(betInput);
+      if (amount < MIN_BET || amount > MAX_BET) return;
+    } catch {
+      return;
     }
 
     if (mode === BET_MODES.AUTO) {
       if (isAutoBetting) {
-        setIsAutoBetting(false)
+        setIsAutoBetting(false);
       } else {
-        setIsAutoBetting(true)
-        setCurrentBetCount(0)
-        setStartBalance(balanceBigInt)
-        onPlaceBet(amount.toString(), rows, risk)
+        setIsAutoBetting(true);
+        setCurrentBetCount(0);
+        setStartBalance(balanceBigInt);
+        onPlaceBet(amount.toString(), rows, risk);
       }
     } else {
-      onPlaceBet(amount.toString(), rows, risk)
+      onPlaceBet(amount.toString(), rows, risk);
     }
-  }, [mode, isAutoBetting, isPlaying, betInput, balanceBigInt, rows, risk, onPlaceBet])
+  }, [mode, isAutoBetting, isPlaying, betInput, balanceBigInt, rows, risk, onPlaceBet]);
 
   return {
     numBetsInput,
@@ -173,5 +170,5 @@ export const useAutoBet = ({
     handleNumBetsChange,
     handleStopProfitChange,
     handleStopLossChange,
-  }
-}
+  };
+};

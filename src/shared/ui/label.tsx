@@ -1,20 +1,21 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 
-import { cn } from "@/shared/lib/utils"
+import { cn } from '@/shared/lib/utils';
 
-const Label = ({ className, ...props }: React.ComponentProps<"label">) => {
+const Label = ({ className, ...props }: React.ComponentProps<'label'>) => {
   return (
+    // eslint-disable-next-line jsx-a11y/label-has-associated-control
     <label
       data-slot="label"
       className={cn(
-        "flex items-center gap-2 text-[14px] leading-[14px] tracking-[-0.15px] font-medium text-auth-label select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+        'flex items-center gap-2 text-[14px] leading-[14px] tracking-[-0.15px] font-medium text-auth-label select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50',
         className
       )}
       {...props}
     />
-  )
-}
+  );
+};
 
-export { Label }
+export { Label };

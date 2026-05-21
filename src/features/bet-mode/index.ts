@@ -1,1 +1,1 @@
-export { BetModeToggle } from './ui/BetModeToggle'
+export { BetModeToggle } from './ui/BetModeToggle';

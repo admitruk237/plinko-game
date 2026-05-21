@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import { Tabs, TabsList, TabsTrigger } from '@/shared/ui/tabs'
-import { BET_MODES, BetMode } from '@/shared/config'
+import { Tabs, TabsList, TabsTrigger } from '@/shared/ui/tabs';
+import { BET_MODES, type BetMode } from '@/shared/config';
 
 interface Props {
-  value: BetMode
-  onChange: (value: BetMode) => void
-  disabled?: boolean
+  value: BetMode;
+  onChange: (value: BetMode) => void;
+  disabled?: boolean;
 }
 
 export const BetModeToggle = ({ value, onChange, disabled }: Props) => {
@@ -25,5 +25,5 @@ export const BetModeToggle = ({ value, onChange, disabled }: Props) => {
         </TabsTrigger>
       </TabsList>
     </Tabs>
-  )
-}
+  );
+};

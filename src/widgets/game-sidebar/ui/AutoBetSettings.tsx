@@ -1,23 +1,23 @@
-import React from 'react'
-import { Label } from '@/shared/ui/label'
-import { Input } from '@/shared/ui/input'
+import React from 'react';
+import { Label } from '@/shared/ui/label';
+import { Input } from '@/shared/ui/input';
 
 const LABELS = {
   NUM_BETS: 'Number of Bets',
   STOP_PROFIT: 'Stop on Profit',
   STOP_LOSS: 'Stop on Loss',
-} as const
+} as const;
 
-const INPUT_TYPE = 'text'
+const INPUT_TYPE = 'text';
 
 interface Props {
-  numBetsInput: string
-  stopProfitInput: string
-  stopLossInput: string
-  isAutoBetting: boolean
-  onNumBetsChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  onStopProfitChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  onStopLossChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  numBetsInput: string;
+  stopProfitInput: string;
+  stopLossInput: string;
+  isAutoBetting: boolean;
+  onNumBetsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onStopProfitChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onStopLossChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const AutoBetSettings = ({
@@ -65,5 +65,5 @@ export const AutoBetSettings = ({
         </div>
       </div>
     </>
-  )
-}
+  );
+};

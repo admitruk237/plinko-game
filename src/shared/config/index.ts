@@ -1,4 +1,4 @@
-export { ROUTES } from './routes'
+export { ROUTES } from './routes';
 export {
   DEFAULT_PAGE_LIMIT,
   DEFAULT_BET_AMOUNT,
@@ -8,5 +8,5 @@ export {
   DEFAULT_BET_COUNT,
   BET_MODES,
   RISK_LEVELS,
-} from './constants'
-export type { BetMode } from './constants'
+} from './constants';
+export type { BetMode } from './constants';

@@ -1,7 +1,7 @@
-import { RegisterForm } from '@/features/auth/ui/RegisterForm'
+import { RegisterForm } from '@/features/auth/ui/RegisterForm';
 
 const RegisterPage = () => {
-  return <RegisterForm />
-}
+  return <RegisterForm />;
+};
 
-export default RegisterPage
+export default RegisterPage;

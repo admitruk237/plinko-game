@@ -1,9 +1,9 @@
-import { ReactNode } from 'react'
-import { Card, CardContent, CardHeader } from '@/shared/ui/card'
+import type { ReactNode } from 'react';
+import { Card, CardContent, CardHeader } from '@/shared/ui/card';
 
 interface Props {
-  subtitle: string
-  children: ReactNode
+  subtitle: string;
+  children: ReactNode;
 }
 
 export const AuthCard = ({ subtitle, children }: Props) => {
@@ -27,5 +27,5 @@ export const AuthCard = ({ subtitle, children }: Props) => {
         </p>
       </div>
     </main>
-  )
-}
+  );
+};

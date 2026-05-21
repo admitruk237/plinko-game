@@ -1,7 +1,7 @@
-import { useInfiniteQuery } from '@tanstack/react-query'
-import { bffApi } from '@/shared/api'
-import type { BetListResponse } from '@/entities/game/model/types'
-import { DEFAULT_PAGE_LIMIT } from '@/shared/config'
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { bffApi } from '@/shared/api';
+import type { BetListResponse } from '@/entities/game/model/types';
+import { DEFAULT_PAGE_LIMIT } from '@/shared/config';
 
 export const useBetHistory = (rows?: number) => {
   return useInfiniteQuery<BetListResponse>({
@@ -14,5 +14,5 @@ export const useBetHistory = (rows?: number) => {
       }),
     initialPageParam: null as string | null,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
-  })
-}
+  });
+};

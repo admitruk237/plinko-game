@@ -1,7 +1,7 @@
-import { HistoryClient } from '@/widgets/history-client/HistoryClient'
+import { HistoryClient } from '@/widgets/history-client/HistoryClient';
 
 const HistoryPage = () => {
-  return <HistoryClient />
-}
+  return <HistoryClient />;
+};
 
-export default HistoryPage
+export default HistoryPage;

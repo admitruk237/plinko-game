@@ -1,51 +1,39 @@
-import { useState, useCallback } from 'react'
-import type { Risk, GameConfig } from '@/entities/game/model/types'
-import { useBetForm, useAutoBet } from '@/features/place-bet'
-import { BET_MODES, RISK_LEVELS, BetMode } from '@/shared/config'
+import { useCallback, useState } from 'react';
+import type { GameConfig, Risk } from '@/entities/game/model/types';
+import { useAutoBet, useBetForm } from '@/features/place-bet';
+import { BET_MODES, type BetMode, RISK_LEVELS } from '@/shared/config';
 
 interface Props {
-  config: GameConfig
-  balance: string
-  isPlaying: boolean
-  onPlaceBet: (amount: string, rows: number, risk: Risk) => void
+  config: GameConfig;
+  balance: string;
+  isPlaying: boolean;
+  onPlaceBet: (amount: string, rows: number, risk: Risk) => void;
 }
 
-export const useGameSidebar = ({
-  config,
-  balance,
-  isPlaying,
-  onPlaceBet,
-}: Props) => {
-  const [mode, setMode] = useState<BetMode>(BET_MODES.MANUAL)
-  const [risk, setRisk] = useState<Risk>(RISK_LEVELS.HIGH)
-  const [rows, setRows] = useState<number>(12)
+export const useGameSidebar = ({ config: _config, balance, isPlaying, onPlaceBet }: Props) => {
+  const [mode, setMode] = useState<BetMode>(BET_MODES.MANUAL);
+  const [risk, setRisk] = useState<Risk>(RISK_LEVELS.HIGH);
+  const [rows, setRows] = useState<number>(12);
 
   const handleRowsChange = useCallback((val: number | readonly number[]) => {
-    const v = Array.isArray(val) ? val[0] : val
+    const v = Array.isArray(val) ? val[0] : val;
     if (typeof v === 'number') {
-      setRows(v)
+      setRows(v);
     }
-  }, [])
+  }, []);
 
   const handleFullscreenToggle = useCallback(() => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {})
+      document.documentElement.requestFullscreen().catch(() => {});
     } else {
-      document.exitFullscreen().catch(() => {})
+      document.exitFullscreen().catch(() => {});
     }
-  }, [])
+  }, []);
 
-  const {
-    form,
-    betInput,
-    handleHalf,
-    handleDouble,
-    handleMax,
-    handleInputChange,
-  } = useBetForm({
+  const { form, betInput, handleHalf, handleDouble, handleMax, handleInputChange } = useBetForm({
     balance,
     disabled: mode === BET_MODES.AUTO ? false : isPlaying,
-  })
+  });
 
   const {
     numBetsInput,
@@ -65,7 +53,7 @@ export const useGameSidebar = ({
     risk,
     onPlaceBet,
     mode,
-  })
+  });
 
   return {
     mode,
@@ -90,5 +78,5 @@ export const useGameSidebar = ({
     handleNumBetsChange,
     handleStopProfitChange,
     handleStopLossChange,
-  }
-}
+  };
+};

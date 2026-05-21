@@ -1,14 +1,14 @@
 import type {
-  Risk,
-  GameConfigDto as GameConfig,
-  BetSeedRefDto as BetSeedRef,
-  BetResponseDto as BetResponse,
-  BetListResponseDto as BetListResponse,
-  CreateBetDto,
   ActiveSeedResponseDto as ActiveSeedResponse,
+  BetListResponseDto as BetListResponse,
+  BetResponseDto as BetResponse,
+  BetSeedRefDto as BetSeedRef,
+  CreateBetDto,
+  GameConfigDto as GameConfig,
   RevealedSeedResponseDto as RevealedSeedResponse,
+  Risk,
   RotateSeedResponseDto as RotateSeedResponse,
-} from '@/shared/api/types'
+} from '@/shared/api/types';
 
 export type {
   Risk,
@@ -20,20 +20,20 @@ export type {
   ActiveSeedResponse,
   RevealedSeedResponse,
   RotateSeedResponse,
-}
+};
 
 export interface BetResult {
-  betId: string
-  multiplier: number
-  payout: string
-  path: string
-  bucketIndex: number
-  rows: number
-  risk: Risk
+  betId: string;
+  multiplier: number;
+  payout: string;
+  path: string;
+  bucketIndex: number;
+  rows: number;
+  risk: Risk;
 }
 
 export interface BallAnimation {
-  path: string
-  bucketIndex: number
-  startTime: number
+  path: string;
+  bucketIndex: number;
+  startTime: number;
 }

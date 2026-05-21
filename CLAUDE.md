@@ -57,6 +57,13 @@ Layer-specific rules (auto-loaded by Claude Code when working in matching paths)
 @.claude/rules/features.md
 @.claude/rules/widgets.md
 
+Domain rules (auto-loaded by path):
+
+@.claude/rules/bff.md
+@.claude/rules/auth.md
+@.claude/rules/game.md
+@.claude/rules/components.md
+
 ---
 
 # 🚫 Strict TypeScript Rules
@@ -72,22 +79,6 @@ interface Props {
   value: number;
   onClick: () => void;
 }
-```
-
----
-
-# 🧩 Components Rules
-
-- Functional components ONLY
-- Keep components small and focused
-- Extract logic into hooks
-- DO NOT use React namespace for hooks — import directly from `'react'`
-
-```ts
-// ✅
-import { useState, useEffect } from 'react';
-// ❌
-React.useState(...)
 ```
 
 ---

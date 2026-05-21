@@ -1,15 +1,15 @@
-import { Loader2 } from 'lucide-react'
-import { Button } from '@/shared/ui/button'
-import { BET_MODES, BetMode } from '@/shared/config'
-import { ZERO, LABELS, STYLES } from '../model/constants'
+import { Loader2 } from 'lucide-react';
+import { Button } from '@/shared/ui/button';
+import { BET_MODES, type BetMode } from '@/shared/config';
+import { LABELS, STYLES, ZERO } from '../model/constants';
 
 interface Props {
-  mode: BetMode
-  isAutoBetting: boolean
-  isPlaying: boolean
-  disabled: boolean
-  limitNumBets: number
-  currentBetCount: number
+  mode: BetMode;
+  isAutoBetting: boolean;
+  isPlaying: boolean;
+  disabled: boolean;
+  limitNumBets: number;
+  currentBetCount: number;
 }
 
 export const BetButton = ({
@@ -22,23 +22,23 @@ export const BetButton = ({
 }: Props) => {
   const getButtonClassName = () => {
     if (mode === BET_MODES.AUTO && isAutoBetting) {
-      return STYLES.STOP_AUTO_BET_CLASS
+      return STYLES.STOP_AUTO_BET_CLASS;
     }
     if (isPlaying) {
-      return STYLES.PLAYING_CLASS
+      return STYLES.PLAYING_CLASS;
     }
-    return ''
-  }
+    return '';
+  };
 
   const renderContent = () => {
     if (mode === BET_MODES.AUTO) {
       if (isAutoBetting) {
         if (limitNumBets > ZERO) {
-          return `${LABELS.STOP} (${currentBetCount}/${limitNumBets})`
+          return `${LABELS.STOP} (${currentBetCount}/${limitNumBets})`;
         }
-        return `${LABELS.STOP} (${currentBetCount})`
+        return `${LABELS.STOP} (${currentBetCount})`;
       }
-      return LABELS.START_AUTO_BET
+      return LABELS.START_AUTO_BET;
     }
 
     if (isPlaying) {
@@ -47,20 +47,15 @@ export const BetButton = ({
           <Loader2 className="animate-spin h-4 w-4" />
           {LABELS.PLAYING}
         </span>
-      )
+      );
     }
 
-    return LABELS.BET
-  }
+    return LABELS.BET;
+  };
 
   return (
-    <Button
-      type="submit"
-      variant="primary"
-      disabled={disabled}
-      className={getButtonClassName()}
-    >
+    <Button type="submit" variant="primary" disabled={disabled} className={getButtonClassName()}>
       {renderContent()}
     </Button>
-  )
-}
+  );
+};

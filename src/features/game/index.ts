@@ -1,2 +1,2 @@
-export * from './api'
-export { useGamePlay } from './model/useGamePlay'
+export * from './api';
+export { useGamePlay } from './model/useGamePlay';

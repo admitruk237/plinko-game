@@ -4,4 +4,4 @@ export const ROUTES = {
   REGISTER: '/register',
   GAME: '/game',
   HISTORY: '/history',
-} as const
+} as const;

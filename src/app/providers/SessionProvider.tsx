@@ -1,21 +1,20 @@
-'use client'
+'use client';
 
-import { ReactNode, useRef } from 'react'
-import { useSessionStore } from '@/entities/session'
-import type { User } from '@/entities/session'
+import { type ReactNode, useRef } from 'react';
+import { type User, useSessionStore } from '@/entities/session';
 
 interface Props {
-  accessToken: string
-  user: User
-  children: ReactNode
+  accessToken: string;
+  user: User;
+  children: ReactNode;
 }
 
 export const SessionProvider = ({ accessToken, user, children }: Props) => {
-  const initialized = useRef(false)
-  if (!initialized.current) {
-    useSessionStore.setState({ accessToken, user })
-    initialized.current = true
+  const initialized = useRef<true | null>(null);
+  if (initialized.current == null) {
+    useSessionStore.setState({ accessToken, user });
+    initialized.current = true;
   }
 
-  return <>{children}</>
-}
+  return <>{children}</>;
+};

@@ -1,11 +1,16 @@
-import { NextResponse } from 'next/server'
-import { getAccessToken, getRefreshToken, deleteAccessToken, deleteRefreshToken } from '@/shared/lib/session'
+import { NextResponse } from 'next/server';
+import {
+  deleteAccessToken,
+  deleteRefreshToken,
+  getAccessToken,
+  getRefreshToken,
+} from '@/shared/lib/session';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://plinko-be-stanish.fly.dev'
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://plinko-be-stanish.fly.dev';
 
 export async function POST(): Promise<NextResponse> {
-  const accessToken = await getAccessToken()
-  const refreshToken = await getRefreshToken()
+  const accessToken = await getAccessToken();
+  const refreshToken = await getRefreshToken();
 
   if (accessToken && refreshToken) {
     try {
@@ -16,14 +21,14 @@ export async function POST(): Promise<NextResponse> {
           Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ refreshToken }),
-      })
+      });
     } catch {
       // Ignore logout errors
     }
   }
 
-  await deleteAccessToken()
-  await deleteRefreshToken()
+  await deleteAccessToken();
+  await deleteRefreshToken();
 
-  return NextResponse.json(null, { status: 204 })
+  return NextResponse.json(null, { status: 204 });
 }

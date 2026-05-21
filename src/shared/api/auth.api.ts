@@ -1,12 +1,12 @@
-import { apiClient } from './client'
+import { apiClient } from './client';
 import type {
-  LoginDto,
-  RegisterDto,
   AuthResponseDto,
-  RegisterResponseDto,
+  LoginDto,
   RefreshResponseDto,
+  RegisterDto,
+  RegisterResponseDto,
   UserDto,
-} from './types'
+} from './types';
 
 export const authApi = {
   login: (dto: LoginDto) =>
@@ -34,6 +34,5 @@ export const authApi = {
       body: JSON.stringify({ refreshToken }),
     }),
 
-  getMe: (token: string) =>
-    apiClient<UserDto>('/api/v1/users/me', { token }),
-}
+  getMe: (token: string) => apiClient<UserDto>('/api/v1/users/me', { token }),
+};

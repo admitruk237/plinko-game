@@ -1,12 +1,12 @@
-import type { BetResponse } from '@/entities/game/model/types'
-import { formatCredits } from '@/shared/lib/credits'
-import { multiplierTextColor } from '@/shared/lib/multiplier-color'
-import { formatTimestamp, formatFullTimestamp } from '@/shared/lib/format-date'
-import { RISK_BADGE_STYLES } from '@/shared/lib/risk-styles'
+import type { BetResponse } from '@/entities/game/model/types';
+import { formatCredits } from '@/shared/lib/credits';
+import { multiplierTextColor } from '@/shared/lib/multiplier-color';
+import { formatFullTimestamp, formatTimestamp } from '@/shared/lib/format-date';
+import { RISK_BADGE_STYLES } from '@/shared/lib/risk-styles';
 
 interface Props {
-  bets: BetResponse[]
-  onSelectBet: (bet: BetResponse) => void
+  bets: BetResponse[];
+  onSelectBet: (bet: BetResponse) => void;
 }
 
 export const BetTable = ({ bets, onSelectBet }: Props) => {
@@ -24,9 +24,9 @@ export const BetTable = ({ bets, onSelectBet }: Props) => {
       </thead>
       <tbody>
         {bets.map((bet) => {
-          const multiplier = Number(bet.multiplier)
-          const isWin = multiplier >= 1
-          const colorClass = multiplierTextColor(multiplier)
+          const multiplier = Number(bet.multiplier);
+          const isWin = multiplier >= 1;
+          const colorClass = multiplierTextColor(multiplier);
 
           return (
             <tr
@@ -36,26 +36,33 @@ export const BetTable = ({ bets, onSelectBet }: Props) => {
                 isWin ? 'bg-green-500/3' : 'bg-red-500/3'
               }`}
             >
-              <td className="py-3 text-sm text-white/70" title={bet.createdAt ? formatFullTimestamp(bet.createdAt) : ''}>
+              <td
+                className="py-3 text-sm text-white/70"
+                title={bet.createdAt ? formatFullTimestamp(bet.createdAt) : ''}
+              >
                 {bet.createdAt ? formatTimestamp(bet.createdAt) : '-'}
               </td>
               <td className="py-3">
-                <span className={`text-xs font-bold px-2 py-0.5 rounded border ${RISK_BADGE_STYLES[bet.risk]}`}>
+                <span
+                  className={`text-xs font-bold px-2 py-0.5 rounded border ${RISK_BADGE_STYLES[bet.risk]}`}
+                >
                   {bet.risk}
                 </span>
               </td>
               <td className="py-3 text-sm text-white/70 text-center">{bet.rows}</td>
-              <td className="py-3 text-sm text-white/70 text-right font-mono">{formatCredits(bet.amount)}</td>
-              <td className={`py-3 text-sm text-right font-bold ${colorClass}`}>
-                {multiplier}x
+              <td className="py-3 text-sm text-white/70 text-right font-mono">
+                {formatCredits(bet.amount)}
               </td>
-              <td className={`py-3 text-sm text-right font-mono ${isWin ? 'text-green-400' : 'text-red-400'}`}>
+              <td className={`py-3 text-sm text-right font-bold ${colorClass}`}>{multiplier}x</td>
+              <td
+                className={`py-3 text-sm text-right font-mono ${isWin ? 'text-green-400' : 'text-red-400'}`}
+              >
                 {formatCredits(bet.payout)}
               </td>
             </tr>
-          )
+          );
         })}
       </tbody>
     </table>
-  )
-}
+  );
+};
