@@ -22,7 +22,7 @@ const config: Config = {
     '!src/app/globals.css',
     '!src/app/favicon.ico',
   ],
-  coverageThresholds: {
+  coverageThreshold: {
     global: {
       branches: 70,
       functions: 70,
