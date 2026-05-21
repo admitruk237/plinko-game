@@ -64,6 +64,16 @@ Domain rules (auto-loaded by path):
 @.claude/rules/game.md
 @.claude/rules/components.md
 
+Layer documentation (detailed slice descriptions, real examples):
+
+@.claude/docs/app.md
+@.claude/docs/shared.md
+@.claude/docs/entities.md
+@.claude/docs/features.md
+@.claude/docs/widgets.md
+
+Navigation index: @.claude/doc-mapping.json
+
 ---
 
 # 🚫 Strict TypeScript Rules
