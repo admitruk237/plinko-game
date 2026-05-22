@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { GameHeader, GameSidebar, PlinkoBoard } from '@/widgets';
-import { useGameStore } from '@/entities/game';
+import { type Risk, useGameStore } from '@/entities/game';
 import { useSessionStore } from '@/entities/session';
-import type { Risk } from '@/entities/game';
 import { useCurrentUser, useGameConfig, useGamePlay, useLogout } from '@/features/game';
 import { RISK_LEVELS } from '@/shared/config';
 

@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { bffApi, BffError } from '@/shared/api';
-import { useSessionStore } from '@/entities/session';
-import type { User } from '@/entities/session';
+import { type User, useSessionStore } from '@/entities/session';
 import { ROUTES } from '@/shared/config';
 
 export const useCurrentUser = () => {
