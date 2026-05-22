@@ -10,7 +10,7 @@ import { Input } from '@/shared/ui/input';
 import { Button } from '@/shared/ui/button';
 import { type RegisterFormValues, registerSchema } from '../model/schemas';
 import { registerAction } from '../actions/register.action';
-import { useSessionStore } from '@/entities/session/model/store';
+import { useSessionStore } from '@/entities/session';
 import { AuthCard } from './AuthCard';
 import { ROUTES } from '@/shared/config';
 

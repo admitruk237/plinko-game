@@ -21,7 +21,7 @@ export async function getValidAccessToken(): Promise<string | null> {
   if (accessToken) {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://plinko-be-stanish.fly.dev'}/api/v1/users/me`,
+        `${process.env.API_BASE_URL ?? 'https://plinko-be-stanish.fly.dev'}/api/v1/users/me`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       if (res.ok) return accessToken;

@@ -1,5 +1,5 @@
 'use client';
-import type { GameConfig, Risk } from '@/entities/game/model/types';
+import type { GameConfig, Risk } from '@/entities/game';
 import { Card } from '@/shared/ui/card';
 import { BetModeToggle } from '@/features/bet-mode';
 import { CurrencyIcon } from '@/shared/ui/currency-icon';

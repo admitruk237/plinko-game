@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { bffApi } from '@/shared/api';
-import type { BetListResponse } from '@/entities/game/model/types';
+import type { BetListResponse } from '@/entities/game';
 import { DEFAULT_PAGE_LIMIT } from '@/shared/config';
 
 export const useBetHistory = (rows?: number) => {

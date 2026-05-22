@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import type { BetResponse } from '@/entities/game/model/types';
+import type { BetResponse } from '@/entities/game';
 import { Label } from '@/shared/ui/label';
 import { useBetHistory } from '@/features/bet-history';
 import { BetTable } from './BetTable';

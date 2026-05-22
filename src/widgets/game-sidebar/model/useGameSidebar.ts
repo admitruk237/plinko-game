@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import type { GameConfig, Risk } from '@/entities/game/model/types';
+import type { GameConfig, Risk } from '@/entities/game';
 import { useAutoBet, useBetForm } from '@/features/place-bet';
 import { BET_MODES, type BetMode } from '@/shared/config';
 

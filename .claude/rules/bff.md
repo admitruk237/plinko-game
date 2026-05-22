@@ -3,7 +3,7 @@ paths: ["src/app/api/**"]
 ---
 # BFF Layer (src/app/api/)
 
-Next.js Route Handlers that act as a proxy between the browser and the external backend (`NEXT_PUBLIC_API_BASE_URL`, default: `https://plinko-be-stanish.fly.dev`).
+Next.js Route Handlers that act as a proxy between the browser and the external backend (`API_BASE_URL`, default: `https://plinko-be-stanish.fly.dev`).
 
 ## Auth token flow
 
@@ -40,5 +40,5 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 - NEVER read cookies manually in route handlers — always use `session.ts` helpers or `getValidAccessToken()`
 - NEVER expose raw backend errors — proxy the status code and body as-is
 - Public routes (login, register, session) handle tokens themselves — do NOT call `getValidAccessToken()` there
-- `API_BASE` constant must come from `process.env.NEXT_PUBLIC_API_BASE_URL` with fallback to the fly.dev URL
+- `API_BASE` constant must come from `process.env.API_BASE_URL` (server-only, NO `NEXT_PUBLIC_` prefix) with fallback to the fly.dev URL
 - Route handlers are **Server Components context** — no Zustand, no client hooks

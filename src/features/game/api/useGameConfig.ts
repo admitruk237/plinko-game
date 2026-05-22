@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { bffApi } from '@/shared/api';
-import type { GameConfig } from '@/entities/game/model/types';
+import type { GameConfig } from '@/entities/game';
 
 export const useGameConfig = () => {
   return useQuery<GameConfig>({

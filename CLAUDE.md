@@ -62,6 +62,7 @@ Domain rules (auto-loaded by path):
 @.claude/rules/bff.md
 @.claude/rules/auth.md
 @.claude/rules/game.md
+@.claude/rules/naming.md
 @.claude/rules/components.md
 @.claude/rules/pitfalls.md
 @.claude/rules/testing.md
@@ -111,7 +112,6 @@ interface Props {
 - NO magic strings or hardcoded literals — use constants or enums
 - Before writing code: check simplicity → check architecture → check types
 - Keep CLAUDE.md under 200 lines (if it gets close, refactor and shorten it)
-
 
 ---
 

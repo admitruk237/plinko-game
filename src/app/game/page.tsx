@@ -1,4 +1,4 @@
-import { GameClient } from '@/widgets/game-client/GameClient';
+import { GameClient } from '@/widgets';
 
 const GamePage = () => {
   return <GameClient />;

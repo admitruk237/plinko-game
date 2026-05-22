@@ -33,16 +33,24 @@ queryClient.setQueryData<User>(['me'], (old) =>
 
 Query key for current user is always `['me']` — never change it.
 
-## Entity imports
+## Public API — always through index.ts
+
+Every layer slice exposes a public API via `index.ts`. NEVER import directly from internal paths (`model/`, `ui/`, `api/`, `actions/`).
 
 ```ts
 // ❌ breaks FSD encapsulation
 import { useSessionStore } from '@/entities/session/model/store'
 import type { User } from '@/entities/session/model/types'
+import { LoginForm } from '@/features/auth/ui/LoginForm'
+import { GameClient } from '@/widgets/game-client/GameClient'
 
 // ✅ always through the public index
 import { useSessionStore, type User } from '@/entities/session'
+import { LoginForm } from '@/features/auth'
+import { GameClient } from '@/widgets'
 ```
+
+Applies to ALL layers: `entities`, `features`, `widgets`.
 
 ## Server-only modules
 

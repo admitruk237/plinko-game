@@ -1,12 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { GameHeader } from '@/widgets/game-header/GameHeader';
-import { GameSidebar } from '@/widgets/game-sidebar/GameSidebar';
-import { PlinkoBoard } from '@/widgets/game-board/PlinkoBoard';
-import { useGameStore } from '@/entities/game/model/store';
-import { useSessionStore } from '@/entities/session/model/store';
-import type { Risk } from '@/entities/game/model/types';
+import { GameHeader, GameSidebar, PlinkoBoard } from '@/widgets';
+import { type Risk, useGameStore } from '@/entities/game';
+import { useSessionStore } from '@/entities/session';
 import { useCurrentUser, useGameConfig, useGamePlay, useLogout } from '@/features/game';
 import { RISK_LEVELS } from '@/shared/config';
 

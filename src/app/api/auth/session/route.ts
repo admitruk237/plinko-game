@@ -8,7 +8,7 @@ import {
   setAccessToken,
   setRefreshToken,
 } from '@/shared/lib/session';
-import type { User } from '@/entities/session/model/types';
+import type { User } from '@/entities/session';
 
 interface SessionData {
   accessToken: string;

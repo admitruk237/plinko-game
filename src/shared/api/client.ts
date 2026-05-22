@@ -16,7 +16,7 @@ export async function apiClient<T>(
     ...(customHeaders ?? {}),
   };
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://plinko-be-stanish.fly.dev';
+  const baseUrl = process.env.API_BASE_URL ?? 'https://plinko-be-stanish.fly.dev';
 
   const response = await fetch(`${baseUrl}${path}`, {
     ...fetchOptions,

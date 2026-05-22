@@ -22,3 +22,5 @@ widgets/
 - MUST NOT import from `pages/` or `app/`
 - Pass data down via props or read from stores — do not create new stores inside widgets
 - Export only the top-level component through `index.ts`
+- Import entities and features ONLY through their public `index.ts`
+- Widget-to-widget imports go through the shared barrel `@/widgets` — never directly from `@/widgets/slice-name/Component`
