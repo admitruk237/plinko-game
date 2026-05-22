@@ -307,7 +307,7 @@ export const PlinkoBoard = ({
           return (
             <div
               key={`${risk}-${rows}-${index}`}
-              className={`flex flex-1 items-center justify-center rounded-[10px] border-2 h-[40px] px-3 py-2 text-[14px] font-bold leading-[20px] tracking-[-0.15px] transition-all duration-200 ${isFlashing ? 'scale-105 brightness-125' : ''}`}
+              className={`flex flex-1 items-center justify-center rounded sm:rounded-[10px] border sm:border-2 h-[26px] sm:h-[40px] px-0.5 sm:px-3 py-0.5 sm:py-2 text-[9px] sm:text-[14px] font-bold leading-tight sm:leading-[20px] tracking-[-0.15px] transition-all duration-200 ${isFlashing ? 'scale-105 brightness-125' : ''}`}
               style={{
                 backgroundColor: `${hex}33`,
                 borderColor: hex,
