@@ -27,7 +27,9 @@ export const GameHeader = ({ balance, onLogout }: Props) => {
   return (
     <header className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3 border-b border-white/5">
       <div className="flex items-center gap-2 sm:gap-[19px] min-w-0">
-        <h1 className="text-2xl font-bold text-white leading-8 tracking-[0.07px] shrink-0">Plinko</h1>
+        <h1 className="text-2xl font-bold text-white leading-8 tracking-[0.07px] shrink-0">
+          Plinko
+        </h1>
         <div className="flex items-center gap-2 bg-balance-bg border border-balance-border rounded-[10px] py-2 px-3 sm:px-4 min-w-0 h-[46px] opacity-100">
           <CurrencyIcon />
           <span className="max-sm:hidden font-sans font-normal text-xs text-balance-label leading-4 tracking-normal shrink-0">
