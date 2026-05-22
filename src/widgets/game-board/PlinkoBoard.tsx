@@ -17,12 +17,16 @@ const BADGE_BOTTOM_OFFSET = 20; // px from container bottom to badge bar
 const TOP_PADDING = 24;
 const PEG_RADIUS = 4;
 const BALL_RADIUS = 6;
-const BOTTOM_GAP = 76; // px gap between last peg row and badge bar top
-
 function getSideMargin(width: number): number {
   if (width < 480) return 40;
   if (width < 768) return 120;
   return 280;
+}
+
+function getBottomGap(width: number): number {
+  if (width < 480) return 16;
+  if (width < 768) return 40;
+  return 76;
 }
 const SETTLE_DURATION = 320;
 const BUCKET_FLASH_DURATION = 500;
@@ -83,7 +87,7 @@ export const PlinkoBoard = ({
       if (!width || !height) return { x: 0, y: 0 };
       // Available vertical space: from TOP_PADDING down to badge bar top minus gap
       const availableHeight =
-        height - BADGE_BOTTOM_OFFSET - BADGE_HEIGHT - TOP_PADDING - BOTTOM_GAP;
+        height - BADGE_BOTTOM_OFFSET - BADGE_HEIGHT - TOP_PADDING - getBottomGap(width);
       const rowSpacing = availableHeight / rows;
       const colSpacing = getColSpacing(width, rows);
       const pegsInRow = row + 2;
