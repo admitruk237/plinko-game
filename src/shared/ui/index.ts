@@ -15,3 +15,5 @@ export { MoveLeftIcon, type MoveLeftIconHandle } from './move-left-icon';
 export * from './table';
 export * from './select';
 export { Badge } from './badge';
+export { ClockIcon, type ClockIconHandle } from './clock-icon';
+export { LogoutIcon, type LogoutIconHandle } from './logout-icon';

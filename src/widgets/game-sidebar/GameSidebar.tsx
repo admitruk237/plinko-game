@@ -1,4 +1,5 @@
 'use client';
+import { AnimatePresence, motion } from 'motion/react';
 import type { GameConfig, Risk } from '@/entities/game';
 import { Card } from '@/shared/ui/card';
 import { BetModeToggle } from '@/features/bet-mode';
@@ -115,17 +116,28 @@ export const GameSidebar = ({
             disabled={isAutoBetting}
           />
 
-          {mode === BET_MODES.AUTO && (
-            <AutoBetSettings
-              numBetsInput={numBetsInput}
-              stopProfitInput={stopProfitInput}
-              stopLossInput={stopLossInput}
-              isAutoBetting={isAutoBetting}
-              onNumBetsChange={handleNumBetsChange}
-              onStopProfitChange={handleStopProfitChange}
-              onStopLossChange={handleStopLossChange}
-            />
-          )}
+          <AnimatePresence initial={false}>
+            {mode === BET_MODES.AUTO && (
+              <motion.div
+                key="auto-bet-settings"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.25, ease: 'easeInOut' }}
+                className="flex flex-col gap-4 overflow-hidden"
+              >
+                <AutoBetSettings
+                  numBetsInput={numBetsInput}
+                  stopProfitInput={stopProfitInput}
+                  stopLossInput={stopLossInput}
+                  isAutoBetting={isAutoBetting}
+                  onNumBetsChange={handleNumBetsChange}
+                  onStopProfitChange={handleStopProfitChange}
+                  onStopLossChange={handleStopLossChange}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
           <BetButton
             mode={mode}
             isAutoBetting={isAutoBetting}

@@ -33,6 +33,7 @@ export const RowsSelector = ({ rows, min, max, onChange, disabled }: Props) => {
         onValueChange={onChange}
         step={CONFIG.SLIDER_STEP}
         disabled={disabled}
+        thumbClassName={rows !== min ? '-ml-[3px]' : undefined}
       />
       <div className="flex justify-between text-xs text-white/30">
         <span>{min}</span>
