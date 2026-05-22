@@ -6,7 +6,7 @@ import {
   getRefreshToken,
 } from '@/shared/lib/session';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://plinko-be-stanish.fly.dev';
+const API_BASE = process.env.API_BASE_URL ?? 'https://plinko-be-stanish.fly.dev';
 
 export async function POST(): Promise<NextResponse> {
   const accessToken = await getAccessToken();
