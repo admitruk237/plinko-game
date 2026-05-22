@@ -110,6 +110,13 @@
     {
       "pattern": "src/**",
       "doc": null,
+      "rules": ".claude/rules/naming.md",
+      "layer": "global",
+      "description": "Domain naming conventions — Plinko vocabulary, anti-patterns, handler/state/prop naming rules"
+    },
+    {
+      "pattern": "src/**",
+      "doc": null,
       "rules": ".claude/rules/pitfalls.md",
       "layer": "global",
       "description": "Project-specific gotchas: credits BigInt, balance update, server-only imports, animation promise"

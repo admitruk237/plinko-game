@@ -62,6 +62,7 @@ Domain rules (auto-loaded by path):
 @.claude/rules/bff.md
 @.claude/rules/auth.md
 @.claude/rules/game.md
+@.claude/rules/naming.md
 @.claude/rules/components.md
 @.claude/rules/pitfalls.md
 @.claude/rules/testing.md
