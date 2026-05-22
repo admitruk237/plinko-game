@@ -13,10 +13,11 @@ interface Props {
 }
 
 const BADGE_HEIGHT = 56;
+const BADGE_BOTTOM_OFFSET = 340; // px from container bottom to badge bar
 const TOP_PADDING = 24;
 const PEG_RADIUS = 4;
 const BALL_RADIUS = 6;
-const BOTTOM_GAP = 16;
+const BOTTOM_GAP = 76; // px gap between last peg row and badge bar top
 
 function getSideMargin(width: number): number {
   if (width < 480) return 40;
@@ -80,8 +81,9 @@ export const PlinkoBoard = ({
     (row: number, col: number) => {
       const { width, height } = dimensions;
       if (!width || !height) return { x: 0, y: 0 };
-      // Divide by rows (not rows+1) so last peg sits right at the badge bar top
-      const availableHeight = height - BADGE_HEIGHT - TOP_PADDING - BOTTOM_GAP;
+      // Available vertical space: from TOP_PADDING down to badge bar top minus gap
+      const availableHeight =
+        height - BADGE_BOTTOM_OFFSET - BADGE_HEIGHT - TOP_PADDING - BOTTOM_GAP;
       const rowSpacing = availableHeight / rows;
       const colSpacing = getColSpacing(width, rows);
       const pegsInRow = row + 2;
@@ -99,7 +101,8 @@ export const PlinkoBoard = ({
       if (!width || !height) return { x: 0, y: 0 };
       const colSpacing = getColSpacing(width, rows);
       const startX = getSideMargin(width) / 2;
-      return { x: startX + index * colSpacing, y: height - BADGE_HEIGHT / 2 };
+      // Ball settles into center of badge bar
+      return { x: startX + index * colSpacing, y: height - BADGE_BOTTOM_OFFSET - BADGE_HEIGHT / 2 };
     },
     [dimensions, rows]
   );
@@ -284,13 +287,14 @@ export const PlinkoBoard = ({
   }, [dimensions, rows, currentAnimations, getPegPosition, getBallState, onAnimationEnd]);
 
   return (
-    <div ref={containerRef} className="relative flex-1 flex flex-col">
+    <div ref={containerRef} className="relative flex-1 flex flex-col min-h-0 overflow-hidden">
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
       {/* Badge bar — aligned with peg columns via SIDE_MARGIN */}
       <div
-        className="absolute bottom-0 left-0 right-0 flex items-center gap-px"
+        className="absolute left-0 right-0 flex items-center gap-1"
         style={{
+          bottom: BADGE_BOTTOM_OFFSET,
           height: BADGE_HEIGHT,
           paddingLeft: getSideMargin(dimensions.width) / 2,
           paddingRight: getSideMargin(dimensions.width) / 2,
