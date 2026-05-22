@@ -1,5 +1,3 @@
-import 'server-only';
-
 interface ApiError {
   status: number;
   message: string | string[];
