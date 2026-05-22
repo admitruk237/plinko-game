@@ -6,9 +6,11 @@ export const MAX_BET = 1_000_000_000_000n;
 
 export function formatCredits(raw: string): string {
   const v = BigInt(raw);
-  const whole = v / UNIT;
-  const frac = (v % UNIT).toString().padStart(6, '0').slice(0, 2);
-  return `${whole.toLocaleString()}.${frac}`;
+  const isNegative = v < 0n;
+  const absV = isNegative ? -v : v;
+  const whole = absV / UNIT;
+  const frac = (absV % UNIT).toString().padStart(6, '0').slice(0, 2);
+  return `${isNegative ? '-' : ''}${whole.toLocaleString()}.${frac}`;
 }
 
 export function parseCredits(input: string): bigint {

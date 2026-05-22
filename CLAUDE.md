@@ -111,6 +111,7 @@ interface Props {
 - Avoid code duplication
 - NO magic strings or hardcoded literals — use constants or enums
 - Before writing code: check simplicity → check architecture → check types
+- NO need to run a production build or typecheck (tsc) after minor edits (pre-commit checks remain mandatory)
 - Keep CLAUDE.md under 200 lines (if it gets close, refactor and shorten it)
 
 ---

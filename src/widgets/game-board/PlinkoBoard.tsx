@@ -13,7 +13,7 @@ interface Props {
 }
 
 const BADGE_HEIGHT = 56;
-const BADGE_BOTTOM_OFFSET = 340; // px from container bottom to badge bar
+const BADGE_BOTTOM_OFFSET = 20; // px from container bottom to badge bar
 const TOP_PADDING = 24;
 const PEG_RADIUS = 4;
 const BALL_RADIUS = 6;

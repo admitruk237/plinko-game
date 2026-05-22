@@ -46,11 +46,13 @@ export const bffApi = {
     limit?: number;
     cursor?: string | null;
     rows?: number;
+    risk?: string;
   }): Promise<BetListResponseDto> => {
     const searchParams = new URLSearchParams();
     if (params.limit) searchParams.set('limit', params.limit.toString());
     if (params.cursor) searchParams.set('cursor', params.cursor);
     if (params.rows) searchParams.set('rows', params.rows.toString());
+    if (params.risk) searchParams.set('risk', params.risk);
 
     const res = await fetch(`/api/bets?${searchParams.toString()}`);
     if (!res.ok) throw new BffError(res.status, 'Failed to fetch bets');

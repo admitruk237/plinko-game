@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { formatCredits } from '@/shared/lib/credits';
-import { CurrencyIcon } from '@/shared/ui/currency-icon';
+import { Button, CurrencyIcon } from '@/shared/ui';
 import { ROUTES } from '@/shared/config';
 
 interface Props {
@@ -13,19 +13,24 @@ interface Props {
 export const GameHeader = ({ balance, onLogout }: Props) => {
   return (
     <header className="flex items-center justify-between px-4 py-3 border-b border-white/5">
-      <div className="flex items-center gap-4">
-        <h1 className="text-xl font-bold text-white tracking-tight">Plinko</h1>
-        <div className="flex items-center gap-1.5 bg-[#1a2c1a] border border-green-500/20 rounded-full px-3 py-1.5">
+      <div className="flex items-center gap-[19px]">
+        <h1 className="text-2xl font-bold text-white leading-8 tracking-[0.07px]">Plinko</h1>
+        <div className="flex items-center gap-2 bg-balance-bg border border-balance-border rounded-[10px] py-2 px-4 w-[206.23px] h-[46px] opacity-100">
           <CurrencyIcon />
-          <span className="text-sm font-semibold text-green-400">
-            Balance: {formatCredits(balance)}
+          <span className="font-sans font-normal text-xs text-balance-label leading-4 tracking-normal">
+            Balance:
+          </span>
+          <span className="font-sans font-bold text-lg text-balance-value leading-7 tracking-[-0.44px]">
+            {formatCredits(balance)}
           </span>
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <Link
-          href={ROUTES.HISTORY}
-          className="flex items-center gap-1.5 bg-[#1e2231] hover:bg-[#252a3a] border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white/80 font-medium transition-colors"
+        <Button
+          render={<Link href={ROUTES.HISTORY} />}
+          nativeButton={false}
+          variant="headerAction"
+          size="none"
         >
           <svg
             width="14"
@@ -39,11 +44,8 @@ export const GameHeader = ({ balance, onLogout }: Props) => {
             <polyline points="12,6 12,12 16,14" />
           </svg>
           <span className="max-sm:hidden">History</span>
-        </Link>
-        <button
-          onClick={onLogout}
-          className="flex items-center gap-1.5 bg-[#1e2231] hover:bg-[#252a3a] border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white/80 font-medium transition-colors"
-        >
+        </Button>
+        <Button onClick={onLogout} variant="headerAction" size="none">
           <svg
             width="14"
             height="14"
@@ -57,7 +59,7 @@ export const GameHeader = ({ balance, onLogout }: Props) => {
             <line x1="21" y1="12" x2="9" y2="12" />
           </svg>
           <span className="max-sm:hidden">Logout</span>
-        </button>
+        </Button>
       </div>
     </header>
   );

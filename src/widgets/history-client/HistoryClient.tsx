@@ -2,23 +2,47 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import type { BetResponse } from '@/entities/game';
-import { Label } from '@/shared/ui/label';
-import { useBetHistory } from '@/features/bet-history';
-import { BetTable } from './BetTable';
-import { BetDetailDrawer } from './BetDetailDrawer';
+import { Filter } from 'lucide-react';
 
+import type { BetResponse } from '@/entities/game';
+import { useBetHistory } from '@/features/bet-history';
 import { ROUTES } from '@/shared/config';
+import {
+  DEFAULT_FILTER_VALUE,
+  FILTER_ALL_VALUE,
+  RISK_OPTIONS,
+  ROW_OPTIONS,
+} from './model/constants';
+import {
+  Button,
+  MoveLeftIcon,
+  type MoveLeftIconHandle,
+  Select,
+  SelectIcon,
+  SelectItem,
+  SelectPopup,
+  SelectPortal,
+  SelectPositioner,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/ui';
+
+import { BetTable } from './BetTable';
 
 export const HistoryClient = () => {
-  const [filterRows, setFilterRows] = useState<string>('all');
-  const [selectedBet, setSelectedBet] = useState<BetResponse | null>(null);
+  const [filterRows, setFilterRows] = useState<string>(DEFAULT_FILTER_VALUE);
+  const [filterRisk, setFilterRisk] = useState<string>(DEFAULT_FILTER_VALUE);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const iconRef = useRef<MoveLeftIconHandle>(null);
 
-  const rowsParam = filterRows !== 'all' ? Number(filterRows) : undefined;
+  const rowsParam = filterRows !== FILTER_ALL_VALUE ? Number(filterRows) : undefined;
+  const riskParam =
+    filterRisk !== FILTER_ALL_VALUE ? (filterRisk as BetResponse['risk']) : undefined;
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useBetHistory(rowsParam);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useBetHistory(
+    rowsParam,
+    riskParam
+  );
 
   const allBets = data?.pages.flatMap((p) => p.items) ?? [];
 
@@ -84,81 +108,121 @@ export const HistoryClient = () => {
         </div>
       );
     }
-    return <BetTable bets={allBets} onSelectBet={setSelectedBet} />;
+    return <BetTable bets={allBets} />;
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 border-b border-white/5">
-        <div className="flex items-center gap-3">
-          <Link
-            href={ROUTES.GAME}
-            className="flex items-center gap-1.5 text-white/60 hover:text-white transition-colors"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+    <div className="min-h-screen w-full overflow-y-auto bg-transparent">
+      <div className="max-w-[1232px] w-full mx-auto px-4 md:px-6 xl:px-0 flex flex-col">
+        {/* Header */}
+        <header className="flex items-center justify-between py-4 border-b border-white/5">
+          <div className="flex items-center gap-3">
+            <Button
+              render={<Link href={ROUTES.GAME} />}
+              nativeButton={false}
+              variant="headerAction"
+              size="none"
+              onMouseEnter={() => iconRef.current?.startAnimation()}
+              onMouseLeave={() => iconRef.current?.stopAnimation()}
             >
-              <polyline points="15,18 9,12 15,6" />
-            </svg>
-            Back
-          </Link>
-          <h1 className="text-xl font-bold text-white">Bet History</h1>
-        </div>
-      </header>
+              <MoveLeftIcon ref={iconRef} size={16} />
+              <span>Back to Game</span>
+            </Button>
+            <h1 className="text-2xl font-bold text-white leading-8 tracking-[0.07px]">
+              Bet History
+            </h1>
+          </div>
+        </header>
 
-      <div className="flex items-center gap-4 px-6 py-3 border-b border-white/5">
-        <div className="flex items-center gap-2">
-          <Label className="text-sm text-white/50">Rows:</Label>
-          <select
-            value={filterRows}
-            onChange={(e) => setFilterRows(e.target.value)}
-            className="bg-[#1a1e2e] border border-white/10 rounded-lg px-2 py-1 text-sm text-white outline-none"
-          >
-            <option value="all">All</option>
-            {Array.from({ length: 9 }, (_, i) => i + 8).map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
+        {/* Filters Card */}
+        <div className="mt-6 w-full bg-balance-bg border border-balance-border border-t-[#2A2F3E] rounded-[10px] pt-[17px] pr-[17px] pb-[1px] pl-[17px] opacity-100">
+          <div className="flex items-center flex-wrap gap-6 pb-4">
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-white" />
+              <span className="text-sm font-semibold text-white">Filters:</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-normal text-balance-label leading-4 tracking-normal font-sans">
+                Risk:
+              </span>
+              <Select
+                value={filterRisk}
+                onValueChange={(val) => setFilterRisk(val ?? DEFAULT_FILTER_VALUE)}
+              >
+                <SelectTrigger className="w-[120px]">
+                  <SelectValue placeholder="All" />
+                  <SelectIcon />
+                </SelectTrigger>
+                <SelectPortal>
+                  <SelectPositioner side="bottom" align="start" sideOffset={4}>
+                    <SelectPopup>
+                      {RISK_OPTIONS.map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </SelectItem>
+                      ))}
+                    </SelectPopup>
+                  </SelectPositioner>
+                </SelectPortal>
+              </Select>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-normal text-balance-label leading-4 tracking-normal font-sans">
+                Rows:
+              </span>
+              <Select
+                value={filterRows}
+                onValueChange={(val) => setFilterRows(val ?? DEFAULT_FILTER_VALUE)}
+              >
+                <SelectTrigger className="w-[100px]">
+                  <SelectValue placeholder="All" />
+                  <SelectIcon />
+                </SelectTrigger>
+                <SelectPortal>
+                  <SelectPositioner side="bottom" align="start" sideOffset={4}>
+                    <SelectPopup>
+                      {ROW_OPTIONS.map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </SelectItem>
+                      ))}
+                    </SelectPopup>
+                  </SelectPositioner>
+                </SelectPortal>
+              </Select>
+            </div>
+          </div>
+        </div>
+
+        {/* Table Container */}
+        <div className="mt-6 w-full pb-10">
+          {renderBets()}
+
+          {/* Infinite scroll sentinel */}
+          <div ref={sentinelRef} className="py-4 flex justify-center">
+            {isFetchingNextPage && (
+              <svg className="animate-spin h-5 w-5 text-white/40" viewBox="0 0 24 24">
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="none"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+            )}
+          </div>
         </div>
       </div>
-
-      {/* Table */}
-      <div className="flex-1 overflow-auto px-6">
-        {renderBets()}
-
-        {/* Infinite scroll sentinel */}
-        <div ref={sentinelRef} className="py-4 flex justify-center">
-          {isFetchingNextPage && (
-            <svg className="animate-spin h-5 w-5 text-white/40" viewBox="0 0 24 24">
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-                fill="none"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              />
-            </svg>
-          )}
-        </div>
-      </div>
-
-      {/* Bet detail drawer */}
-      {selectedBet && <BetDetailDrawer bet={selectedBet} onClose={() => setSelectedBet(null)} />}
     </div>
   );
 };

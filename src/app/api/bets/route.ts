@@ -40,10 +40,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const limit = searchParams.get('limit');
   const cursor = searchParams.get('cursor');
   const rows = searchParams.get('rows');
+  const risk = searchParams.get('risk');
 
   if (limit) params.set('limit', limit);
   if (cursor) params.set('cursor', cursor);
   if (rows) params.set('rows', rows);
+  if (risk) params.set('risk', risk);
 
   const response = await fetch(`${API_BASE}/api/v1/bets?${params.toString()}`, {
     headers: { Authorization: `Bearer ${token}` },

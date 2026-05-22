@@ -25,6 +25,8 @@ const buttonVariants = cva(
         riskOption:
           'h-10 rounded-[10px] border-2 border-[#2a3040] border-t-[#2A2F3E] bg-[#0F1419] text-[14px] font-medium leading-[20px] tracking-[-0.15px] text-[#99A1AF] text-center transition-colors data-[active=false]:hover:text-white data-[active=false]:hover:border-white/20 focus-visible:ring-0 data-[active=false]:focus-visible:border-[#2a3040] data-[active=false]:focus-visible:border-t-[#2A2F3E]',
         icon: 'text-white/40 hover:text-white/70 bg-transparent hover:bg-transparent transition-colors',
+        headerAction:
+          'h-[46px] px-4 gap-1.5 rounded-[10px] border border-balance-border bg-balance-bg text-sm font-medium text-white/80 hover:text-white hover:bg-balance-border/50 transition-colors',
       },
       size: {
         none: '',

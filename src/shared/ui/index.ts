@@ -11,3 +11,7 @@ export * from './tabs';
 export { Switch } from './switch';
 export * from './dialog';
 export { SettingsIcon } from './settings-icon';
+export { MoveLeftIcon, type MoveLeftIconHandle } from './move-left-icon';
+export * from './table';
+export * from './select';
+export { Badge } from './badge';

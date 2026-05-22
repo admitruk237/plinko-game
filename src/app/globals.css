@@ -57,6 +57,12 @@
   --color-auth-input-placeholder: #A1A1A1;
   --color-auth-label: #D1D5DC;
   --color-auth-text-muted: #6A7282;
+
+  /* Balance Container Theme Tokens */
+  --color-balance-bg: #1A1F2E;
+  --color-balance-border: #2A2F3E;
+  --color-balance-label: #99A1AF;
+  --color-balance-value: #00C950;
 }
 
 :root {
