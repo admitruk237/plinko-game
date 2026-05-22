@@ -29,7 +29,7 @@ export async function getRefreshToken(): Promise<string | undefined> {
 export async function deleteRefreshToken(): Promise<void> {
   try {
     const store = await cookies();
-    store.delete(REFRESH_KEY);
+    store.set(REFRESH_KEY, '', { ...COOKIE_OPTIONS, maxAge: 0 });
   } catch (error) {
     console.warn('Could not delete refresh token cookie (likely read-only context):', error);
   }
@@ -52,7 +52,7 @@ export async function getAccessToken(): Promise<string | undefined> {
 export async function deleteAccessToken(): Promise<void> {
   try {
     const store = await cookies();
-    store.delete(ACCESS_KEY);
+    store.set(ACCESS_KEY, '', { ...COOKIE_OPTIONS, maxAge: 0 });
   } catch (error) {
     console.warn('Could not delete access token cookie (likely read-only context):', error);
   }
