@@ -1,4 +1,3 @@
-import { Loader2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { BET_MODES, type BetMode } from '@/shared/config';
 import { LABELS, STYLES, ZERO } from '../model/constants';
@@ -6,7 +5,6 @@ import { LABELS, STYLES, ZERO } from '../model/constants';
 interface Props {
   mode: BetMode;
   isAutoBetting: boolean;
-  isPlaying: boolean;
   disabled: boolean;
   limitNumBets: number;
   currentBetCount: number;
@@ -15,7 +13,6 @@ interface Props {
 export const BetButton = ({
   mode,
   isAutoBetting,
-  isPlaying,
   disabled,
   limitNumBets,
   currentBetCount,
@@ -23,9 +20,6 @@ export const BetButton = ({
   const getButtonClassName = () => {
     if (mode === BET_MODES.AUTO && isAutoBetting) {
       return STYLES.STOP_AUTO_BET_CLASS;
-    }
-    if (isPlaying) {
-      return STYLES.PLAYING_CLASS;
     }
     return '';
   };
@@ -39,15 +33,6 @@ export const BetButton = ({
         return `${LABELS.STOP} (${currentBetCount})`;
       }
       return LABELS.START_AUTO_BET;
-    }
-
-    if (isPlaying) {
-      return (
-        <span className="flex items-center justify-center gap-2">
-          <Loader2 className="animate-spin h-4 w-4" />
-          {LABELS.PLAYING}
-        </span>
-      );
     }
 
     return LABELS.BET;

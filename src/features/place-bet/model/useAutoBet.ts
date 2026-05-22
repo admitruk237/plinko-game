@@ -136,8 +136,6 @@ export const useAutoBet = ({
   }, []);
 
   const handleBet = useCallback(() => {
-    if (isPlaying && !isAutoBetting) return;
-
     let amount = 0n;
     try {
       amount = parseCredits(betInput);
@@ -158,7 +156,7 @@ export const useAutoBet = ({
     } else {
       onPlaceBet(amount.toString(), rows, risk);
     }
-  }, [mode, isAutoBetting, isPlaying, betInput, balanceBigInt, rows, risk, onPlaceBet]);
+  }, [mode, isAutoBetting, betInput, balanceBigInt, rows, risk, onPlaceBet]);
 
   return {
     numBetsInput,

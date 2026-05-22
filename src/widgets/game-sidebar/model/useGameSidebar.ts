@@ -44,7 +44,7 @@ export const useGameSidebar = ({
 
   const { form, betInput, handleHalf, handleDouble, handleMax, handleInputChange } = useBetForm({
     balance,
-    disabled: mode === BET_MODES.AUTO ? false : isPlaying,
+    disabled: false,
   });
 
   const {

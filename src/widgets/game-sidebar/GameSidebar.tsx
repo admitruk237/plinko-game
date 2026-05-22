@@ -58,9 +58,8 @@ export const GameSidebar = ({
     handleStopLossChange,
   } = useGameSidebar({ config, balance, isPlaying, rows, risk, onRowsChange, onPlaceBet });
 
-  const isManualDisabled = isPlaying;
   const isAutoDisabled = isAutoBetting ? false : isPlaying;
-  const isBetButtonDisabled = mode === BET_MODES.AUTO ? isAutoDisabled : isManualDisabled;
+  const isBetButtonDisabled = mode === BET_MODES.AUTO ? isAutoDisabled : false;
 
   const limitNumBets = parseInt(numBetsInput, 10);
 
@@ -106,14 +105,14 @@ export const GameSidebar = ({
             risks={config.risks}
             currentRisk={risk}
             onChange={onRiskChange}
-            disabled={isAutoBetting}
+            disabled={isPlaying || isAutoBetting}
           />
           <RowsSelector
             rows={rows}
             min={config.rows[ZERO]}
             max={config.rows[config.rows.length - 1]}
             onChange={handleRowsChange}
-            disabled={isAutoBetting}
+            disabled={isPlaying || isAutoBetting}
           />
 
           <AnimatePresence initial={false}>
@@ -141,7 +140,6 @@ export const GameSidebar = ({
           <BetButton
             mode={mode}
             isAutoBetting={isAutoBetting}
-            isPlaying={isPlaying}
             disabled={isBetButtonDisabled}
             limitNumBets={limitNumBets}
             currentBetCount={currentBetCount}
