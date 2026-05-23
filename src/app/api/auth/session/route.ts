@@ -37,9 +37,12 @@ export async function GET(): Promise<NextResponse<SessionData> | NextResponse<nu
     await setAccessToken(refreshed.accessToken);
     const user = await authApi.getMe(refreshed.accessToken);
     return NextResponse.json({ accessToken: refreshed.accessToken, user });
-  } catch {
-    await deleteRefreshToken();
-    await deleteAccessToken();
+  } catch (err) {
+    const status = (err as { status?: number })?.status;
+    if (status === 401 || status === 403) {
+      await deleteRefreshToken();
+      await deleteAccessToken();
+    }
     return NextResponse.json(null, { status: 401 });
   }
 }

@@ -9,28 +9,23 @@ import {
 } from '@/shared/lib/session';
 import { authApi } from '@/shared/api/auth.api';
 
-/**
- * Gets a valid access token, attempting refresh if the current one is expired.
- * Returns null if no valid token can be obtained.
- */
+function isTokenExpired(token: string): boolean {
+  try {
+    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
+    return Date.now() >= (payload.exp as number) * 1000;
+  } catch {
+    return true;
+  }
+}
+
 export async function getValidAccessToken(): Promise<string | null> {
   const accessToken = await getAccessToken();
-  const refreshToken = await getRefreshToken();
 
-  // Try the current access token against the backend
-  if (accessToken) {
-    try {
-      const res = await fetch(
-        `${process.env.API_BASE_URL ?? 'https://plinko-be-stanish.fly.dev'}/api/v1/users/me`,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      if (res.ok) return accessToken;
-    } catch {
-      // token is invalid or expired — fall through to refresh
-    }
+  if (accessToken && !isTokenExpired(accessToken)) {
+    return accessToken;
   }
 
-  // Try to refresh
+  const refreshToken = await getRefreshToken();
   if (!refreshToken) {
     await deleteAccessToken();
     return null;
@@ -41,9 +36,12 @@ export async function getValidAccessToken(): Promise<string | null> {
     await setAccessToken(refreshed.accessToken);
     await setRefreshToken(refreshed.refreshToken);
     return refreshed.accessToken;
-  } catch {
-    await deleteAccessToken();
-    await deleteRefreshToken();
+  } catch (err) {
+    const status = (err as { status?: number })?.status;
+    if (status === 401 || status === 403) {
+      await deleteAccessToken();
+      await deleteRefreshToken();
+    }
     return null;
   }
 }
