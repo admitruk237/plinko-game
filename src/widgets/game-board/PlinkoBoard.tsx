@@ -10,6 +10,8 @@ interface Props {
   payoutTable: number[];
   currentAnimations: BallAnimation[];
   onAnimationEnd: (id: string) => void;
+  onPegHit?: () => void;
+  animationsEnabled: boolean;
 }
 
 const BADGE_HEIGHT = 56;
@@ -62,10 +64,14 @@ export const PlinkoBoard = ({
   payoutTable,
   currentAnimations,
   onAnimationEnd,
+  onPegHit,
+  animationsEnabled,
 }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animFrameRef = useRef<number>(0);
+  const lastHitPegRef = useRef<Map<string, string>>(new Map());
+  const instantCompletedRef = useRef<Set<string>>(new Set());
   const [flashBuckets, setFlashBuckets] = useState<Map<number, number>>(new Map());
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
@@ -183,6 +189,16 @@ export const PlinkoBoard = ({
     [dimensions, getPegPosition, getBucketPosition]
   );
 
+  // Instantly complete animations when animations are disabled
+  useEffect(() => {
+    if (animationsEnabled) return;
+    for (const anim of currentAnimations) {
+      if (instantCompletedRef.current.has(anim.id)) continue;
+      instantCompletedRef.current.add(anim.id);
+      onAnimationEnd(anim.id);
+    }
+  }, [currentAnimations, animationsEnabled, onAnimationEnd]);
+
   useEffect(() => {
     if (!dimensions.width || !dimensions.height) return;
 
@@ -208,6 +224,15 @@ export const PlinkoBoard = ({
         if (finishedIds.has(anim.id)) continue;
         const state = getBallState(anim, now);
         ballStatesMap.set(anim.id, state);
+
+        if (state.nearPeg && onPegHit) {
+          const pegKey = `${state.nearPeg.row}-${state.nearPeg.col}`;
+          if (lastHitPegRef.current.get(anim.id) !== pegKey) {
+            lastHitPegRef.current.set(anim.id, pegKey);
+            onPegHit();
+          }
+        }
+
         if (state.nearPeg) {
           glowPegs.add(`${state.nearPeg.row}-${state.nearPeg.col}`);
         }
@@ -243,6 +268,7 @@ export const PlinkoBoard = ({
 
         if (state.done && !finishedIds.has(anim.id)) {
           finishedIds.add(anim.id);
+          lastHitPegRef.current.delete(anim.id);
           setFlashBuckets((prev) => {
             const next = new Map(prev);
             next.set(anim.bucketIndex, Date.now());
@@ -288,7 +314,16 @@ export const PlinkoBoard = ({
 
     animFrameRef.current = requestAnimationFrame(render);
     return () => cancelAnimationFrame(animFrameRef.current);
-  }, [dimensions, rows, currentAnimations, getPegPosition, getBallState, onAnimationEnd]);
+  }, [
+    dimensions,
+    rows,
+    currentAnimations,
+    getPegPosition,
+    getBallState,
+    onAnimationEnd,
+    onPegHit,
+    animationsEnabled,
+  ]);
 
   return (
     <div ref={containerRef} className="relative flex-1 flex flex-col min-h-0 overflow-hidden">

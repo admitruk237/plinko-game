@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { GameConfig, Risk } from '@/entities/game';
 import { useAutoBet, useBetForm } from '@/features/place-bet';
+import { useSound } from '@/features/game';
 import { BET_MODES, type BetMode } from '@/shared/config';
 
 interface Props {
@@ -23,15 +24,17 @@ export const useGameSidebar = ({
   onPlaceBet,
 }: Props) => {
   const [mode, setMode] = useState<BetMode>(BET_MODES.MANUAL);
+  const { playRowsChange } = useSound();
 
   const handleRowsChange = useCallback(
     (val: number | readonly number[]) => {
       const v = Array.isArray(val) ? val[0] : val;
       if (typeof v === 'number') {
         onRowsChange(v);
+        playRowsChange();
       }
     },
-    [onRowsChange]
+    [onRowsChange, playRowsChange]
   );
 
   const handleFullscreenToggle = useCallback(() => {

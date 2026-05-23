@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { GameHeader, GameSidebar, PlinkoBoard } from '@/widgets';
 import { type Risk, useGameStore } from '@/entities/game';
 import { useSessionStore } from '@/entities/session';
-import { useCurrentUser, useGameConfig, useGamePlay, useLogout } from '@/features/game';
+import { useCurrentUser, useGameConfig, useGamePlay, useLogout, useSound } from '@/features/game';
+import { useSettingsStore } from '@/entities/settings';
 import { RISK_LEVELS } from '@/shared/config';
 
 export const GameClient = () => {
@@ -21,6 +22,8 @@ export const GameClient = () => {
   const logoutMutation = useLogout();
 
   const { currentAnimations, handlePlaceBet, handleAnimationEnd } = useGamePlay({ setPlaying });
+  const { playPegHit } = useSound();
+  const animationsEnabled = useSettingsStore((s) => s.animationsEnabled);
 
   const balance = freshUser?.balance ?? user?.balance ?? '0';
 
@@ -79,6 +82,8 @@ export const GameClient = () => {
             payoutTable={payoutTable}
             currentAnimations={currentAnimations}
             onAnimationEnd={handleAnimationEnd}
+            onPegHit={playPegHit}
+            animationsEnabled={animationsEnabled}
           />
         </div>
       </div>

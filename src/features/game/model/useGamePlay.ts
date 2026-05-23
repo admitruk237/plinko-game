@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { type BallAnimation, type Risk, useGameStore } from '@/entities/game';
 import type { User } from '@/entities/session';
 import { formatCredits } from '@/shared/lib/credits';
+import { useSound } from './use-sound';
 import { usePlaceBet } from '../api/usePlaceBet';
 
 interface Props {
@@ -19,9 +20,11 @@ interface UseGamePlayResult {
 export const useGamePlay = ({ setPlaying }: Props): UseGamePlayResult => {
   const queryClient = useQueryClient();
   const addResult = useGameStore((s) => s.addResult);
+  const { playDrop, playResult } = useSound();
 
   const [currentAnimations, setCurrentAnimations] = useState<BallAnimation[]>([]);
   const animResolveMap = useRef<Map<string, () => void>>(new Map());
+  const betResultMap = useRef<Map<string, number>>(new Map());
   const activeCount = useRef(0);
 
   const placeBetMutation = usePlaceBet();
@@ -31,8 +34,12 @@ export const useGamePlay = ({ setPlaying }: Props): UseGamePlayResult => {
       try {
         const bet = await placeBetMutation.mutateAsync({ amount, rows, risk });
 
+        playDrop();
         activeCount.current += 1;
         setPlaying(true);
+
+        const multiplier = Number(bet.multiplier);
+        betResultMap.current.set(bet.betId, multiplier);
 
         await new Promise<void>((resolve) => {
           const id = bet.betId;
@@ -48,7 +55,6 @@ export const useGamePlay = ({ setPlaying }: Props): UseGamePlayResult => {
           ]);
         });
 
-        const multiplier = Number(bet.multiplier);
         const payout = formatCredits(bet.payout);
 
         addResult({
@@ -60,6 +66,8 @@ export const useGamePlay = ({ setPlaying }: Props): UseGamePlayResult => {
           rows: bet.rows,
           risk: bet.risk,
         });
+
+        playResult(multiplier);
 
         if (multiplier >= 1) {
           toast.success(`${multiplier}x — ${payout}`, { duration: 3000 });
@@ -77,12 +85,13 @@ export const useGamePlay = ({ setPlaying }: Props): UseGamePlayResult => {
         if (activeCount.current === 0) setPlaying(false);
       }
     },
-    [setPlaying, addResult, queryClient, placeBetMutation]
+    [setPlaying, addResult, queryClient, placeBetMutation, playDrop, playResult]
   );
 
   const handleAnimationEnd = useCallback((id: string) => {
     animResolveMap.current.get(id)?.();
     animResolveMap.current.delete(id);
+    betResultMap.current.delete(id);
     setCurrentAnimations((prev) => prev.filter((a) => a.id !== id));
   }, []);
 
