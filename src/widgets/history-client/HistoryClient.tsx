@@ -126,23 +126,23 @@ export const HistoryClient = () => {
               onMouseLeave={() => iconRef.current?.stopAnimation()}
             >
               <MoveLeftIcon ref={iconRef} size={16} />
-              <span>Back to Game</span>
+              <span className="max-sm:hidden">Back to Game</span>
             </Button>
-            <h1 className="text-2xl font-bold text-white leading-8 tracking-[0.07px]">
+            <h1 className="text-xl sm:text-2xl font-bold text-white leading-8 tracking-[0.07px]">
               Bet History
             </h1>
           </div>
         </header>
 
         {/* Filters Card */}
-        <div className="mt-6 w-full bg-balance-bg border border-balance-border border-t-[#2A2F3E] rounded-[10px] pt-[17px] pr-[17px] pb-[1px] pl-[17px] opacity-100">
-          <div className="flex items-center flex-wrap gap-6 pb-4">
-            <div className="flex items-center gap-2">
+        <div className="mt-4 sm:mt-6 w-full bg-balance-bg border border-balance-border border-t-[#2A2F3E] rounded-[10px] py-3 px-3 sm:pt-[17px] sm:pr-[17px] sm:pb-[1px] sm:pl-[17px] opacity-100">
+          <div className="flex items-center flex-nowrap gap-2 sm:gap-6 sm:flex-wrap pb-1 sm:pb-4">
+            <div className="flex items-center gap-2 shrink-0">
               <Filter className="w-4 h-4 text-white" />
-              <span className="text-sm font-semibold text-white">Filters:</span>
+              <span className="hidden sm:inline text-sm font-semibold text-white">Filters:</span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <span className="text-xs font-normal text-balance-label leading-4 tracking-normal font-sans">
                 Risk:
               </span>
@@ -150,7 +150,7 @@ export const HistoryClient = () => {
                 value={filterRisk}
                 onValueChange={(val) => setFilterRisk(val ?? DEFAULT_FILTER_VALUE)}
               >
-                <SelectTrigger className="w-[120px]">
+                <SelectTrigger className="w-[90px] sm:w-[120px]">
                   <SelectValue placeholder="All" />
                   <SelectIcon />
                 </SelectTrigger>
@@ -168,7 +168,7 @@ export const HistoryClient = () => {
               </Select>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <span className="text-xs font-normal text-balance-label leading-4 tracking-normal font-sans">
                 Rows:
               </span>
@@ -176,7 +176,7 @@ export const HistoryClient = () => {
                 value={filterRows}
                 onValueChange={(val) => setFilterRows(val ?? DEFAULT_FILTER_VALUE)}
               >
-                <SelectTrigger className="w-[100px]">
+                <SelectTrigger className="w-[80px] sm:w-[100px]">
                   <SelectValue placeholder="All" />
                   <SelectIcon />
                 </SelectTrigger>
