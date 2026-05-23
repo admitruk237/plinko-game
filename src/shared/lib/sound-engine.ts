@@ -3,7 +3,11 @@ import { Howler } from 'howler';
 function getCtx(): AudioContext | null {
   try {
     Howler.volume(1);
-    return Howler.ctx as AudioContext | null;
+    const ctx = Howler.ctx as AudioContext | null;
+    if (ctx?.state === 'suspended') {
+      void ctx.resume();
+    }
+    return ctx;
   } catch {
     return null;
   }
@@ -95,5 +99,9 @@ export const SoundEngine = {
   playRowsChange(): void {
     playNoise(0.06, 180, 0.2);
     playTone(200, 0.06, 'square', 0.08);
+  },
+
+  playClick(): void {
+    playTone(880, 0.035, 'triangle', 0.09);
   },
 };

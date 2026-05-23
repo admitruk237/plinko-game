@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Howler } from 'howler';
 import { useSettingsStore } from '@/entities/settings';
 import { SoundEngine } from '@/shared/lib/sound-engine';
@@ -8,9 +8,9 @@ import { SoundEngine } from '@/shared/lib/sound-engine';
 export const useSound = () => {
   const soundEffectsEnabled = useSettingsStore((s) => s.soundEffectsEnabled);
 
-  if (typeof window !== 'undefined') {
+  useEffect(() => {
     Howler.mute(!soundEffectsEnabled);
-  }
+  }, [soundEffectsEnabled]);
 
   const playDrop = useCallback(() => {
     if (soundEffectsEnabled) SoundEngine.playDrop();
@@ -38,5 +38,9 @@ export const useSound = () => {
     if (soundEffectsEnabled) SoundEngine.playRowsChange();
   }, [soundEffectsEnabled]);
 
-  return { playDrop, playPegHit, playResult, playRowsChange };
+  const playClick = useCallback(() => {
+    if (soundEffectsEnabled) SoundEngine.playClick();
+  }, [soundEffectsEnabled]);
+
+  return { playDrop, playPegHit, playResult, playRowsChange, playClick };
 };

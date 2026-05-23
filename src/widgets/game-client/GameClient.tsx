@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GameHeader, GameSidebar, PlinkoBoard } from '@/widgets';
 import { type Risk, useGameStore } from '@/entities/game';
 import { useSessionStore } from '@/entities/session';
@@ -22,8 +22,19 @@ export const GameClient = () => {
   const logoutMutation = useLogout();
 
   const { currentAnimations, handlePlaceBet, handleAnimationEnd } = useGamePlay({ setPlaying });
-  const { playPegHit } = useSound();
+  const { playPegHit, playClick } = useSound();
   const animationsEnabled = useSettingsStore((s) => s.animationsEnabled);
+
+  useEffect(() => {
+    const onButtonClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('button') || target.closest('[role="button"]')) {
+        playClick();
+      }
+    };
+    document.addEventListener('click', onButtonClick);
+    return () => document.removeEventListener('click', onButtonClick);
+  }, [playClick]);
 
   const balance = freshUser?.balance ?? user?.balance ?? '0';
 
