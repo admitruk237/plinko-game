@@ -32,7 +32,11 @@ src/shared/
 | `Slider` | `slider.tsx` | Slider (rows selector) |
 | `CurrencyIcon` | `currency-icon.tsx` | Currency icon |
 | `SettingsIcon` | `settings-icon.tsx` | Animated settings icon (motion/react) |
+| `GameIcon` / `TrophyIcon` / `ProfileIcon` / `ClockIcon` | `*-icon.tsx` | Animated nav icons (motion/react, expose `*IconHandle` ref for hover) |
+| `MoveLeftIcon` / `LogoutIcon` | `*-icon.tsx` | Animated action icons (ref-controlled) |
 | `Field` | `field.tsx` | Field with validation |
+| `LoadingState` | `loading-state.tsx` | Spinner + message (`fullScreen` prop) |
+| `ErrorState` | `error-state.tsx` | Error message block (`fullScreen` prop) |
 
 All imported via barrel: `import { Button, Input } from '@/shared/ui'`
 

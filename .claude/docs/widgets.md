@@ -10,17 +10,19 @@
 
 ```
 widgets/game-client/
-  GameClient.tsx   ← 'use client', orchestrates the entire game
+  GameClient.tsx          ← 'use client', renders the game layout
+  model/
+    useGameClient.ts      ← all orchestration logic (state, hooks, handlers)
 ```
 
-**Main composite game component.** Wires together:
+**Main composite game component.** `useGameClient` aggregates:
 - `useGameConfig()` — loads game config
-- `useCurrentUser()` — user balance
+- `useCurrentUser()` + session store — user balance
 - `useGameStore` — `isPlaying`, `setPlaying`
-- `useGamePlay()` — bet logic
-- `GameSidebar` + `PlinkoBoard` + `GameHeader` + `RecentResults`
+- `useGamePlay()` — bet logic (`currentAnimations`, `handlePlaceBet`, `handleAnimationEnd`)
+- local `rows` / `risk` state, `payoutTable` derivation, logout handlers
 
-Passes `handlePlaceBet`, `currentAnimation`, `handleAnimationEnd` down to child components.
+`GameClient.tsx` renders only — composes `Header` + `GameSidebar` + `PlinkoBoard` + `RecentResults` from the values returned by `useGameClient`.
 
 ---
 
@@ -62,14 +64,34 @@ widgets/game-sidebar/
 
 ---
 
-### `game-header` — game header
+### `header` — reusable page header
 
 ```
-widgets/game-header/
-  GameHeader.tsx
+widgets/header/
+  Header.tsx
 ```
 
-Displays logo, user balance, and logout button. Reads `user.balance` via props.
+Generic top bar used across pages (game, history, profile, progress). Renders a title and optional pieces driven by props — there is no game-specific logic here.
+
+**Props:**
+- `title: string`
+- `balance?: string` + `showBalance?: boolean` — formatted balance pill
+- `showBackButton?: boolean` + `backRoute?: string` — animated "Back to Game" link
+- `rightAction?: ReactNode` — slot for page-specific actions (e.g. logout)
+
+---
+
+### `bottom-nav` — mobile bottom navigation
+
+```
+widgets/bottom-nav/
+  BottomNav.tsx
+  model/
+    useBottomNav.tsx   ← builds nav items, hover animation refs, active state
+    constants.ts       ← NAV_ITEMS_CONFIG, icon sizes
+```
+
+Fixed footer with four tabs (Game / Progress / History / Profile). Active tab is derived from `usePathname()`; an animated indicator bar slides between tabs via `motion` `layoutId`. Each icon is ref-controlled (`*IconHandle`) so hover triggers its animation. Tab clicks play a click sound via `useSound()`.
 
 ---
 
@@ -88,18 +110,19 @@ Shows last 4 bet results (`useGameStore.recentResults`). Colors by multiplier vi
 
 ```
 widgets/history-client/
-  HistoryClient.tsx     ← filter + infinite scroll + table
-  BetTable.tsx          ← bet table
-  BetDetailDrawer.tsx   ← sliding drawer with bet details
+  HistoryClient.tsx       ← renders Header + filters + table + infinite-scroll sentinel
+  BetTable.tsx            ← TanStack Table of bets
+  model/
+    useHistory.ts         ← filter state, useBetHistory query, IntersectionObserver auto-load
+    useBetColumns.tsx     ← column definitions for BetTable
+    constants.ts          ← filter values, messages
+  ui/
+    HistoryFilters.tsx    ← risk + rows filter selects
 ```
 
-**`HistoryClient`:**
-- Filter by row count (select: all / 8–16)
-- `useBetHistory(rowsParam)` — infinite query
-- Load More button with `hasNextPage` / `isFetchingNextPage`
-- Row click → `BetDetailDrawer`
+**`useHistory`:** Holds `filterRows` / `filterRisk` state, calls `useBetHistory(rowsParam, riskParam)` (infinite query), flattens pages into `allBets`, and auto-loads the next page when `sentinelRef` enters the viewport.
 
-**`BetDetailDrawer`:** Sliding panel with details: multiplier, payout, path, seed info.
+**`HistoryClient`:** Render-only — wires `useHistory` into `Header`, `HistoryFilters`, and `BetTable`, with a `BottomNav` footer. Empty/loading states use `LoadingState`.
 
 ---
 

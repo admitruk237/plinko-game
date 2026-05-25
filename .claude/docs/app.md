@@ -14,6 +14,8 @@ src/app/
   globals.css             ← Tailwind imports, OKLCH CSS variables
   game/page.tsx           ← protected game page
   history/page.tsx        ← protected bet history page
+  progress/page.tsx       ← protected progress page (BottomNav shell)
+  profile/page.tsx        ← protected profile page (BottomNav shell)
   login/page.tsx          ← public login page
   register/page.tsx       ← public register page
   providers/
