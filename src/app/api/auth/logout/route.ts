@@ -30,5 +30,5 @@ export async function POST(): Promise<NextResponse> {
   await deleteAccessToken();
   await deleteRefreshToken();
 
-  return NextResponse.json(null, { status: 204 });
+  return new NextResponse(null, { status: 204 });
 }
