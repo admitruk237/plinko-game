@@ -17,3 +17,8 @@ export * from './select';
 export { Badge } from './badge';
 export { ClockIcon, type ClockIconHandle } from './clock-icon';
 export { LogoutIcon, type LogoutIconHandle } from './logout-icon';
+export { GameIcon, type GameIconHandle } from './game-icon';
+export { TrophyIcon, type TrophyIconHandle } from './trophy-icon';
+export { ProfileIcon, type ProfileIconHandle } from './profile-icon';
+export { LoadingState } from './loading-state';
+export { ErrorState } from './error-state';

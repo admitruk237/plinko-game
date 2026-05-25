@@ -81,5 +81,5 @@ else
   echo "🧪 Running tests matching: $UNIQUE_PATTERNS"
   echo ""
 
-  npx jest --testPathPattern="$UNIQUE_PATTERNS" --passWithNoTests
+  npx jest --testPathPatterns="$UNIQUE_PATTERNS" --passWithNoTests
 fi

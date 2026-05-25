@@ -44,4 +44,4 @@ Do NOT write custom alternatives to what shadcn already provides.
 
 ## Size limit
 
-If a component exceeds ~80 lines or contains multiple independent visual blocks — split into sub-components, one file each.
+If a component exceeds ~120 lines or contains multiple independent visual blocks — split into sub-components, one file each.
