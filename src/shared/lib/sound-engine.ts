@@ -93,7 +93,10 @@ export const SoundEngine = {
   },
 
   playLoss(): void {
-    playTone(330, 0.18, 'sine', 0.2, 220);
+    playTone(392, 0.28, 'sawtooth', 0.16, 370);
+    setTimeout(() => playTone(349, 0.28, 'sawtooth', 0.16, 330), 240);
+    setTimeout(() => playTone(311, 0.28, 'sawtooth', 0.16, 294), 480);
+    setTimeout(() => playTone(233, 0.7, 'sawtooth', 0.18, 174), 720);
   },
 
   playRowsChange(): void {

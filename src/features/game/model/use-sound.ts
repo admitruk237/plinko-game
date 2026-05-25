@@ -1,9 +1,10 @@
 'use client';
 
 import { useCallback, useEffect } from 'react';
-import { Howler } from 'howler';
+
 import { useSettingsStore } from '@/entities/settings';
 import { SoundEngine } from '@/shared/lib/sound-engine';
+import { Howler } from 'howler';
 
 export const useSound = () => {
   const soundEffectsEnabled = useSettingsStore((s) => s.soundEffectsEnabled);

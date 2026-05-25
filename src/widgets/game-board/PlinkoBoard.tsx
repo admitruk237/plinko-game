@@ -17,8 +17,12 @@ interface Props {
 const BADGE_HEIGHT = 56;
 const BADGE_BOTTOM_OFFSET = 20; // px from container bottom to badge bar
 const TOP_PADDING = 24;
-const PEG_RADIUS = 4;
-const BALL_RADIUS = 6;
+function getPegRadius(width: number): number {
+  return width < 480 ? 3 : 4;
+}
+function getBallRadius(width: number): number {
+  return width < 480 ? 4.5 : 6;
+}
 function getSideMargin(width: number): number {
   if (width < 480) return 40;
   if (width < 768) return 120;
@@ -32,15 +36,18 @@ function getBottomGap(width: number): number {
 }
 const SETTLE_DURATION = 320;
 const BUCKET_FLASH_DURATION = 500;
+const PEG_GLOW_DURATION = 380;
+const HOP_HEIGHT = 9;
 
-const BASE_STEP_MS = 340;
-function getStepDuration(row: number): number {
-  return BASE_STEP_MS / Math.sqrt(row + 1);
+const BASE_STEP_MS = 420;
+function getStepDuration(row: number, width: number): number {
+  const mobileFactor = width < 480 ? 1.18 : 1;
+  return (BASE_STEP_MS * mobileFactor) / Math.sqrt(row + 1);
 }
 
-function getCumulativeTime(upToRow: number): number {
+function getCumulativeTime(upToRow: number, width: number): number {
   let t = 0;
-  for (let r = 0; r < upToRow; r++) t += getStepDuration(r);
+  for (let r = 0; r < upToRow; r++) t += getStepDuration(r, width);
   return t;
 }
 
@@ -71,6 +78,7 @@ export const PlinkoBoard = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const animFrameRef = useRef<number>(0);
   const lastHitPegRef = useRef<Map<string, string>>(new Map());
+  const pegGlowRef = useRef<Map<string, number>>(new Map());
   const instantCompletedRef = useRef<Set<string>>(new Set());
   const [flashBuckets, setFlashBuckets] = useState<Map<number, number>>(new Map());
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -126,10 +134,11 @@ export const PlinkoBoard = ({
         return { x: 0, y: 0, opacity: 1, bounceFactor: 0, nearPeg: null, done: false };
       }
 
+      const pegRadius = getPegRadius(dimensions.width);
       let timeAccum = 0;
 
       for (let r = 0; r < path.length; r++) {
-        const dur = getStepDuration(r);
+        const dur = getStepDuration(r, dimensions.width);
 
         if (timeAccum + dur > elapsed) {
           const localT = (elapsed - timeAccum) / dur;
@@ -149,13 +158,14 @@ export const PlinkoBoard = ({
           } else {
             const prevPeg = getPegPosition(r - 1, curCol);
             const deflectDir = path[r] === 'R' ? 1 : -1;
-            fromX = prevPeg.x + deflectDir * (PEG_RADIUS + 2);
-            fromY = prevPeg.y + PEG_RADIUS + 2;
+            fromX = prevPeg.x + deflectDir * (pegRadius + 2);
+            fromY = prevPeg.y + pegRadius + 2;
           }
 
           const x = fromX + (toPeg.x - fromX) * localT;
-          const y = fromY + (toPeg.y - fromY) * (localT * localT);
-          const bounceFactor = r > 0 ? Math.max(0, 1 - localT / 0.18) : 0;
+          const hop = r > 0 ? Math.sin(localT * Math.PI) * HOP_HEIGHT : 0;
+          const y = fromY + (toPeg.y - fromY) * (localT * localT) - hop;
+          const bounceFactor = r > 0 ? Math.max(0, 1 - localT / 0.28) : 0;
           const nearPeg = localT > 0.7 ? { row: r, col: nextCol } : null;
 
           return { x, y, opacity: 1, bounceFactor, nearPeg, done: false };
@@ -165,7 +175,7 @@ export const PlinkoBoard = ({
       }
 
       // Settling into bucket — ball fades as it "enters" the badge
-      const settleElapsed = elapsed - getCumulativeTime(path.length);
+      const settleElapsed = elapsed - getCumulativeTime(path.length, dimensions.width);
       const settleT = Math.min(settleElapsed / SETTLE_DURATION, 1);
       const settleEased = 1 - Math.pow(1 - settleT, 3);
 
@@ -183,7 +193,7 @@ export const PlinkoBoard = ({
         opacity,
         bounceFactor: 0,
         nearPeg: null,
-        done: elapsed >= getCumulativeTime(path.length) + SETTLE_DURATION,
+        done: elapsed >= getCumulativeTime(path.length, dimensions.width) + SETTLE_DURATION,
       };
     },
     [dimensions, getPegPosition, getBucketPosition]
@@ -235,26 +245,29 @@ export const PlinkoBoard = ({
 
         if (state.nearPeg) {
           glowPegs.add(`${state.nearPeg.row}-${state.nearPeg.col}`);
+          pegGlowRef.current.set(`${state.nearPeg.row}-${state.nearPeg.col}`, now);
         }
       }
 
       // Draw pegs
+      const pegRadius = getPegRadius(dimensions.width);
       for (let row = 0; row < rows; row++) {
         const pegsInRow = row + 2;
         for (let col = 0; col < pegsInRow; col++) {
           const pos = getPegPosition(row, col);
-          const isGlowing = glowPegs.has(`${row}-${col}`);
+          const hitTime = pegGlowRef.current.get(`${row}-${col}`);
+          const glow = hitTime ? Math.max(0, 1 - (now - hitTime) / PEG_GLOW_DURATION) : 0;
 
-          if (isGlowing) {
+          if (glow > 0) {
             ctx.beginPath();
-            ctx.arc(pos.x, pos.y, PEG_RADIUS + 5, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(255,255,255,0.18)';
+            ctx.arc(pos.x, pos.y, pegRadius + 5 * glow, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255,255,255,${0.18 * glow})`;
             ctx.fill();
           }
 
           ctx.beginPath();
-          ctx.arc(pos.x, pos.y, PEG_RADIUS, 0, Math.PI * 2);
-          ctx.fillStyle = isGlowing ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.4)';
+          ctx.arc(pos.x, pos.y, pegRadius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${0.4 + 0.55 * glow})`;
           ctx.fill();
         }
       }
@@ -286,18 +299,18 @@ export const PlinkoBoard = ({
         }
 
         const { x, y, opacity, bounceFactor } = state;
-        const r = BALL_RADIUS * (1 + bounceFactor * 0.4);
+        const r = getBallRadius(dimensions.width) * (1 + bounceFactor * 0.6);
 
         ctx.save();
         ctx.globalAlpha = opacity;
         ctx.globalCompositeOperation = 'screen';
 
-        const gradient = ctx.createRadialGradient(x, y, 0, x, y, r * 2.5);
-        gradient.addColorStop(0, 'rgba(255,255,255,0.85)');
-        gradient.addColorStop(0.4, 'rgba(255,255,255,0.4)');
+        const gradient = ctx.createRadialGradient(x, y, 0, x, y, r * 1.8);
+        gradient.addColorStop(0, 'rgba(255,255,255,0.5)');
+        gradient.addColorStop(0.4, 'rgba(255,255,255,0.2)');
         gradient.addColorStop(1, 'rgba(255,255,255,0)');
         ctx.beginPath();
-        ctx.arc(x, y, r * 2.5, 0, Math.PI * 2);
+        ctx.arc(x, y, r * 1.8, 0, Math.PI * 2);
         ctx.fillStyle = gradient;
         ctx.fill();
 

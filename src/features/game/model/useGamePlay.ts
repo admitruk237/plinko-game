@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { type BallAnimation, type Risk, useGameStore } from '@/entities/game';
 import type { User } from '@/entities/session';
 import { formatCredits } from '@/shared/lib/credits';
+import { BffError } from '@/shared/api';
 import { useSound } from './use-sound';
 import { usePlaceBet } from '../api/usePlaceBet';
 
@@ -79,7 +80,11 @@ export const useGamePlay = ({ setPlaying }: Props): UseGamePlayResult => {
           old ? { ...old, balance: bet.balanceAfter } : old
         );
       } catch (err) {
-        console.error('Bet error:', err);
+        if (err instanceof BffError) {
+          toast.error(err.message, { duration: 3000 });
+        } else {
+          toast.error('Failed to place bet', { duration: 3000 });
+        }
       } finally {
         activeCount.current -= 1;
         if (activeCount.current === 0) setPlaying(false);
