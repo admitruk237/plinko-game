@@ -1,8 +1,12 @@
 import type {
   BetListResponseDto,
   BetResponseDto,
+  ClaimResultDto,
   CreateBetDto,
   GameConfigDto,
+  ProfileDto,
+  ProgressionAggregateDto,
+  UpdateProfileDto,
   UserDto,
 } from './types';
 
@@ -56,6 +60,60 @@ export const bffApi = {
 
     const res = await fetch(`/api/bets?${searchParams.toString()}`);
     if (!res.ok) throw new BffError(res.status, 'Failed to fetch bets');
+    return res.json();
+  },
+
+  getProfile: async (): Promise<ProfileDto> => {
+    const res = await fetch('/api/profile/me');
+    if (!res.ok) throw new BffError(res.status, 'Failed to fetch profile');
+    return res.json();
+  },
+
+  updateProfile: async (dto: UpdateProfileDto): Promise<ProfileDto> => {
+    const res = await fetch('/api/profile/me', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dto),
+    });
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      throw new BffError(res.status, error.message || 'Failed to update profile');
+    }
+    return res.json();
+  },
+
+  uploadAvatar: async (file: File): Promise<ProfileDto> => {
+    const body = new FormData();
+    body.append('image', file);
+    const res = await fetch('/api/profile/avatar', { method: 'POST', body });
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      throw new BffError(res.status, error.message || 'Failed to upload avatar');
+    }
+    return res.json();
+  },
+
+  getProgression: async (): Promise<ProgressionAggregateDto> => {
+    const res = await fetch('/api/progression/me');
+    if (!res.ok) throw new BffError(res.status, 'Failed to fetch progression');
+    return res.json();
+  },
+
+  claimDaily: async (): Promise<ClaimResultDto> => {
+    const res = await fetch('/api/progression/daily/claim', { method: 'POST' });
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      throw new BffError(res.status, error.message || 'Failed to claim daily reward');
+    }
+    return res.json();
+  },
+
+  claimMission: async (id: string): Promise<ClaimResultDto> => {
+    const res = await fetch(`/api/progression/missions/${id}/claim`, { method: 'POST' });
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      throw new BffError(res.status, error.message || 'Failed to claim mission');
+    }
     return res.json();
   },
 
