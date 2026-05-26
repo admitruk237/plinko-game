@@ -1,4 +1,4 @@
-import { Gift, Flame } from 'lucide-react';
+import { Flame, Gift } from 'lucide-react';
 import { Button, CurrencyIcon } from '@/shared/ui';
 import { formatCredits } from '@/shared/lib/credits';
 

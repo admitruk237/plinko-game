@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useProgression, useClaimDaily, useClaimMission } from '@/features/progression';
+import { useClaimDaily, useClaimMission, useProgression } from '@/features/progression';
 import { levelProgress } from '@/shared/lib/progression';
 import type { MissionDto, ProgressionAggregateDto } from '@/shared/api/types';
 
@@ -22,9 +22,7 @@ export const useProgressionClient = (): ProgressionView => {
   const claimMission = useClaimMission();
   const [claimingMissionId, setClaimingMissionId] = useState<string | null>(null);
 
-  const levelPercent = progression
-    ? levelProgress(progression).percent
-    : 0;
+  const levelPercent = progression ? levelProgress(progression).percent : 0;
 
   const onClaimDaily = () => {
     claimDaily.mutate();

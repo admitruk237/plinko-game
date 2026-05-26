@@ -30,7 +30,9 @@ export const MissionCard = ({ mission, isClaiming, onClaim }: Props) => {
           <p className="text-xs text-[#99A1AF] mb-3">{mission.description}</p>
 
           <div className="flex items-center justify-between text-xs text-[#99A1AF] mb-1">
-            <span>{mission.progress} / {mission.target}</span>
+            <span>
+              {mission.progress} / {mission.target}
+            </span>
             <span>{percent}%</span>
           </div>
           <ProgressBar percent={percent} className="h-1.5" />
@@ -54,9 +56,7 @@ export const MissionCard = ({ mission, isClaiming, onClaim }: Props) => {
             </Button>
           )}
 
-          {mission.status === 'CLAIMED' && (
-            <span className="text-xs text-[#99A1AF]">Claimed</span>
-          )}
+          {mission.status === 'CLAIMED' && <span className="text-xs text-[#99A1AF]">Claimed</span>}
         </div>
       </div>
     </div>
