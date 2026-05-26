@@ -1,3 +1,4 @@
+export { ArrowLeftIcon, type ArrowLeftIconHandle } from './arrow-left-icon';
 export { Button } from './button';
 export { Card } from './card';
 export { CurrencyIcon } from './currency-icon';

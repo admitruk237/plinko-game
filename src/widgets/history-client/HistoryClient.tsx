@@ -50,10 +50,15 @@ export const HistoryClient = () => {
 
   return (
     <div className="flex flex-col h-[100dvh] overflow-hidden">
+      <Header
+        title="Bet History"
+        showBackButton
+        backRoute={ROUTES.GAME}
+        variant="subpage"
+        maxWidthClassName="max-w-[1232px]"
+      />
       <div className="flex-1 overflow-y-auto w-full bg-transparent">
-        <div className="max-w-[1232px] w-full mx-auto px-4 md:px-6 xl:px-0 flex flex-col pb-10">
-          <Header title="Bet History" showBackButton backRoute={ROUTES.GAME} />
-
+        <div className="max-w-[1232px] w-full mx-auto px-4 md:px-6 xl:px-0 flex flex-col pb-10 pt-4">
           <HistoryFilters
             filterRisk={filterRisk}
             filterRows={filterRows}
