@@ -5,3 +5,4 @@ export { Header } from './header/Header';
 export { GameSidebar } from './game-sidebar/GameSidebar';
 export { RecentResults } from './recent-results/RecentResults';
 export { BottomNav } from './bottom-nav/BottomNav';
+export { ProfileClient } from './profile-client';
