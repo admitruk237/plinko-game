@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { ROUTES } from '@/shared/config';
 
-const protectedRoutes = [ROUTES.GAME, ROUTES.HISTORY];
+const protectedRoutes = [ROUTES.GAME, ROUTES.HISTORY, ROUTES.PROFILE, ROUTES.PROGRESS];
 const publicRoutes = [ROUTES.LOGIN, ROUTES.REGISTER];
 
 export default function middleware(req: NextRequest) {
