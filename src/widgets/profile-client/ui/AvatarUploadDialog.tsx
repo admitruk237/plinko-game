@@ -14,6 +14,7 @@ interface Props {
   isOpen: boolean;
   pendingFile: File | null;
   isUploading: boolean;
+  uploadError: string | null;
   onClose: () => void;
   onFileSelect: (file: File) => void;
   onUpload: () => void;
@@ -23,6 +24,7 @@ export const AvatarUploadDialog = ({
   isOpen,
   pendingFile,
   isUploading,
+  uploadError,
   onClose,
   onFileSelect,
   onUpload,
@@ -100,6 +102,8 @@ export const AvatarUploadDialog = ({
             className="hidden"
             onChange={handleFileChange}
           />
+
+          {uploadError && <p className="text-sm text-red-400">{uploadError}</p>}
 
           <div className="flex gap-3">
             <Button

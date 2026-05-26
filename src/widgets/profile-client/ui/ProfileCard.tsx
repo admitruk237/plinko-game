@@ -100,6 +100,7 @@ export const ProfileCard = ({ profile, balanceDisplay, levelPercent, nickname, a
       isOpen={avatar.isModalOpen}
       pendingFile={avatar.pendingFile}
       isUploading={avatar.isUploading}
+      uploadError={avatar.uploadError}
       onClose={avatar.onCloseModal}
       onFileSelect={avatar.onFileSelect}
       onUpload={avatar.onUpload}
