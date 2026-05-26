@@ -1,29 +1,44 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useState } from 'react';
 import { useUploadAvatar } from '@/features/profile/api';
 
 interface AvatarUpload {
-  fileInputRef: React.RefObject<HTMLInputElement | null>;
+  isModalOpen: boolean;
+  pendingFile: File | null;
   isUploading: boolean;
-  onPickAvatar: () => void;
-  onAvatarSelect: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onOpenModal: () => void;
+  onCloseModal: () => void;
+  onFileSelect: (file: File) => void;
+  onUpload: () => void;
 }
 
 export const useAvatarUpload = (): AvatarUpload => {
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
   const { mutate, isPending } = useUploadAvatar();
 
-  const onPickAvatar = useCallback(() => {
-    fileInputRef.current?.click();
+  const onOpenModal = useCallback(() => setIsModalOpen(true), []);
+
+  const onCloseModal = useCallback(() => {
+    setIsModalOpen(false);
+    setPendingFile(null);
   }, []);
 
-  const onAvatarSelect = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (file) mutate(file);
-      event.target.value = '';
-    },
-    [mutate]
-  );
+  const onFileSelect = useCallback((file: File) => {
+    setPendingFile(file);
+  }, []);
 
-  return { fileInputRef, isUploading: isPending, onPickAvatar, onAvatarSelect };
+  const onUpload = useCallback(() => {
+    if (!pendingFile) return;
+    mutate(pendingFile, { onSuccess: onCloseModal });
+  }, [pendingFile, mutate, onCloseModal]);
+
+  return {
+    isModalOpen,
+    pendingFile,
+    isUploading: isPending,
+    onOpenModal,
+    onCloseModal,
+    onFileSelect,
+    onUpload,
+  };
 };
