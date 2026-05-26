@@ -8,6 +8,7 @@ import {
   DEFAULT_NUM_BETS,
   DEFAULT_STOP_LOSS,
   DEFAULT_STOP_PROFIT,
+  MAX_NUM_BETS,
 } from '@/shared/config';
 
 interface Props {
@@ -16,7 +17,7 @@ interface Props {
   betInput: string;
   rows: number;
   risk: Risk;
-  onPlaceBet: (amount: string, rows: number, risk: Risk) => void;
+  onPlaceBet: (amount: string, rows: number, risk: Risk) => Promise<void> | void;
   mode: BetMode;
 }
 
@@ -47,6 +48,7 @@ export const useAutoBet = ({
   const [isAutoBetting, setIsAutoBetting] = useState<boolean>(false);
   const [currentBetCount, setCurrentBetCount] = useState<number>(DEFAULT_BET_COUNT);
   const [startBalance, setStartBalance] = useState<bigint | null>(null);
+  const [isWaitingForBet, setIsWaitingForBet] = useState<boolean>(false);
 
   const balanceBigInt = BigInt(balance || '0');
 
@@ -56,7 +58,7 @@ export const useAutoBet = ({
 
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    if (!isAutoBetting) return;
+    if (!isAutoBetting || isWaitingForBet) return;
 
     const betsLeft = parseInt(numBetsInput, 10);
     if (!isNaN(betsLeft) && betsLeft > 0 && currentBetCount >= betsLeft) {
@@ -92,13 +94,30 @@ export const useAutoBet = ({
         return;
       }
 
-      onPlaceBet(betInput, rows, risk);
-      setCurrentBetCount((c) => c + 1);
+      setIsWaitingForBet(true);
+      const res = onPlaceBet(amount.toString(), rows, risk);
+
+      if (res instanceof Promise) {
+        res
+          .then(() => {
+            setIsWaitingForBet(false);
+            setCurrentBetCount((c) => c + 1);
+          })
+          .catch(() => {
+            setIsAutoBetting(false);
+            setIsWaitingForBet(false);
+          });
+      } else {
+        setIsWaitingForBet(false);
+        setCurrentBetCount((c) => c + 1);
+      }
     } catch {
       setIsAutoBetting(false);
+      setIsWaitingForBet(false);
     }
   }, [
     isAutoBetting,
+    isWaitingForBet,
     isPlaying,
     currentBetCount,
     numBetsInput,
@@ -114,7 +133,13 @@ export const useAutoBet = ({
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleNumBetsChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setNumBetsInput(e.target.value.replace(/[^0-9]/g, ''));
+    const digits = e.target.value.replace(/[^0-9]/g, '');
+    const num = parseInt(digits, 10);
+    if (digits === '') {
+      setNumBetsInput('');
+    } else if (!isNaN(num)) {
+      setNumBetsInput(String(Math.min(num, MAX_NUM_BETS)));
+    }
   }, []);
 
   const handleStopProfitChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {

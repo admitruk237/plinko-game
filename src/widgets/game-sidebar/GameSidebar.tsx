@@ -1,6 +1,10 @@
 'use client';
+
+import { useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
+import { X as XIcon } from 'lucide-react';
 import type { GameConfig, Risk } from '@/entities/game';
+import { Button } from '@/shared/ui/button';
 import { Card } from '@/shared/ui/card';
 import { BetModeToggle } from '@/features/bet-mode';
 import { CurrencyIcon } from '@/shared/ui/currency-icon';
@@ -16,6 +20,15 @@ import { SidebarFooter } from './ui/SidebarFooter';
 import { BetButton } from './ui/BetButton';
 import { LABELS, ZERO } from './model/constants';
 
+export interface CompactState {
+  betAmount: string;
+  mode: string;
+  isAutoBetting: boolean;
+  limitNumBets: number;
+  currentBetCount: number;
+  isBetButtonDisabled: boolean;
+}
+
 interface Props {
   config: GameConfig;
   balance: string;
@@ -24,7 +37,10 @@ interface Props {
   risk: Risk;
   onRowsChange: (rows: number) => void;
   onRiskChange: (risk: Risk) => void;
-  onPlaceBet: (amount: string, rows: number, risk: Risk) => void;
+  onPlaceBet: (amount: string, rows: number, risk: Risk) => Promise<void> | void;
+  onCompactStateChange?: (state: CompactState) => void;
+  showCloseButton?: boolean;
+  onClose?: () => void;
 }
 
 export const GameSidebar = ({
@@ -36,6 +52,9 @@ export const GameSidebar = ({
   onRowsChange,
   onRiskChange,
   onPlaceBet,
+  onCompactStateChange,
+  showCloseButton = false,
+  onClose,
 }: Props) => {
   const {
     mode,
@@ -43,6 +62,7 @@ export const GameSidebar = ({
     handleRowsChange,
     handleFullscreenToggle,
     form,
+    betInput,
     handleHalf,
     handleDouble,
     handleMax,
@@ -60,23 +80,61 @@ export const GameSidebar = ({
 
   const isAutoDisabled = isAutoBetting ? false : isPlaying;
   const isBetButtonDisabled = mode === BET_MODES.AUTO ? isAutoDisabled : false;
-
   const limitNumBets = parseInt(numBetsInput, 10);
+
+  useEffect(() => {
+    onCompactStateChange?.({
+      betAmount: betInput,
+      mode,
+      isAutoBetting,
+      limitNumBets: limitNumBets || 0,
+      currentBetCount,
+      isBetButtonDisabled,
+    });
+  }, [
+    betInput,
+    mode,
+    isAutoBetting,
+    limitNumBets,
+    currentBetCount,
+    isBetButtonDisabled,
+    onCompactStateChange,
+  ]);
 
   return (
     <Card
       variant="sidebar"
-      className="h-full max-md:w-full max-md:min-w-0 max-md:h-auto z-10 shrink-0"
+      className="md:h-full md:w-[320px] md:min-w-[320px] md:!overflow-y-auto md:[scrollbar-width:thin] md:[scrollbar-color:#2A2F3E_transparent] md:[&::-webkit-scrollbar]:w-1 md:[&::-webkit-scrollbar-track]:bg-transparent md:[&::-webkit-scrollbar-thumb]:bg-[#2A2F3E] md:[&::-webkit-scrollbar-thumb]:rounded-full max-md:w-full max-md:min-w-0 max-md:min-h-full max-md:border-none max-md:bg-transparent max-md:p-0 max-md:shadow-none z-10 shrink-0"
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleBet)} className="flex flex-col gap-4 h-full">
-          <BetModeToggle value={mode} onChange={setMode} disabled={isAutoBetting} />
-          <div className="flex flex-col gap-2 shrink-0">
+        <form
+          id="sidebar-form"
+          onSubmit={form.handleSubmit(handleBet)}
+          className="flex flex-col gap-4 min-h-full shrink-0"
+        >
+          <div className="flex items-center gap-3 w-full shrink-0">
+            <div className="flex-grow">
+              <BetModeToggle value={mode} onChange={setMode} disabled={isAutoBetting} />
+            </div>
+            {showCloseButton && (
+              <Button
+                type="button"
+                onClick={onClose}
+                variant="icon"
+                size="none"
+                className="md:hidden p-2 text-white/40 hover:text-white bg-[#0F1419] rounded-[14px] w-[36px] h-[36px] flex items-center justify-center shrink-0 border border-[#2A2F3E]"
+              >
+                <XIcon size={16} />
+              </Button>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2">
             <FormField
               control={form.control}
               name="betInput"
               render={({ field }) => (
-                <FormItem className="shrink-0">
+                <FormItem>
                   <FormLabel>{LABELS.BET_AMOUNT}</FormLabel>
                   <div className="relative flex items-center w-full">
                     <CurrencyIcon className="absolute left-3 top-1/2 -translate-y-1/2 z-10" />
@@ -137,6 +195,7 @@ export const GameSidebar = ({
               </motion.div>
             )}
           </AnimatePresence>
+
           <BetButton
             mode={mode}
             isAutoBetting={isAutoBetting}
@@ -144,7 +203,11 @@ export const GameSidebar = ({
             limitNumBets={limitNumBets}
             currentBetCount={currentBetCount}
           />
-          <SidebarFooter onFullscreenToggle={handleFullscreenToggle} />
+
+          {/* mt-auto: в manual — притягує до низу; в auto — 0 (вміст заповнює), gap-4 дає 16px */}
+          <div className="mt-auto">
+            <SidebarFooter onFullscreenToggle={handleFullscreenToggle} />
+          </div>
         </form>
       </Form>
     </Card>

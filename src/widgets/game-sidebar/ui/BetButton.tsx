@@ -8,6 +8,8 @@ interface Props {
   disabled: boolean;
   limitNumBets: number;
   currentBetCount: number;
+  formId?: string;
+  className?: string;
 }
 
 export const BetButton = ({
@@ -16,6 +18,8 @@ export const BetButton = ({
   disabled,
   limitNumBets,
   currentBetCount,
+  formId,
+  className,
 }: Props) => {
   const getButtonClassName = () => {
     if (mode === BET_MODES.AUTO && isAutoBetting) {
@@ -39,7 +43,13 @@ export const BetButton = ({
   };
 
   return (
-    <Button type="submit" variant="primary" disabled={disabled} className={getButtonClassName()}>
+    <Button
+      type="submit"
+      form={formId}
+      variant="primary"
+      disabled={disabled}
+      className={`${getButtonClassName()} ${className || ''}`}
+    >
       {renderContent()}
     </Button>
   );

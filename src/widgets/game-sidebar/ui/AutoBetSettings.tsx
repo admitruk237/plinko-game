@@ -1,6 +1,7 @@
 import React from 'react';
 import { Label } from '@/shared/ui/label';
 import { Input } from '@/shared/ui/input';
+import { MAX_NUM_BETS } from '@/shared/config';
 
 const LABELS = {
   NUM_BETS: 'Number of Bets',
@@ -38,8 +39,10 @@ export const AutoBetSettings = ({
           value={numBetsInput}
           disabled={isAutoBetting}
           onChange={onNumBetsChange}
+          placeholder={`1 – ${MAX_NUM_BETS}`}
           className="bg-[#0f1219] border border-white/10"
         />
+        <p className="text-xs text-white/40">Max {MAX_NUM_BETS} bets</p>
       </div>
 
       <div className="flex gap-3 shrink-0">

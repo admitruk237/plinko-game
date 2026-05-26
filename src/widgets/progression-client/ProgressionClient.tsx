@@ -30,7 +30,13 @@ export const ProgressionClient = () => {
 
   return (
     <div className="flex h-[100dvh] flex-col overflow-hidden">
-      <Header title="Progress" showBackButton backRoute={ROUTES.GAME} />
+      <Header
+        title="Progression"
+        showBackButton
+        backRoute={ROUTES.GAME}
+        variant="subpage"
+        maxWidthClassName="max-w-[896px] px-4"
+      />
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto flex max-w-[896px] flex-col gap-4 p-4">
           <LevelProgressCard

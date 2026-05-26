@@ -12,7 +12,7 @@ interface Props {
 
 export const SidebarFooter = ({ onFullscreenToggle }: Props) => {
   return (
-    <div className="flex items-center justify-between gap-2 mt-auto shrink-0 pt-4">
+    <div className="flex items-center justify-between gap-2 shrink-0">
       <Button
         type="button"
         variant="icon"

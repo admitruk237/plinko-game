@@ -1,6 +1,7 @@
 export const DEFAULT_PAGE_LIMIT = 20;
 export const DEFAULT_BET_AMOUNT = '1.00';
 export const DEFAULT_NUM_BETS = '10';
+export const MAX_NUM_BETS = 1000;
 export const DEFAULT_STOP_PROFIT = '0.00';
 export const DEFAULT_STOP_LOSS = '0.00';
 export const DEFAULT_BET_COUNT = 0;

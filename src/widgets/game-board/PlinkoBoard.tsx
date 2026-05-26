@@ -15,8 +15,41 @@ interface Props {
 }
 
 const BADGE_HEIGHT = 56;
-const BADGE_BOTTOM_OFFSET = 20; // px from container bottom to badge bar
+const MOBILE_BREAKPOINT = 768;
+const MOBILE_BADGE_BOTTOM_OFFSET = 168;
+const DESKTOP_BADGE_BOTTOM_OFFSET = 20;
 const TOP_PADDING = 24;
+
+// Badge scaling configurations
+const BADGE_SPACING_SMALL = 35;
+const BADGE_SPACING_MEDIUM = 45;
+const BADGE_SPACING_LARGE = 55;
+
+const FONT_SIZE_XSMALL = 7;
+const FONT_SIZE_SMALL = 8;
+const FONT_SIZE_MOBILE_DEFAULT = 9;
+const FONT_SIZE_MEDIUM = 10;
+const FONT_SIZE_LARGE = 12;
+const FONT_SIZE_DESKTOP_DEFAULT = 14;
+
+const BADGE_HEIGHT_XSMALL = 26;
+const BADGE_HEIGHT_SMALL = 30;
+const BADGE_HEIGHT_MEDIUM = 34;
+const BADGE_HEIGHT_DEFAULT = 40;
+
+const BADGE_PADDING_ZERO = 0;
+const BADGE_PADDING_XSMALL = 2;
+const BADGE_PADDING_SMALL = 4;
+const BADGE_PADDING_MEDIUM = 8;
+const BADGE_PADDING_DEFAULT = 12;
+
+const RADIUS_SMALL = 4;
+const RADIUS_MEDIUM = 6;
+const RADIUS_LARGE = 8;
+const RADIUS_DEFAULT = 10;
+
+const BORDER_WIDTH_THIN = 1;
+const BORDER_WIDTH_THICK = 2;
 function getPegRadius(width: number): number {
   return width < 480 ? 3 : 4;
 }
@@ -95,13 +128,88 @@ export const PlinkoBoard = ({
     return () => observer.disconnect();
   }, []);
 
+  const getBadgeStyle = (multiplier: number, index: number) => {
+    const isFlashing = flashBuckets.has(index);
+    const hex = getMultiplierHex(multiplier);
+    const { width } = dimensions;
+
+    if (!width) {
+      return {
+        backgroundColor: `${hex}33`,
+        borderColor: hex,
+        color: hex,
+      };
+    }
+
+    const colSpacing = getColSpacing(width, rows);
+
+    let fontSize = FONT_SIZE_DESKTOP_DEFAULT;
+    let height = BADGE_HEIGHT_DEFAULT;
+    let px = BADGE_PADDING_DEFAULT;
+    let borderRadius = RADIUS_DEFAULT;
+    let borderWidth = BORDER_WIDTH_THICK;
+
+    if (width < MOBILE_BREAKPOINT) {
+      fontSize = rows >= 14 ? FONT_SIZE_XSMALL : FONT_SIZE_MOBILE_DEFAULT;
+      height = BADGE_HEIGHT_XSMALL;
+      px = BADGE_PADDING_ZERO;
+      borderRadius = RADIUS_SMALL;
+      borderWidth = BORDER_WIDTH_THIN;
+    } else {
+      if (colSpacing < BADGE_SPACING_SMALL) {
+        fontSize = FONT_SIZE_SMALL;
+        height = BADGE_HEIGHT_XSMALL;
+        px = BADGE_PADDING_XSMALL;
+        borderRadius = RADIUS_SMALL;
+        borderWidth = BORDER_WIDTH_THIN;
+      } else if (colSpacing < BADGE_SPACING_MEDIUM) {
+        fontSize = FONT_SIZE_MEDIUM;
+        height = BADGE_HEIGHT_SMALL;
+        px = BADGE_PADDING_SMALL;
+        borderRadius = RADIUS_MEDIUM;
+        borderWidth = BORDER_WIDTH_THIN;
+      } else if (colSpacing < BADGE_SPACING_LARGE) {
+        fontSize = FONT_SIZE_LARGE;
+        height = BADGE_HEIGHT_MEDIUM;
+        px = BADGE_PADDING_MEDIUM;
+        borderRadius = RADIUS_LARGE;
+        borderWidth = BORDER_WIDTH_THICK;
+      }
+    }
+
+    return {
+      backgroundColor: `${hex}33`,
+      borderColor: hex,
+      color: hex,
+      fontSize: `${fontSize}px`,
+      height: `${height}px`,
+      paddingLeft: `${px}px`,
+      paddingRight: `${px}px`,
+      borderRadius: `${borderRadius}px`,
+      borderWidth: `${borderWidth}px`,
+      transform: isFlashing ? 'scale(1.05)' : 'none',
+      filter: isFlashing ? 'brightness(1.25)' : 'none',
+    };
+  };
+
+  const getBadgeBarGapClass = () => {
+    const { width } = dimensions;
+    if (!width) return 'gap-1';
+    if (width < MOBILE_BREAKPOINT) return 'gap-[2px]';
+    const colSpacing = getColSpacing(width, rows);
+    if (colSpacing < BADGE_SPACING_MEDIUM) return 'gap-[2px]';
+    return 'gap-1';
+  };
+
   const getPegPosition = useCallback(
     (row: number, col: number) => {
       const { width, height } = dimensions;
       if (!width || !height) return { x: 0, y: 0 };
+      const badgeBottomOffset =
+        width < MOBILE_BREAKPOINT ? MOBILE_BADGE_BOTTOM_OFFSET : DESKTOP_BADGE_BOTTOM_OFFSET;
       // Available vertical space: from TOP_PADDING down to badge bar top minus gap
       const availableHeight =
-        height - BADGE_BOTTOM_OFFSET - BADGE_HEIGHT - TOP_PADDING - getBottomGap(width);
+        height - badgeBottomOffset - BADGE_HEIGHT - TOP_PADDING - getBottomGap(width);
       const rowSpacing = availableHeight / rows;
       const colSpacing = getColSpacing(width, rows);
       const pegsInRow = row + 2;
@@ -117,10 +225,12 @@ export const PlinkoBoard = ({
     (index: number) => {
       const { width, height } = dimensions;
       if (!width || !height) return { x: 0, y: 0 };
+      const badgeBottomOffset =
+        width < MOBILE_BREAKPOINT ? MOBILE_BADGE_BOTTOM_OFFSET : DESKTOP_BADGE_BOTTOM_OFFSET;
       const colSpacing = getColSpacing(width, rows);
       const startX = getSideMargin(width) / 2;
       // Ball settles into center of badge bar
-      return { x: startX + index * colSpacing, y: height - BADGE_BOTTOM_OFFSET - BADGE_HEIGHT / 2 };
+      return { x: startX + index * colSpacing, y: height - badgeBottomOffset - BADGE_HEIGHT / 2 };
     },
     [dimensions, rows]
   );
@@ -344,33 +454,26 @@ export const PlinkoBoard = ({
 
       {/* Badge bar — aligned with peg columns via SIDE_MARGIN */}
       <div
-        className="absolute left-0 right-0 flex items-center gap-0 sm:gap-1"
+        className={`absolute left-0 right-0 flex items-center ${getBadgeBarGapClass()}`}
         style={{
-          bottom: BADGE_BOTTOM_OFFSET,
+          bottom:
+            dimensions.width < MOBILE_BREAKPOINT
+              ? MOBILE_BADGE_BOTTOM_OFFSET
+              : DESKTOP_BADGE_BOTTOM_OFFSET,
           height: BADGE_HEIGHT,
           paddingLeft: getSideMargin(dimensions.width) / 2,
           paddingRight: getSideMargin(dimensions.width) / 2,
         }}
       >
-        {payoutTable.map((multiplier, index) => {
-          const isFlashing = flashBuckets.has(index);
-          const hex = getMultiplierHex(multiplier);
-          const mobileFontSize = rows >= 14 ? 'text-[7px]' : 'text-[9px]';
-
-          return (
-            <div
-              key={`${risk}-${rows}-${index}`}
-              className={`flex flex-1 items-center justify-center rounded sm:rounded-[10px] border sm:border-2 h-[26px] sm:h-[40px] px-0 sm:px-3 py-0.5 sm:py-2 ${mobileFontSize} sm:text-[14px] font-bold leading-tight sm:leading-[20px] tracking-[-0.15px] transition-all duration-200 ${isFlashing ? 'scale-105 brightness-125' : ''}`}
-              style={{
-                backgroundColor: `${hex}33`,
-                borderColor: hex,
-                color: hex,
-              }}
-            >
-              {multiplier}x
-            </div>
-          );
-        })}
+        {payoutTable.map((multiplier, index) => (
+          <div
+            key={`${risk}-${rows}-${index}`}
+            className="flex flex-1 items-center justify-center border font-bold leading-none tracking-[-0.15px] transition-all duration-200"
+            style={getBadgeStyle(multiplier, index)}
+          >
+            {multiplier}x
+          </div>
+        ))}
       </div>
     </div>
   );

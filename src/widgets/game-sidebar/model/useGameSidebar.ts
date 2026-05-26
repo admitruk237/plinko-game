@@ -11,7 +11,7 @@ interface Props {
   rows: number;
   risk: Risk;
   onRowsChange: (rows: number) => void;
-  onPlaceBet: (amount: string, rows: number, risk: Risk) => void;
+  onPlaceBet: (amount: string, rows: number, risk: Risk) => Promise<void> | void;
 }
 
 export const useGameSidebar = ({
