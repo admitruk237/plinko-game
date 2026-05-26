@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { useClaimDaily, useClaimMission, useProgression } from '@/features/progression';
 import { levelProgress } from '@/shared/lib/progression';
+import { formatCredits } from '@/shared/lib/credits';
 import type { MissionDto, ProgressionAggregateDto } from '@/shared/api/types';
 
 interface ProgressionView {
@@ -25,12 +27,27 @@ export const useProgressionClient = (): ProgressionView => {
   const levelPercent = progression ? levelProgress(progression).percent : 0;
 
   const onClaimDaily = () => {
-    claimDaily.mutate();
+    claimDaily.mutate(undefined, {
+      onSuccess: (result) => {
+        const credits = formatCredits(result.reward.credits);
+        toast.success(`Daily reward claimed! +${credits} credits, +${result.reward.xp} XP`);
+      },
+    });
   };
 
   const onClaimMission = (id: string) => {
+    const mission = [
+      ...(progression?.missions.daily ?? []),
+      ...(progression?.missions.starter ?? []),
+    ].find((m) => m.id === id);
+
     setClaimingMissionId(id);
     claimMission.mutate(id, {
+      onSuccess: (result) => {
+        const credits = formatCredits(result.reward.credits);
+        const label = mission?.title ?? 'Mission';
+        toast.success(`${label} claimed! +${credits} credits, +${result.reward.xp} XP`);
+      },
       onSettled: () => setClaimingMissionId(null),
     });
   };
