@@ -22,3 +22,4 @@ export { TrophyIcon, type TrophyIconHandle } from './trophy-icon';
 export { ProfileIcon, type ProfileIconHandle } from './profile-icon';
 export { LoadingState } from './loading-state';
 export { ErrorState } from './error-state';
+export { ProgressBar } from './progress-bar';
