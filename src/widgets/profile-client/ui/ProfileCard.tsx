@@ -1,7 +1,7 @@
-import { Pencil, Trophy, Flame, TrendingUp } from 'lucide-react';
-import { Button, Input, CurrencyIcon, ProgressBar } from '@/shared/ui';
+import { Flame, Pencil, TrendingUp, Trophy } from 'lucide-react';
+import { Button, CurrencyIcon, Input, ProgressBar } from '@/shared/ui';
 import type { ProfileDto } from '@/shared/api/types';
-import type { useNicknameEdit, useAvatarUpload } from '@/features/profile';
+import type { useAvatarUpload, useNicknameEdit } from '@/features/profile';
 import { ProfileAvatar } from './ProfileAvatar';
 
 interface Props {
@@ -67,7 +67,8 @@ export const ProfileCard = ({ profile, balanceDisplay, levelPercent, nickname, a
             <Trophy className="h-4 w-4 text-[#F0B100]" /> Level {profile.progression.level}
           </span>
           <span className="flex items-center gap-1.5 text-sm text-white">
-            <Flame className="h-4 w-4 text-[#FF6900]" /> {profile.progression.dailyStreak} day streak
+            <Flame className="h-4 w-4 text-[#FF6900]" /> {profile.progression.dailyStreak} day
+            streak
           </span>
         </div>
       </div>
@@ -84,7 +85,8 @@ export const ProfileCard = ({ profile, balanceDisplay, levelPercent, nickname, a
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <span className="flex items-center gap-2 text-sm text-white">
-          <TrendingUp className="h-4 w-4 text-[#51A2FF]" /> Level {profile.progression.level} Progress
+          <TrendingUp className="h-4 w-4 text-[#51A2FF]" /> Level {profile.progression.level}{' '}
+          Progress
         </span>
         <span className="text-xs text-[#99A1AF]">
           {profile.progression.xpIntoCurrentLevel} / {profile.progression.xpForNextLevel} XP

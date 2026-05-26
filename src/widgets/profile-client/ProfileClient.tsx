@@ -1,7 +1,7 @@
 'use client';
 
-import { Header, BottomNav } from '@/widgets';
-import { LoadingState, ErrorState } from '@/shared/ui';
+import { BottomNav, Header } from '@/widgets';
+import { ErrorState, LoadingState } from '@/shared/ui';
 import { ROUTES } from '@/shared/config';
 import { useProfileClient } from './model/useProfileClient';
 import { ProfileCard } from './ui/ProfileCard';

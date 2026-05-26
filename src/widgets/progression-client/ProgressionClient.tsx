@@ -1,7 +1,7 @@
 'use client';
 
-import { Header, BottomNav } from '@/widgets';
-import { LoadingState, ErrorState } from '@/shared/ui';
+import { BottomNav, Header } from '@/widgets';
+import { ErrorState, LoadingState } from '@/shared/ui';
 import { ROUTES } from '@/shared/config';
 import { useProgressionClient } from './model/useProgressionClient';
 import { LevelProgressCard } from './ui/LevelProgressCard';

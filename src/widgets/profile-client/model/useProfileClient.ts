@@ -1,7 +1,7 @@
-import { useProfile, useNicknameEdit, useAvatarUpload } from '@/features/profile';
+import { useAvatarUpload, useNicknameEdit, useProfile } from '@/features/profile';
 import { useSessionStore } from '@/entities/session';
 import { formatCredits } from '@/shared/lib/credits';
-import { levelProgress, formatMemberSince } from '@/shared/lib/progression';
+import { formatMemberSince, levelProgress } from '@/shared/lib/progression';
 import type { ProfileDto } from '@/shared/api/types';
 
 interface ProfileView {
