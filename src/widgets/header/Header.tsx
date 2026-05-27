@@ -120,12 +120,12 @@ export const Header = ({
           {title}
         </h1>
         {showBalance && balance !== undefined && (
-          <div className="bg-balance-bg border border-balance-border flex h-[46px] items-center gap-2 rounded-[10px] px-3 py-2 opacity-100 sm:px-4 min-w-0">
+          <div className="bg-balance-bg border border-balance-border flex h-[38px] sm:h-[46px] items-center gap-1.5 sm:gap-2 rounded-[10px] px-2.5 py-1 sm:px-4 opacity-100 min-w-0">
             <CurrencyIcon />
             <span className="text-balance-label font-sans text-xs font-normal leading-4 tracking-normal max-sm:hidden shrink-0">
               Balance:
             </span>
-            <span className="text-balance-value font-sans text-base font-bold leading-7 tracking-[-0.44px] truncate sm:text-lg">
+            <span className="text-balance-value font-sans text-sm sm:text-base font-bold leading-7 tracking-[-0.44px] truncate">
               {formatCredits(balance)}
             </span>
           </div>

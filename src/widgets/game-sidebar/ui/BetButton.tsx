@@ -1,6 +1,6 @@
 import { Button } from '@/shared/ui/button';
 import { BET_MODES, type BetMode } from '@/shared/config';
-import { LABELS, STYLES, ZERO } from '../model/constants';
+import { LABELS, ZERO } from '../model/constants';
 
 interface Props {
   mode: BetMode;
@@ -21,13 +21,6 @@ export const BetButton = ({
   formId,
   className,
 }: Props) => {
-  const getButtonClassName = () => {
-    if (mode === BET_MODES.AUTO && isAutoBetting) {
-      return STYLES.STOP_AUTO_BET_CLASS;
-    }
-    return '';
-  };
-
   const renderContent = () => {
     if (mode === BET_MODES.AUTO) {
       if (isAutoBetting) {
@@ -46,9 +39,9 @@ export const BetButton = ({
     <Button
       type="submit"
       form={formId}
-      variant="primary"
+      variant={mode === BET_MODES.AUTO && isAutoBetting ? 'destructive' : 'primary'}
       disabled={disabled}
-      className={`${getButtonClassName()} ${className || ''}`}
+      className={className}
     >
       {renderContent()}
     </Button>

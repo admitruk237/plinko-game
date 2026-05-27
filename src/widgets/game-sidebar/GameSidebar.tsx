@@ -11,7 +11,7 @@ import { CurrencyIcon } from '@/shared/ui/currency-icon';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
 import { QuickBetControls } from '@/features/place-bet';
-import { BET_MODES } from '@/shared/config';
+import { BET_MODES, type BetMode } from '@/shared/config';
 import { useGameSidebar } from './model/useGameSidebar';
 import { RiskSelector } from './ui/RiskSelector';
 import { RowsSelector } from './ui/RowsSelector';
@@ -22,7 +22,7 @@ import { LABELS, ZERO } from './model/constants';
 
 export interface CompactState {
   betAmount: string;
-  mode: string;
+  mode: BetMode;
   isAutoBetting: boolean;
   limitNumBets: number;
   currentBetCount: number;

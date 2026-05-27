@@ -176,7 +176,6 @@ export const useAutoBet = ({
         setIsAutoBetting(true);
         setCurrentBetCount(0);
         setStartBalance(balanceBigInt);
-        onPlaceBet(amount.toString(), rows, risk);
       }
     } else {
       onPlaceBet(amount.toString(), rows, risk);

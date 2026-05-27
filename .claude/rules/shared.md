@@ -22,3 +22,4 @@ Generic, reusable building blocks with zero domain knowledge.
   ```
 - All imports within the app use the alias `@/shared/...` — never relative `../`
 - `cn()` is the only way to merge class names — import from `@/shared/lib/utils`
+- When creating or modifying components in this layer, refer to and follow `.claude/rules/components.md`.

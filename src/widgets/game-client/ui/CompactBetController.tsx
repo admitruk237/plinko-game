@@ -3,6 +3,7 @@
 import type { Risk } from '@/entities/game';
 import { SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/shared/ui';
+import { BET_MODES, type BetMode } from '@/shared/config';
 
 interface Props {
   betAmount: string;
@@ -12,13 +13,12 @@ interface Props {
   limitNumBets: number;
   currentBetCount: number;
   disabled: boolean;
-  mode: string;
+  mode: BetMode;
   onOpenSettings: () => void;
 }
 
 const SLIDERS_ICON_SIZE = 18;
 const FORM_ID = 'sidebar-form';
-const AUTO_MODE = 'AUTO';
 
 export const CompactBetController = ({
   betAmount,
@@ -31,15 +31,8 @@ export const CompactBetController = ({
   mode,
   onOpenSettings,
 }: Props) => {
-  const getButtonClassName = () => {
-    if (mode === AUTO_MODE && isAutoBetting) {
-      return '!bg-red-500/20 !border-red-500 !text-red-500 hover:!bg-red-500/30';
-    }
-    return '';
-  };
-
   const renderContent = () => {
-    if (mode === AUTO_MODE) {
+    if (mode === BET_MODES.AUTO) {
       if (isAutoBetting) {
         if (limitNumBets > 0) {
           return `Stop (${currentBetCount}/${limitNumBets})`;
@@ -68,9 +61,8 @@ export const CompactBetController = ({
       <Button
         type="submit"
         form={FORM_ID}
-        variant="primary"
+        variant={mode === BET_MODES.AUTO && isAutoBetting ? 'destructive' : 'primary'}
         disabled={disabled}
-        className={`w-full !h-[44px] rounded-xl font-bold text-sm shrink-0 ${getButtonClassName()}`}
       >
         {renderContent()}
       </Button>

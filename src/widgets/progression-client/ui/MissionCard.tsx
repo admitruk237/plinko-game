@@ -25,11 +25,11 @@ export const MissionCard = ({ mission, isClaiming, onClaim }: Props) => {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             {statusIcon}
-            <p className="text-sm font-semibold text-white truncate">{mission.title}</p>
+            <p className="text-xs sm:text-sm font-semibold text-white truncate">{mission.title}</p>
           </div>
-          <p className="text-xs text-[#99A1AF] mb-3">{mission.description}</p>
+          <p className="text-[10px] sm:text-xs text-[#99A1AF] mb-3">{mission.description}</p>
 
-          <div className="flex items-center justify-between text-xs text-[#99A1AF] mb-1">
+          <div className="flex items-center justify-between text-[10px] sm:text-xs text-[#99A1AF] mb-1">
             <span>
               {mission.progress} / {mission.target}
             </span>
@@ -39,11 +39,11 @@ export const MissionCard = ({ mission, isClaiming, onClaim }: Props) => {
         </div>
 
         <div className="flex flex-col items-end gap-2 shrink-0">
-          <span className="flex items-center gap-1 text-xs text-[#00C950]">
-            <CurrencyIcon className="h-3.5 w-3.5" />
+          <span className="flex items-center gap-1 text-[10px] sm:text-xs text-[#00C950]">
+            <CurrencyIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
             {formatCredits(mission.creditReward)}
           </span>
-          <span className="text-xs text-[#51A2FF]">+{mission.xpReward} XP</span>
+          <span className="text-[10px] sm:text-xs text-[#51A2FF]">+{mission.xpReward} XP</span>
 
           {mission.claimable && (
             <Button

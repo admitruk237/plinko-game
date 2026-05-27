@@ -20,3 +20,4 @@ Next.js App Router root. Contains routing, global layout, and global styles only
 - Export `metadata` or `generateMetadata` for SEO — never hardcode `<title>` tags
 - Providers that require `'use client'` (e.g. QueryClientProvider) go in a separate `providers.tsx` with the directive, imported into `layout.tsx`
 - Do NOT put business logic or game logic here — delegate to `pages/` or `widgets/`
+- When creating or modifying components in this layer, refer to and follow `.claude/rules/components.md`.

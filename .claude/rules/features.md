@@ -25,3 +25,4 @@ features/
 - Features MUST NOT import from `widgets/` or `pages/`
 - Keep UI components in `ui/`, business logic in `model/` — no logic inside JSX
 - Each feature exposes a single public API via `index.ts`
+- When creating or modifying components in this layer, refer to and follow `.claude/rules/components.md`.

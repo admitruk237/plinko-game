@@ -41,6 +41,11 @@ Components render only. Logic lives elsewhere:
 Before writing any UI primitive — check `src/shared/ui/` for an existing shadcn component.
 Use `Button`, `Input`, `Card`, `Dialog`, `Switch`, `Tabs`, `Form`/`FormField`/`FormItem` etc. whenever applicable.
 Do NOT write custom alternatives to what shadcn already provides.
+If you need custom styles or variants, extend the existing shadcn component in `src/shared/ui/` by adding a new variant with `cva` and forwarding props instead of inline styles or bespoke classes.
+
+## Working with Images
+
+NEVER use the native `<img>` HTML element. Always use the Next.js `Image` component (`import Image from 'next/image'`) to ensure proper image optimization, lazy loading, and layout responsiveness.
 
 ## Size limit
 

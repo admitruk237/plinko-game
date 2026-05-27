@@ -18,7 +18,7 @@ const buttonVariants = cva(
         ghost:
           'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50',
         destructive:
-          'bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40',
+          'w-full !h-[44px] rounded-[8px] bg-gradient-to-r from-[#FB2C36] to-[#E7000B] text-white font-semibold transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50',
         link: 'text-primary underline-offset-4 hover:underline',
         quickBet:
           'h-8 px-3 gap-1.5 rounded-[8px] border border-[#262626]/50 border-t-[#262626] bg-[#262626]/30 text-[14px] font-medium leading-[20px] tracking-[-0.15px] text-[#D1D5DC] text-center hover:text-white hover:bg-[#262626]/40 transition-colors',

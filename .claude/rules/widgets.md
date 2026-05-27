@@ -24,3 +24,4 @@ widgets/
 - Export only the top-level component through `index.ts`
 - Import entities and features ONLY through their public `index.ts`
 - Widget-to-widget imports go through the shared barrel `@/widgets` — never directly from `@/widgets/slice-name/Component`
+- When creating or modifying components in this layer, refer to and follow `.claude/rules/components.md`.

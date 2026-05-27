@@ -6,12 +6,13 @@ import { cn } from '@/shared/lib/utils';
 import { BottomNav, GameSidebar, Header, PlinkoBoard } from '@/widgets';
 import type { CompactState } from '@/widgets/game-sidebar/GameSidebar';
 import { Button, LoadingState, LogoutIcon } from '@/shared/ui';
+import { BET_MODES } from '@/shared/config';
 import { CompactBetController } from './ui/CompactBetController';
 import { useGameClient } from './model/useGameClient';
 
 const LOADING_MESSAGE = 'Loading game...';
 const INITIAL_BET_AMOUNT = '1.00';
-const INITIAL_BET_MODE = 'MANUAL';
+const INITIAL_BET_MODE = BET_MODES.MANUAL;
 const INITIAL_BET_COUNT = 0;
 const INITIAL_LIMIT_BETS = 0;
 const LOGOUT_ICON_SIZE = 14;
