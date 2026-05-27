@@ -9,7 +9,7 @@ export const BottomNav = () => {
   const { navItems } = useBottomNav();
 
   return (
-    <footer className="w-full h-[65px] bg-[#1A1F2E]/95 border-t border-[#2A2F3E] backdrop-blur-sm z-50 shrink-0">
+    <footer className="w-full h-[65px] bg-panel/95 border-t border-panel-border backdrop-blur-sm z-50 shrink-0">
       <div className="max-w-[896px] h-full mx-auto flex items-center justify-around relative">
         {navItems.map((item) => (
           <Link
@@ -23,7 +23,7 @@ export const BottomNav = () => {
             {item.isActive && (
               <motion.div
                 layoutId="bottom-nav-active-bar"
-                className="absolute top-0 w-12 h-1 bg-gradient-to-r from-[#00C950] to-[#00BC7D] rounded-b-full"
+                className="absolute top-0 w-12 h-1 bg-gradient-to-r from-success to-teal-500 rounded-b-full"
                 transition={{ type: 'spring', stiffness: 380, damping: 30 }}
               />
             )}
@@ -33,7 +33,7 @@ export const BottomNav = () => {
             <span
               className={cn(
                 'font-sans font-medium text-xs leading-4 text-center transition-colors duration-200',
-                item.isActive ? 'text-[#00C950]' : 'text-[#99A1AF]'
+                item.isActive ? 'text-success' : 'text-text-muted'
               )}
             >
               {item.label}

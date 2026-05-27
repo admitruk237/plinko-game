@@ -13,7 +13,7 @@ export const MissionSection = ({ title, missions, claimingId, onClaim }: Props) 
 
   return (
     <div>
-      <h3 className="mb-3 text-xs sm:text-sm font-semibold text-[#99A1AF] uppercase tracking-wider">
+      <h3 className="mb-3 text-xs sm:text-sm font-semibold text-text-muted uppercase tracking-wider">
         {title}
       </h3>
       <div className="flex flex-col gap-3">

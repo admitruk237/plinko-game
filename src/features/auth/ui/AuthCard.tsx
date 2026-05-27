@@ -18,11 +18,11 @@ export const AuthCard = ({ subtitle, children }: Props) => {
               </div>
             </div>
             <h1 className="text-3xl font-bold text-white leading-none m-2">Plinko</h1>
-            <p className="text-base text-[#99A1AF]">{subtitle}</p>
+            <p className="text-base text-text-muted">{subtitle}</p>
           </CardHeader>
           <CardContent className="p-0">{children}</CardContent>
         </Card>
-        <p className="text-center text-xs text-[#99A1AF] mt-4">
+        <p className="text-center text-xs text-text-muted mt-4">
           By continuing, you agree to our Terms and Privacy Policy
         </p>
       </div>

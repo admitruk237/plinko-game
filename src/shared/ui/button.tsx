@@ -18,12 +18,12 @@ const buttonVariants = cva(
         ghost:
           'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50',
         destructive:
-          'w-full !h-[44px] rounded-[8px] bg-gradient-to-r from-[#FB2C36] to-[#E7000B] text-white font-semibold transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50',
+          'w-full !h-[44px] rounded-[8px] bg-gradient-to-r from-danger to-danger-hover text-white font-semibold transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50',
         link: 'text-primary underline-offset-4 hover:underline',
         quickBet:
-          'h-8 px-3 gap-1.5 rounded-[8px] border border-[#262626]/50 border-t-[#262626] bg-[#262626]/30 text-[14px] font-medium leading-[20px] tracking-[-0.15px] text-[#D1D5DC] text-center hover:text-white hover:bg-[#262626]/40 transition-colors',
+          'h-8 px-3 gap-1.5 rounded-[8px] border border-neutral-800/50 border-t-neutral-800 bg-neutral-800/30 text-[14px] font-medium leading-[20px] tracking-[-0.15px] text-neutral-300 text-center hover:text-white hover:bg-neutral-800/40 transition-colors',
         riskOption:
-          'h-10 rounded-[10px] border-2 border-[#2a3040] border-t-[#2A2F3E] bg-[#0F1419] text-[14px] font-medium leading-[20px] tracking-[-0.15px] text-[#99A1AF] text-center transition-colors data-[active=false]:hover:text-white data-[active=false]:hover:border-white/20 focus-visible:ring-0 data-[active=false]:focus-visible:border-[#2a3040] data-[active=false]:focus-visible:border-t-[#2A2F3E]',
+          'h-10 rounded-[10px] border-2 border-neutral-700 border-t-panel-border bg-panel-dark text-[14px] font-medium leading-[20px] tracking-[-0.15px] text-text-muted text-center transition-colors data-[active=false]:hover:text-white data-[active=false]:hover:border-white/20 focus-visible:ring-0 data-[active=false]:focus-visible:border-neutral-700 data-[active=false]:focus-visible:border-t-panel-border',
         icon: 'text-white/40 hover:text-white/70 bg-transparent hover:bg-transparent transition-colors',
         headerAction:
           'h-[46px] px-4 gap-1.5 rounded-[10px] border border-balance-border bg-balance-bg text-sm font-medium text-white/80 hover:text-white hover:bg-balance-border/50 transition-colors',

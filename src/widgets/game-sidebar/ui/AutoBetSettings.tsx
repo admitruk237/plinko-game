@@ -40,7 +40,7 @@ export const AutoBetSettings = ({
           disabled={isAutoBetting}
           onChange={onNumBetsChange}
           placeholder={`1 – ${MAX_NUM_BETS}`}
-          className="bg-[#0f1219] border border-white/10"
+          className="bg-sidebar-bg border border-white/10"
         />
         <p className="text-xs text-white/40">Max {MAX_NUM_BETS} bets</p>
       </div>
@@ -53,7 +53,7 @@ export const AutoBetSettings = ({
             value={stopProfitInput}
             disabled={isAutoBetting}
             onChange={onStopProfitChange}
-            className="bg-[#0f1219] border border-white/10"
+            className="bg-sidebar-bg border border-white/10"
           />
         </div>
         <div className="flex-1 flex flex-col gap-2">
@@ -63,7 +63,7 @@ export const AutoBetSettings = ({
             value={stopLossInput}
             disabled={isAutoBetting}
             onChange={onStopLossChange}
-            className="bg-[#0f1219] border border-white/10"
+            className="bg-sidebar-bg border border-white/10"
           />
         </div>
       </div>

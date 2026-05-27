@@ -1,15 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import type { Risk } from '@/entities/game';
 import { MAX_BET, MIN_BET, parseCredits } from '@/shared/lib/credits';
-import {
-  BET_MODES,
-  type BetMode,
-  DEFAULT_BET_COUNT,
-  DEFAULT_NUM_BETS,
-  DEFAULT_STOP_LOSS,
-  DEFAULT_STOP_PROFIT,
-  MAX_NUM_BETS,
-} from '@/shared/config';
+import { BET_MODES, type BetMode, MAX_NUM_BETS } from '@/shared/config';
+import { usePlaceBetStore } from './store';
 
 interface Props {
   balance: string;
@@ -42,13 +35,22 @@ export const useAutoBet = ({
   onPlaceBet,
   mode,
 }: Props): UseAutoBetResult => {
-  const [numBetsInput, setNumBetsInput] = useState<string>(DEFAULT_NUM_BETS);
-  const [stopProfitInput, setStopProfitInput] = useState<string>(DEFAULT_STOP_PROFIT);
-  const [stopLossInput, setStopLossInput] = useState<string>(DEFAULT_STOP_LOSS);
-  const [isAutoBetting, setIsAutoBetting] = useState<boolean>(false);
-  const [currentBetCount, setCurrentBetCount] = useState<number>(DEFAULT_BET_COUNT);
-  const [startBalance, setStartBalance] = useState<bigint | null>(null);
-  const [isWaitingForBet, setIsWaitingForBet] = useState<boolean>(false);
+  const {
+    numBetsInput,
+    setNumBetsInput,
+    stopProfitInput,
+    setStopProfitInput,
+    stopLossInput,
+    setStopLossInput,
+    isAutoBetting,
+    setIsAutoBetting,
+    currentBetCount,
+    setCurrentBetCount,
+    startBalance,
+    setStartBalance,
+    isWaitingForBet,
+    setIsWaitingForBet,
+  } = usePlaceBetStore();
 
   const balanceBigInt = BigInt(balance || '0');
 
@@ -56,7 +58,6 @@ export const useAutoBet = ({
     setIsAutoBetting(false);
   }
 
-  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (!isAutoBetting || isWaitingForBet) return;
 
@@ -130,7 +131,6 @@ export const useAutoBet = ({
     risk,
     onPlaceBet,
   ]);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleNumBetsChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const digits = e.target.value.replace(/[^0-9]/g, '');

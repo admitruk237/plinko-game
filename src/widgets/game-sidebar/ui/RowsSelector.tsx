@@ -22,7 +22,7 @@ export const RowsSelector = ({ rows, min, max, onChange, disabled }: Props) => {
     <div className="flex flex-col gap-3 shrink-0">
       <div className="flex items-center justify-between">
         <Label>{LABELS.TITLE}</Label>
-        <span className="flex items-center justify-center w-[42px] h-[30px] rounded-[10px] border border-[#2A2F3E] bg-[#0F1419] text-[14px] font-bold leading-[20px] tracking-[-0.15px] text-[#00C950]">
+        <span className="flex items-center justify-center w-[42px] h-[30px] rounded-[10px] border border-panel-border bg-panel-dark text-[14px] font-bold leading-[20px] tracking-[-0.15px] text-success">
           {rows}
         </span>
       </div>

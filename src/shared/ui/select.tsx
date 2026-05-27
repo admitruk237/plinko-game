@@ -15,7 +15,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      'flex h-9 w-full min-w-[100px] items-center justify-between gap-2 rounded-[8px] border border-balance-border bg-[#0F121D]/60 px-3 py-1.5 text-sm text-white outline-none focus:ring-1 focus:ring-balance-value disabled:cursor-not-allowed disabled:opacity-50 transition-colors',
+      'flex h-9 w-full min-w-[100px] items-center justify-between gap-2 rounded-[8px] border border-balance-border bg-panel-darker/60 px-3 py-1.5 text-sm text-white outline-none focus:ring-1 focus:ring-balance-value disabled:cursor-not-allowed disabled:opacity-50 transition-colors',
       className
     )}
     {...props}
@@ -46,7 +46,7 @@ const SelectPopup = React.forwardRef<
   <SelectPrimitive.Popup
     ref={ref}
     className={cn(
-      'z-50 min-w-[100px] overflow-hidden rounded-[10px] border border-balance-border bg-[#1A1F2E] p-1 text-white shadow-2xl outline-none transition-all duration-150 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2',
+      'z-50 min-w-[100px] overflow-hidden rounded-[10px] border border-balance-border bg-panel p-1 text-white shadow-2xl outline-none transition-all duration-150 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2',
       className
     )}
     {...props}
@@ -63,13 +63,13 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      'relative flex w-full cursor-pointer select-none items-center justify-between gap-4 rounded-[6px] py-1.5 px-3 text-sm text-[#99A1AF] outline-none data-[highlighted]:bg-[#2A2F3E]/60 data-[highlighted]:text-white data-[checked]:text-white disabled:pointer-events-none disabled:opacity-50 transition-colors',
+      'relative flex w-full cursor-pointer select-none items-center justify-between gap-4 rounded-[6px] py-1.5 px-3 text-sm text-text-muted outline-none data-[highlighted]:bg-panel-border/60 data-[highlighted]:text-white data-[checked]:text-white disabled:pointer-events-none disabled:opacity-50 transition-colors',
       className
     )}
     {...props}
   >
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
-    <SelectPrimitive.ItemIndicator className="flex items-center justify-center text-[#00C950] shrink-0">
+    <SelectPrimitive.ItemIndicator className="flex items-center justify-center text-success shrink-0">
       <Check className="h-3.5 w-3.5" />
     </SelectPrimitive.ItemIndicator>
   </SelectPrimitive.Item>

@@ -63,6 +63,36 @@
   --color-balance-border: #2A2F3E;
   --color-balance-label: #99A1AF;
   --color-balance-value: #00C950;
+
+  /* Extracted Colors */
+  --color-success: #00C950;
+  --color-success-end: #009966;
+  --color-text-muted: #99A1AF;
+  --color-panel: #1A1F2E;
+  --color-panel-border: #2A2F3E;
+  --color-panel-dark: #0F1419;
+  --color-panel-darker: #0F121D;
+  --color-sidebar-bg: #0F1219;
+  --color-neutral-50: #FAFAFA;
+  --color-neutral-300: #D1D5DC;
+  --color-neutral-400: #A1A1A1;
+  --color-neutral-700: #2A3040;
+  --color-neutral-800: #262626;
+  --color-danger: #FB2C36;
+  --color-danger-hover: #E7000B;
+  --color-warning: #F0B100;
+  --color-green-400: #33CC66;
+  --color-green-500: #22C55E;
+  --color-green-600: #16A34A;
+  --color-blue-400: #51A2FF;
+  --color-blue-500: #2B7FFF;
+  --color-purple-500: #AD46FF;
+  --color-teal-500: #00BC7D;
+  --color-orange-400: #FF9500;
+  --color-orange-500: #FF6900;
+  --color-border-hover: #3A3F4E;
+  --color-text-tertiary: #6A7282;
+  --color-black-pure: #0A0A0A;
 }
 
 :root {
@@ -158,14 +188,14 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #2A2F3E;
+    background: var(--color-panel-border);
     border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #3A4050;
+    background: var(--color-border-hover);
   }
   * {
     scrollbar-width: thin;
-    scrollbar-color: #2A2F3E transparent;
+    scrollbar-color: var(--color-panel-border) transparent;
   }
 }

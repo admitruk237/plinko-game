@@ -5,11 +5,11 @@ import { RISK_LEVELS } from '@/shared/config';
 
 const RISK_ACTIVE_CLASSES: Record<Risk, string> = {
   [RISK_LEVELS.LOW]:
-    'data-[active=true]:bg-[#00C950]/20 data-[active=true]:border-[#00C950] data-[active=true]:text-[#00C950] data-[active=true]:focus-visible:border-[#00C950]',
+    'data-[active=true]:bg-success/20 data-[active=true]:border-success data-[active=true]:text-success data-[active=true]:focus-visible:border-success',
   [RISK_LEVELS.MEDIUM]:
-    'data-[active=true]:bg-[#F0B100]/20 data-[active=true]:border-[#F0B100] data-[active=true]:text-[#F0B100] data-[active=true]:focus-visible:border-[#F0B100]',
+    'data-[active=true]:bg-warning/20 data-[active=true]:border-warning data-[active=true]:text-warning data-[active=true]:focus-visible:border-warning',
   [RISK_LEVELS.HIGH]:
-    'data-[active=true]:bg-[#FB2C36]/20 data-[active=true]:border-[#FB2C36] data-[active=true]:text-[#FB2C36] data-[active=true]:focus-visible:border-[#FB2C36]',
+    'data-[active=true]:bg-danger/20 data-[active=true]:border-danger data-[active=true]:text-danger data-[active=true]:focus-visible:border-danger',
 } as const;
 
 const LABELS = {

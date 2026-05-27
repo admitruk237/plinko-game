@@ -15,7 +15,7 @@ interface Props {
 
 export const ProfileCard = ({ profile, balanceDisplay, levelPercent, nickname, avatar }: Props) => (
   <>
-    <div className="flex flex-col gap-4 sm:gap-6 rounded-[10px] border border-[#2A2F3E] bg-[#1A1F2E] p-4 sm:p-[25px]">
+    <div className="flex flex-col gap-4 sm:gap-6 rounded-[10px] border border-panel-border bg-panel p-4 sm:p-[25px]">
       <div className="flex items-start gap-4 sm:gap-6">
         <ProfileAvatar
           avatarUrl={profile.avatarUrl}
@@ -37,14 +37,14 @@ export const ProfileCard = ({ profile, balanceDisplay, levelPercent, nickname, a
                   size="none"
                   onClick={nickname.onSave}
                   disabled={nickname.isPending}
-                  className="h-7 rounded-[4px] bg-[#00C950] px-3 text-xs sm:text-sm font-medium text-white hover:opacity-90"
+                  className="h-7 rounded-[4px] bg-success px-3 text-xs sm:text-sm font-medium text-white hover:opacity-90"
                 >
                   Save
                 </Button>
                 <Button
                   size="none"
                   onClick={nickname.onCancel}
-                  className="h-7 rounded-[4px] bg-[#2A2F3E] px-3 text-xs sm:text-sm font-medium text-[#D1D5DC] hover:opacity-90"
+                  className="h-7 rounded-[4px] bg-panel-border px-3 text-xs sm:text-sm font-medium text-neutral-300 hover:opacity-90"
                 >
                   Cancel
                 </Button>
@@ -55,7 +55,7 @@ export const ProfileCard = ({ profile, balanceDisplay, levelPercent, nickname, a
                   {profile.nickname}
                 </h1>
                 <button type="button" aria-label="Edit nickname" onClick={nickname.onEditStart}>
-                  <Pencil className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#99A1AF]" />
+                  <Pencil className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-text-muted" />
                 </button>
               </>
             )}
@@ -64,25 +64,25 @@ export const ProfileCard = ({ profile, balanceDisplay, levelPercent, nickname, a
             <p className="mt-1 text-xs sm:text-sm text-red-400">{nickname.error}</p>
           ) : null}
 
-          <p className="mt-1 text-xs sm:text-sm text-[#99A1AF] truncate">{profile.email}</p>
+          <p className="mt-1 text-xs sm:text-sm text-text-muted truncate">{profile.email}</p>
 
           <div className="mt-2 flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4">
             <span className="flex items-center gap-1.5 text-xs sm:text-sm text-white">
-              <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#F0B100]" /> Level{' '}
+              <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-warning" /> Level{' '}
               {profile.progression.level}
             </span>
             <span className="flex items-center gap-1.5 text-xs sm:text-sm text-white">
-              <Flame className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#FF6900]" />{' '}
+              <Flame className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-orange-500" />{' '}
               {profile.progression.dailyStreak} day streak
             </span>
           </div>
         </div>
 
         <div className="flex flex-col items-end gap-0.5 shrink-0">
-          <p className="text-[10px] sm:text-xs text-[#99A1AF]">Balance</p>
+          <p className="text-[10px] sm:text-xs text-text-muted">Balance</p>
           <span className="flex items-center gap-1 sm:gap-1.5">
             <CurrencyIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            <span className="text-xs sm:text-sm md:text-base font-bold text-[#00C950]">
+            <span className="text-xs sm:text-sm md:text-base font-bold text-success">
               {balanceDisplay}
             </span>
           </span>
@@ -92,10 +92,10 @@ export const ProfileCard = ({ profile, balanceDisplay, levelPercent, nickname, a
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-white">
-            <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#51A2FF]" /> Level{' '}
+            <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-400" /> Level{' '}
             {profile.progression.level} Progress
           </span>
-          <span className="text-[10px] sm:text-xs text-[#99A1AF]">
+          <span className="text-[10px] sm:text-xs text-text-muted">
             {profile.progression.xpIntoCurrentLevel} / {profile.progression.xpForNextLevel} XP
           </span>
         </div>

@@ -48,7 +48,7 @@ export const SettingsDialog = ({ trigger }: Props) => {
             <DialogTitle className="text-3xl font-bold text-white leading-none mb-2">
               {LABELS.TITLE}
             </DialogTitle>
-            <DialogDescription className="text-base text-[#99A1AF]">
+            <DialogDescription className="text-base text-text-muted">
               {LABELS.DESCRIPTION}
             </DialogDescription>
           </div>
@@ -64,12 +64,12 @@ export const SettingsDialog = ({ trigger }: Props) => {
         <div className="flex flex-col gap-6 mb-[32px]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-[8px] bg-[#00C950]/10 flex items-center justify-center text-[#00C950] shrink-0">
+              <div className="w-10 h-10 rounded-[8px] bg-success/10 flex items-center justify-center text-success shrink-0">
                 <Volume2 size={ICON_SIZE} />
               </div>
               <div className="flex flex-col">
                 <span className="text-[16px] font-bold text-white">{LABELS.SOUND_TITLE}</span>
-                <span className="text-[12px] text-[#99A1AF]">{LABELS.SOUND_DESC}</span>
+                <span className="text-[12px] text-text-muted">{LABELS.SOUND_DESC}</span>
               </div>
             </div>
             <Switch checked={soundEffectsEnabled} onCheckedChange={setSoundEffectsEnabled} />
@@ -77,12 +77,12 @@ export const SettingsDialog = ({ trigger }: Props) => {
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-[8px] bg-[#00C950]/10 flex items-center justify-center text-[#00C950] shrink-0">
+              <div className="w-10 h-10 rounded-[8px] bg-success/10 flex items-center justify-center text-success shrink-0">
                 <Zap size={ICON_SIZE} />
               </div>
               <div className="flex flex-col">
                 <span className="text-[16px] font-bold text-white">{LABELS.ANIM_TITLE}</span>
-                <span className="text-[12px] text-[#99A1AF]">{LABELS.ANIM_DESC}</span>
+                <span className="text-[12px] text-text-muted">{LABELS.ANIM_DESC}</span>
               </div>
             </div>
             <Switch checked={animationsEnabled} onCheckedChange={setAnimationsEnabled} />
@@ -90,7 +90,7 @@ export const SettingsDialog = ({ trigger }: Props) => {
         </div>
 
         {/* Divider */}
-        <div className="border-t border-auth-border pt-6 flex flex-col gap-1.5 text-[14px] text-[#99A1AF]">
+        <div className="border-t border-auth-border pt-6 flex flex-col gap-1.5 text-[14px] text-text-muted">
           <div>
             {LABELS.VERSION_PREFIX}
             <span className="text-white">{METADATA.VERSION}</span>

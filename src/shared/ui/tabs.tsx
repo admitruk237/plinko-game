@@ -24,7 +24,7 @@ const tabsListVariants = cva(
         default: 'bg-muted',
         line: 'gap-1 bg-transparent',
         toggle:
-          'w-full h-[36px] bg-[#0F1419] rounded-[14px] p-[3px] border border-transparent flex items-center shrink-0',
+          'w-full h-[36px] bg-panel-dark rounded-[14px] p-[3px] border border-transparent flex items-center shrink-0',
       },
     },
     defaultVariants: {
@@ -61,8 +61,8 @@ const tabsTriggerVariants = cva(
         ],
         toggle: [
           'rounded-[14px] text-[14px] font-medium leading-[20px] tracking-[-0.15px] duration-300 ease-in-out px-2 py-1',
-          'data-active:bg-[#262626]/30 data-active:border-[#262626]/50 data-active:border-t-[#262626] data-active:text-[#FAFAFA]',
-          'text-[#A1A1A1] hover:text-[#FAFAFA] after:hidden',
+          'data-active:bg-neutral-800/30 data-active:border-neutral-800/50 data-active:border-t-neutral-800 data-active:text-neutral-50',
+          'text-neutral-400 hover:text-neutral-50 after:hidden',
         ],
       },
     },

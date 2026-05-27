@@ -22,7 +22,7 @@ interface Props {
 
 export const HistoryFilters = ({ filterRisk, filterRows, onRiskChange, onRowsChange }: Props) => {
   return (
-    <div className="mt-4 sm:mt-6 w-full bg-balance-bg border border-balance-border border-t-[#2A2F3E] rounded-[10px] py-3 px-3 sm:pt-[17px] sm:pr-[17px] sm:pb-[1px] sm:pl-[17px] opacity-100">
+    <div className="mt-4 sm:mt-6 w-full bg-balance-bg border border-balance-border border-t-panel-border rounded-[10px] py-3 px-3 sm:pt-[17px] sm:pr-[17px] sm:pb-[1px] sm:pl-[17px] opacity-100">
       <div className="flex items-center flex-nowrap gap-2 sm:gap-6 sm:flex-wrap pb-1 sm:pb-4">
         <div className="flex items-center gap-2 shrink-0">
           <Filter className="w-4 h-4 text-white" />

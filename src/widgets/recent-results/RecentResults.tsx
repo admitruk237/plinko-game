@@ -20,7 +20,7 @@ export const RecentResults = ({ results }: Props) => {
         return (
           <div
             key={result.betId}
-            className="flex items-center gap-3 bg-[#1a1e2e]/80 backdrop-blur-sm border border-white/5 rounded-lg px-3 py-2 min-w-[140px] animate-in slide-in-from-right duration-200"
+            className="flex items-center gap-3 bg-panel/80 backdrop-blur-sm border border-white/5 rounded-lg px-3 py-2 min-w-[140px] animate-in slide-in-from-right duration-200"
             style={{ animationDelay: `${index * 50}ms` }}
           >
             <div className="flex flex-col">

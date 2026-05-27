@@ -30,7 +30,7 @@ const DialogPopup = React.forwardRef<
     <DialogPrimitive.Popup
       ref={ref}
       className={cn(
-        'fixed left-[50%] top-[50%] z-50 w-full max-w-[440px] translate-x-[-50%] translate-y-[-50%] rounded-[16px] bg-[#191C26] border border-[#2A2F3E] p-6 shadow-2xl transition-all duration-200 focus:outline-none focus-visible:outline-none',
+        'fixed left-[50%] top-[50%] z-50 w-full max-w-[440px] translate-x-[-50%] translate-y-[-50%] rounded-[16px] bg-panel-dark border border-panel-border p-6 shadow-2xl transition-all duration-200 focus:outline-none focus-visible:outline-none',
         className
       )}
       {...props}
@@ -59,7 +59,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn('text-sm text-[#99A1AF]', className)}
+    className={cn('text-sm text-text-muted', className)}
     {...props}
   />
 ));

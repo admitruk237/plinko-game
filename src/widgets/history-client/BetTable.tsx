@@ -27,7 +27,7 @@ export const BetTable = ({ bets }: Props) => {
             <TableRow
               key={row.id}
               as="div"
-              className="block w-full bg-balance-bg border border-balance-border border-t-[#2A2F3E] rounded-[10px] p-3 sm:p-4 lg:py-3.5 lg:px-5 opacity-100 hover:bg-transparent"
+              className="block w-full bg-balance-bg border border-balance-border border-t-panel-border rounded-[10px] p-3 sm:p-4 lg:py-3.5 lg:px-5 opacity-100 hover:bg-transparent"
             >
               {/* Mobile layout */}
               <div className="sm:hidden w-full">

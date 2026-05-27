@@ -7,9 +7,9 @@ export function getMultiplierHex(m: number): string {
 
 // Legacy text-color classes
 export function multiplierTextColor(m: number): string {
-  if (m >= 5) return 'text-[#FB2C36]';
-  if (m >= 1) return 'text-[#F0B100]';
-  return 'text-[#00C950]';
+  if (m >= 5) return 'text-danger';
+  if (m >= 1) return 'text-warning';
+  return 'text-success';
 }
 
 // Legacy exports

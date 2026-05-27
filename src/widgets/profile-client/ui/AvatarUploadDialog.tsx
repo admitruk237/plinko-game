@@ -54,11 +54,11 @@ export const AvatarUploadDialog = ({
         if (!open) onClose();
       }}
     >
-      <DialogPopup className="w-full max-w-[512px] rounded-[10px] border border-[#2A2F3E] bg-[#1A1F2E] p-[25px] shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]">
+      <DialogPopup className="w-full max-w-[512px] rounded-[10px] border border-panel-border bg-panel p-[25px] shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]">
         <div className="mb-6 flex items-start justify-between">
           <div className="flex flex-col gap-2">
             <DialogTitle className="text-xl font-bold text-white">Upload Avatar</DialogTitle>
-            <DialogDescription className="text-sm text-[#99A1AF]">
+            <DialogDescription className="text-sm text-text-muted">
               Choose a profile picture (max 5MB)
             </DialogDescription>
           </div>
@@ -81,16 +81,16 @@ export const AvatarUploadDialog = ({
             onDragOver={handleDragOver}
             onDrop={handleDrop}
             className={cn(
-              'flex h-[168px] w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-[10px] border-2 border-dashed border-[#2A2F3E] transition-colors hover:border-[#3A3F4E]'
+              'flex h-[168px] w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-[10px] border-2 border-dashed border-panel-border transition-colors hover:border-border-hover'
             )}
           >
-            <Upload className="h-12 w-12 text-[#99A1AF]" />
+            <Upload className="h-12 w-12 text-text-muted" />
             {pendingFile ? (
-              <p className="text-sm font-medium text-[#00C950]">{pendingFile.name}</p>
+              <p className="text-sm font-medium text-success">{pendingFile.name}</p>
             ) : (
               <>
-                <p className="text-sm text-[#D1D5DC]">Drop an image here or click to browse</p>
-                <p className="text-xs text-[#6A7282]">PNG, JPG up to 5MB</p>
+                <p className="text-sm text-neutral-300">Drop an image here or click to browse</p>
+                <p className="text-xs text-text-tertiary">PNG, JPG up to 5MB</p>
               </>
             )}
           </button>
@@ -109,7 +109,7 @@ export const AvatarUploadDialog = ({
             <Button
               size="none"
               onClick={onClose}
-              className="h-[44px] flex-1 rounded-[10px] bg-[#2A2F3E] text-base font-medium text-[#D1D5DC] hover:opacity-90"
+              className="h-[44px] flex-1 rounded-[10px] bg-panel-border text-base font-medium text-neutral-300 hover:opacity-90"
             >
               Cancel
             </Button>
@@ -117,7 +117,7 @@ export const AvatarUploadDialog = ({
               size="none"
               onClick={onUpload}
               disabled={!pendingFile || isUploading}
-              className="flex h-[44px] flex-1 items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[#00C950] to-[#009966] text-base font-medium text-white disabled:opacity-50"
+              className="flex h-[44px] flex-1 items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-success to-success-end text-base font-medium text-white disabled:opacity-50"
             >
               <Upload size={16} />
               {isUploading ? 'Uploading...' : 'Upload'}

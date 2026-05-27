@@ -1,8 +1,7 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import type { GameConfig, Risk } from '@/entities/game';
-import { useAutoBet, useBetForm } from '@/features/place-bet';
+import { useAutoBet, useBetForm, usePlaceBetStore } from '@/features/place-bet';
 import { useSound } from '@/features/game';
-import { BET_MODES, type BetMode } from '@/shared/config';
 
 interface Props {
   config: GameConfig;
@@ -23,7 +22,8 @@ export const useGameSidebar = ({
   onRowsChange,
   onPlaceBet,
 }: Props) => {
-  const [mode, setMode] = useState<BetMode>(BET_MODES.MANUAL);
+  const mode = usePlaceBetStore((state) => state.mode);
+  const setMode = usePlaceBetStore((state) => state.setMode);
   const { playRowsChange } = useSound();
 
   const handleRowsChange = useCallback(

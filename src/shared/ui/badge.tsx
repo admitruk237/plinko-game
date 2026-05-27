@@ -12,10 +12,9 @@ const badgeVariants = cva(
         secondary: 'bg-secondary text-secondary-foreground',
         destructive: 'bg-destructive text-destructive-foreground',
         outline: 'text-foreground border border-input',
-        // Risk variants mapped to the Plinko theme specs
-        low: 'bg-[#00C95033] text-[#00C950]',
-        medium: 'bg-[#F0B10033] text-[#F0B100]',
-        high: 'bg-[#FB2C3633] text-[#FB2C36]',
+        low: 'bg-success/20 text-success',
+        medium: 'bg-warning/20 text-warning',
+        high: 'bg-danger/20 text-danger',
       },
     },
     defaultVariants: {

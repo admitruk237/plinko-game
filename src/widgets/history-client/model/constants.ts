@@ -38,15 +38,15 @@ export const SIGN_PLUS = '+';
 export const SIGN_MINUS = '-';
 export const EMPTY_STRING = '';
 export const TIME_CELL_CLASS =
-  'text-sm font-normal text-[#D1D5DC] leading-5 tracking-[-0.15px] font-sans';
+  'text-sm font-normal text-neutral-300 leading-5 tracking-[-0.15px] font-sans';
 export const CELL_TEXT_CLASS = TIME_CELL_CLASS;
 export const MULTIPLIER_CELL_CLASS =
-  'text-[18px] font-bold text-[#33CC66] leading-[28px] tracking-[-0.44px] font-sans';
+  'text-[18px] font-bold text-green-400 leading-[28px] tracking-[-0.44px] font-sans';
 export const PROFIT_NEG_CLASS =
-  'text-sm font-medium text-[#FB2C36] leading-5 tracking-[-0.15px] font-sans';
+  'text-sm font-medium text-danger leading-5 tracking-[-0.15px] font-sans';
 export const PROFIT_POS_CLASS =
-  'text-sm font-medium text-[#00C950] leading-5 tracking-[-0.15px] font-sans';
+  'text-sm font-medium text-success leading-5 tracking-[-0.15px] font-sans';
 export const PROFIT_ZERO_CLASS =
   'text-sm font-medium text-gray-400 leading-5 tracking-[-0.15px] font-sans';
 export const BALANCE_CELL_CLASS =
-  'text-sm font-medium text-[#D1D5DC] leading-5 tracking-[-0.15px] font-sans text-right';
+  'text-sm font-medium text-neutral-300 leading-5 tracking-[-0.15px] font-sans text-right';

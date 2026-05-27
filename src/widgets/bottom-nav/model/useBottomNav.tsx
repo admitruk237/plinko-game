@@ -45,7 +45,7 @@ export const useBottomNav = () => {
           <GameIcon
             ref={gameIconRef}
             size={ICON_SIZE_GAME}
-            className={cn(active ? 'text-[#00C950]' : 'text-[#99A1AF]')}
+            className={cn(active ? 'text-success' : 'text-text-muted')}
           />
         );
       case 'progress':
@@ -53,7 +53,7 @@ export const useBottomNav = () => {
           <TrophyIcon
             ref={progressIconRef}
             size={ICON_SIZE_DEFAULT}
-            className={cn(active ? 'text-[#00C950]' : 'text-[#99A1AF]')}
+            className={cn(active ? 'text-success' : 'text-text-muted')}
           />
         );
       case 'history':
@@ -61,7 +61,7 @@ export const useBottomNav = () => {
           <ClockIcon
             ref={historyIconRef}
             size={ICON_SIZE_DEFAULT}
-            className={cn(active ? 'text-[#00C950]' : 'text-[#99A1AF]')}
+            className={cn(active ? 'text-success' : 'text-text-muted')}
           />
         );
       case 'profile':
@@ -69,7 +69,7 @@ export const useBottomNav = () => {
           <ProfileIcon
             ref={profileIconRef}
             size={ICON_SIZE_DEFAULT}
-            className={cn(active ? 'text-[#00C950]' : 'text-[#99A1AF]')}
+            className={cn(active ? 'text-success' : 'text-text-muted')}
           />
         );
       default:

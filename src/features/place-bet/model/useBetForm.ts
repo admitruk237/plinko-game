@@ -1,8 +1,9 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm, type UseFormReturn } from 'react-hook-form';
 import { formatCredits, MAX_BET, MIN_BET, parseCredits } from '@/shared/lib/credits';
 
 import { DEFAULT_BET_AMOUNT } from '@/shared/config';
+import { usePlaceBetStore } from './store';
 
 interface Props {
   balance: string;
@@ -24,6 +25,7 @@ interface UseBetFormResult {
 
 export const useBetForm = ({ balance, disabled }: Props): UseBetFormResult => {
   const balanceBigInt = BigInt(balance || '0');
+  const setBetAmount = usePlaceBetStore((state) => state.setBetAmount);
 
   const form = useForm<BetFormValues>({
     defaultValues: {
@@ -32,6 +34,10 @@ export const useBetForm = ({ balance, disabled }: Props): UseBetFormResult => {
   });
 
   const betInput = form.watch('betInput');
+
+  useEffect(() => {
+    setBetAmount(betInput);
+  }, [betInput, setBetAmount]);
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

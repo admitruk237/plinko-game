@@ -9,7 +9,7 @@ const NotFoundPage = () => {
         <p className="text-lg text-white/50 mb-6">Page not found</p>
         <Link
           href={ROUTES.GAME}
-          className="inline-flex h-9 items-center gap-2 bg-gradient-to-r from-[#00C950] to-[#009966] rounded-lg px-4 text-sm text-white font-medium hover:opacity-90 transition-opacity"
+          className="inline-flex h-9 items-center gap-2 bg-gradient-to-r from-success to-success-end rounded-lg px-4 text-sm text-white font-medium hover:opacity-90 transition-opacity"
         >
           <svg
             width="14"
