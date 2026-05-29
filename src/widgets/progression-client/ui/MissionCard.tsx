@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import { CheckCircle, Lock, Zap } from 'lucide-react';
 import { Button, CurrencyIcon, ProgressBar } from '@/shared/ui';
 import { formatCredits } from '@/shared/lib/credits';
@@ -10,7 +11,7 @@ interface Props {
   onClaim: (id: string) => void;
 }
 
-const STATUS_ICON: Record<string, React.ReactNode> = {
+const STATUS_ICON: Record<string, ReactNode> = {
   CLAIMED: <CheckCircle className="h-4 w-4 text-success" />,
   LOCKED: <Lock className="h-4 w-4 text-text-muted" />,
 };

@@ -1,6 +1,13 @@
 'use client';
 
-import { forwardRef, type HTMLAttributes, useCallback, useImperativeHandle, useRef } from 'react';
+import {
+  forwardRef,
+  type HTMLAttributes,
+  type MouseEvent,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 import { domMin, LazyMotion, m, useAnimation, useReducedMotion, type Variants } from 'motion/react';
 import { cn } from '@/shared/lib/utils';
 
@@ -60,7 +67,7 @@ const MoveLeftIcon = forwardRef<MoveLeftIconHandle, MoveLeftIconProps>(
     });
 
     const handleEnter = useCallback(
-      (e?: React.MouseEvent<HTMLDivElement>) => {
+      (e?: MouseEvent<HTMLDivElement>) => {
         if (!isAnimated || reduced) return;
         if (!isControlled.current) {
           void controls.start('animate');
@@ -72,7 +79,7 @@ const MoveLeftIcon = forwardRef<MoveLeftIconHandle, MoveLeftIconProps>(
     );
 
     const handleLeave = useCallback(
-      (e?: React.MouseEvent<HTMLDivElement>) => {
+      (e?: MouseEvent<HTMLDivElement>) => {
         if (!isControlled.current) {
           void controls.start('normal');
         } else if (e) {

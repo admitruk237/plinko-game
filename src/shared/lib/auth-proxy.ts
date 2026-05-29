@@ -9,16 +9,16 @@ import {
 } from '@/shared/lib/session';
 import { authApi } from '@/shared/api/auth.api';
 
-function isTokenExpired(token: string): boolean {
+const isTokenExpired = (token: string): boolean => {
   try {
     const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
     return Date.now() >= (payload.exp as number) * 1000;
   } catch {
     return true;
   }
-}
+};
 
-export async function getValidAccessToken(): Promise<string | null> {
+export const getValidAccessToken = async (): Promise<string | null> => {
   const accessToken = await getAccessToken();
 
   if (accessToken && !isTokenExpired(accessToken)) {
@@ -44,4 +44,4 @@ export async function getValidAccessToken(): Promise<string | null> {
     }
     return null;
   }
-}
+};

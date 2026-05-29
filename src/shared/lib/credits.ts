@@ -4,26 +4,26 @@ const UNIT = 10n ** DECIMALS;
 export const MIN_BET = 1_000_000n;
 export const MAX_BET = 1_000_000_000_000n;
 
-export function formatCredits(raw: string): string {
+export const formatCredits = (raw: string): string => {
   const v = BigInt(raw);
   const isNegative = v < 0n;
   const absV = isNegative ? -v : v;
   const whole = absV / UNIT;
   const frac = (absV % UNIT).toString().padStart(6, '0').slice(0, 2);
   return `${isNegative ? '-' : ''}${whole.toLocaleString()}.${frac}`;
-}
+};
 
-export function parseCredits(input: string): bigint {
+export const parseCredits = (input: string): bigint => {
   const [w, f = ''] = input.replace(/[, ]/g, '').split('.');
   const whole = BigInt(w || '0') * UNIT;
   const frac = BigInt(`${f}000000`.slice(0, 6));
   return whole + frac;
-}
+};
 
-export function creditsToDisplay(raw: string): string {
+export const creditsToDisplay = (raw: string): string => {
   return formatCredits(raw);
-}
+};
 
-export function displayToCredits(display: string): string {
+export const displayToCredits = (display: string): string => {
   return parseCredits(display).toString();
-}
+};

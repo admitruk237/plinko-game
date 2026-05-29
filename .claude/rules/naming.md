@@ -29,7 +29,7 @@ Use these terms consistently. Do not replace them with generic synonyms.
 | `stake` | Amount wagered | bet input field |
 | `balance` | Player's credit balance | user state |
 | `credits` | Internal monetary unit | formatting, arithmetic |
-| `trail` | Recent bet results (last 4) | `recentResults` → `betTrail` |
+| `recentResults` | Last 4 bet results in game store | store field name (established) |
 | `seed` | Provably fair seed data | crypto fairness feature |
 
 ---
@@ -40,10 +40,8 @@ Use these terms consistently. Do not replace them with generic synonyms.
 // ❌ Generic handlers
 handleInputChange   → handleStakeChange
 handleBet           → drop / executeDrop
-handleClick         → onDrop / onRiskSelect
 
 // ❌ Vague state
-isPlaying           → isBallAnimating
 isLoading           → isFetchingConfig / isDropPending
 data                → config / betResult / user
 result              → dropResult / betOutcome
@@ -71,7 +69,6 @@ items               → bets / results / risks
 ```ts
 // ✅ Name = what the hook manages, not what it does
 useBallAnimation()     // manages the ball animation state
-useBetTrail()          // last N bet results
 useDropFlow()          // orchestrates a full bet round
 useStakeForm()         // form for entering a stake
 useAutoDropLoop()      // auto-bet loop
@@ -89,12 +86,25 @@ onAutoStart()          // user starts auto-bet
 onAutoStop()           // user stops auto-bet
 ```
 
+### `handle*` vs `on*`
+
+- **`handle*`** — DOM event handlers і обробники від бібліотек (`handleSubmit` від react-hook-form, `handleKeyDown`, `handleDrop`)
+- **`on*`** — колбеки що передаються через props або є бізнес-логікою (`onDrop`, `onRiskSelect`)
+
+```ts
+// ✅ handleSubmit — react-hook-form повертає цей метод, залишаємо як є
+form.handleSubmit(onDrop)
+
+// ✅ onDrop — бізнес-колбек у props
+interface Props { onDrop: () => void }
+```
+
 ### State variables
 ```ts
 // ✅ Precise, affirmative, domain-rooted
-isBallAnimating        // not isPlaying
+isPlaying              // game store — source of truth for ball animation gate
 isDropPending          // not isLoading (for bet mutation)
-betTrail               // not recentResults
+recentResults          // game store field — established name, do not rename
 activeSlot             // not bucketIndex (in animation context)
 stakeInput             // not betInput
 rowCount               // not rows (local variable)
@@ -104,11 +114,11 @@ rowCount               // not rows (local variable)
 ```ts
 // ✅ Specific, never generic
 interface Props {
-  minRows: number       // not min
-  maxRows: number       // not max
-  onRiskSelect: (risk: Risk) => void    // not onChange
-  onRowsChange: (rows: number) => void  // not onChange
-  stake: string         // not value / betInput
+  minRows: number
+  maxRows: number
+  onRiskSelect: (risk: Risk) => void
+  onRowsChange: (rows: number) => void
+  stake: string
 }
 ```
 
@@ -117,6 +127,5 @@ interface Props {
 ## Scope rules
 
 - **Single-letter variables** only in math/geometry: `x`, `y`, `r` (radius), `i` (loop index over known small range)
-- **`handle*` prefix** — only for raw DOM event handlers (`handleKeyDown`, `handleSubmit`). All business logic callbacks use `on*`
-- **`current*` prefix** — only when contrasting with a previous/next value. Do not use as a generic qualifier (`currentUser` → `user`, `currentAnimation` → `ballAnimation`)
+- **`current*` prefix** — only when contrasting with a previous/next value. Do not use as a generic qualifier (`currentUser` → `user`)
 - **`get*` functions** — pure derivations only. Side-effectful functions use a verb: `drop()`, `rotate()`, `fetch*()`

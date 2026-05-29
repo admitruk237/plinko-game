@@ -4,7 +4,7 @@ import { ROUTES } from '@/shared/config';
 const protectedRoutes = [ROUTES.GAME, ROUTES.HISTORY, ROUTES.PROFILE, ROUTES.PROGRESS];
 const publicRoutes = [ROUTES.LOGIN, ROUTES.REGISTER];
 
-export default function middleware(req: NextRequest) {
+const middleware = (req: NextRequest) => {
   const { pathname } = req.nextUrl;
   const refreshToken = req.cookies.get('refreshToken')?.value;
 
@@ -20,7 +20,9 @@ export default function middleware(req: NextRequest) {
   }
 
   return NextResponse.next();
-}
+};
+
+export default middleware;
 
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon\\.ico|.*\\.png$).*)'],

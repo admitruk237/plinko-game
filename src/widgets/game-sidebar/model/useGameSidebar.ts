@@ -29,12 +29,12 @@ export const useGameSidebar = ({
   const handleRowsChange = useCallback(
     (val: number | readonly number[]) => {
       const v = Array.isArray(val) ? val[0] : val;
-      if (typeof v === 'number') {
+      if (typeof v === 'number' && v !== rows) {
         onRowsChange(v);
         playRowsChange();
       }
     },
-    [onRowsChange, playRowsChange]
+    [rows, onRowsChange, playRowsChange]
   );
 
   const handleFullscreenToggle = useCallback(() => {

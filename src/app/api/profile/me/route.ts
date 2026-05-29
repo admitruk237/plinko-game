@@ -3,7 +3,7 @@ import { getValidAccessToken } from '@/shared/lib/auth-proxy';
 
 const API_BASE = process.env.API_BASE_URL ?? 'https://plinko-be-stanish.fly.dev';
 
-export async function GET(): Promise<NextResponse> {
+export const GET = async (): Promise<NextResponse> => {
   const token = await getValidAccessToken();
   if (!token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -17,9 +17,9 @@ export async function GET(): Promise<NextResponse> {
     return NextResponse.json(data, { status: response.status });
   }
   return NextResponse.json(data);
-}
+};
 
-export async function PATCH(req: NextRequest): Promise<NextResponse> {
+export const PATCH = async (req: NextRequest): Promise<NextResponse> => {
   const token = await getValidAccessToken();
   if (!token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -39,4 +39,4 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(data, { status: response.status });
   }
   return NextResponse.json(data);
-}
+};

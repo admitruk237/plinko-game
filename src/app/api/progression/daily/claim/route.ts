@@ -3,7 +3,7 @@ import { getValidAccessToken } from '@/shared/lib/auth-proxy';
 
 const API_BASE = process.env.API_BASE_URL ?? 'https://plinko-be-stanish.fly.dev';
 
-export async function POST(): Promise<NextResponse> {
+export const POST = async (): Promise<NextResponse> => {
   const token = await getValidAccessToken();
   if (!token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -18,4 +18,4 @@ export async function POST(): Promise<NextResponse> {
     return NextResponse.json(data, { status: response.status });
   }
   return NextResponse.json(data);
-}
+};

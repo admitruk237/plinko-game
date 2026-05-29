@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import { act, renderHook } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useNicknameEdit } from './useNicknameEdit';
@@ -17,7 +18,7 @@ jest.mock('@/shared/api', () => ({
 
 const mockUpdate = bffApi.updateProfile as jest.Mock;
 
-const wrapper = ({ children }: { children: React.ReactNode }) => (
+const wrapper = ({ children }: { children: ReactNode }) => (
   <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
     {children}
   </QueryClientProvider>

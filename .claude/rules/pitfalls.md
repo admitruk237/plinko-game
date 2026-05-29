@@ -3,6 +3,42 @@ paths: ["src/**"]
 ---
 # Project-Specific Pitfalls
 
+## React namespace — never use `React.*` types
+
+NEVER use `React.ChangeEvent`, `React.MouseEvent`, `React.ReactNode`, etc.
+Always import types directly from `'react'`:
+
+```ts
+// ❌ FORBIDDEN
+(e: React.ChangeEvent<HTMLInputElement>)
+const icon: React.ReactNode
+(e?: React.MouseEvent<HTMLDivElement>)
+
+// ✅ REQUIRED — import the type directly
+import { type ChangeEvent, type MouseEvent, type ReactNode } from 'react'
+(e: ChangeEvent<HTMLInputElement>)
+const icon: ReactNode
+(e?: MouseEvent<HTMLDivElement>)
+```
+
+`import React from 'react'` is also forbidden — always use named imports.
+
+## Magic strings in react-hook-form
+
+NEVER use raw string literals for field names in `form.watch()`, `form.setValue()`, `form.getValues()`.
+Define a constant at the top of the file:
+
+```ts
+// ❌
+const value = form.watch('betInput')
+form.setValue('betInput', newValue)
+
+// ✅
+const BET_FIELD = 'betInput' as const
+const value = form.watch(BET_FIELD)
+form.setValue(BET_FIELD, newValue)
+```
+
 Common mistakes in this codebase — always check these before writing code.
 
 ## Credits / Balance
@@ -77,6 +113,30 @@ if (rows !== config.rows[0] && someCondition) setRows(config.rows[0])
 `animResolveRef.current?.()` in `handleAnimationEnd` resolves the bet flow Promise.
 If you call `setPlaying(false)` before the animation ends, the ball will disappear mid-flight.
 Always wait for `handleAnimationEnd` before finalising the bet result.
+
+## Zustand — useShallow для об'єктних селекторів
+
+Селектор що повертає об'єкт або масив створює нову референцію на кожен рендер → нескінченні ре-рендери. Використовуй `useShallow` скрізь де селектор повертає не примітив.
+
+```ts
+import { useShallow } from 'zustand/react/shallow'
+
+// ❌ новий об'єкт щоразу — ре-рендер на кожен store update
+const { addResult, setPlaying } = useGameStore((s) => ({
+  addResult: s.addResult,
+  setPlaying: s.setPlaying,
+}))
+
+// ✅ shallow comparison — ре-рендер тільки якщо значення змінились
+const { addResult, setPlaying } = useGameStore(
+  useShallow((s) => ({ addResult: s.addResult, setPlaying: s.setPlaying }))
+)
+
+// ✅ примітив — useShallow не потрібен
+const isPlaying = useGameStore((s) => s.isPlaying)
+```
+
+Правило діє в усіх шарах: `entities`, `features`, `widgets`.
 
 ## Zustand store — no cross-entity imports
 

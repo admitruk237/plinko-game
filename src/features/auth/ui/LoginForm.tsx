@@ -1,39 +1,15 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
 import { Button } from '@/shared/ui/button';
-import { type LoginFormValues, loginSchema } from '../model/schemas';
-import { loginAction } from '../actions/login.action';
-import { useSessionStore } from '@/entities/session';
 import { AuthCard } from './AuthCard';
 import { ROUTES } from '@/shared/config';
+import { useLoginForm } from '../model/useLoginForm';
 
 export const LoginForm = () => {
-  const router = useRouter();
-  const setSession = useSessionStore((s) => s.setSession);
-
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
-  });
-
-  const { mutate: login, isPending } = useMutation({
-    mutationFn: (values: LoginFormValues) => loginAction(values),
-    onSuccess: (result) => {
-      if (!result.ok) {
-        form.setError('root', { message: result.error });
-        return;
-      }
-      setSession(result.accessToken, result.user);
-      router.push(ROUTES.GAME);
-    },
-  });
+  const { form, login, isPending } = useLoginForm();
 
   return (
     <AuthCard subtitle="Welcome back!">

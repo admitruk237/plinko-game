@@ -54,9 +54,15 @@ export const ProfileCard = ({ profile, balanceDisplay, levelPercent, nickname, a
                 <h1 className="text-base sm:text-lg font-bold text-white truncate">
                   {profile.nickname}
                 </h1>
-                <button type="button" aria-label="Edit nickname" onClick={nickname.onEditStart}>
+                <Button
+                  variant="icon"
+                  size="icon-xs"
+                  type="button"
+                  aria-label="Edit nickname"
+                  onClick={nickname.onEditStart}
+                >
                   <Pencil className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-text-muted" />
-                </button>
+                </Button>
               </>
             )}
           </div>

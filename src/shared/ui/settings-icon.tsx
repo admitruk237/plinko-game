@@ -2,7 +2,14 @@
 
 import { cn } from '@/shared/lib/utils';
 import { domMin, LazyMotion, m, useAnimation, useReducedMotion, type Variants } from 'motion/react';
-import { forwardRef, type HTMLAttributes, useCallback, useImperativeHandle, useRef } from 'react';
+import {
+  forwardRef,
+  type HTMLAttributes,
+  type MouseEvent,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 
 export interface SettingsIconHandle {
   startAnimation: () => void;
@@ -52,7 +59,7 @@ const SettingsIcon = forwardRef<SettingsIconHandle, SettingsIconProps>(
     });
 
     const handleEnter = useCallback(
-      (e?: React.MouseEvent<HTMLDivElement>) => {
+      (e?: MouseEvent<HTMLDivElement>) => {
         if (!isAnimated || reduced) return;
         if (!isControlled.current) controls.start('animate');
         else if (e) onMouseEnter?.(e);
@@ -61,7 +68,7 @@ const SettingsIcon = forwardRef<SettingsIconHandle, SettingsIconProps>(
     );
 
     const handleLeave = useCallback(
-      (e?: React.MouseEvent<HTMLDivElement>) => {
+      (e?: MouseEvent<HTMLDivElement>) => {
         if (!isControlled.current) controls.start('normal');
         else if (e) onMouseLeave?.(e);
       },

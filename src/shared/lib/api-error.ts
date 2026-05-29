@@ -3,6 +3,6 @@ interface ApiErrorShape {
   message?: string | string[];
 }
 
-export function isApiError(err: unknown): err is ApiErrorShape {
+export const isApiError = (err: unknown): err is ApiErrorShape => {
   return typeof err === 'object' && err !== null && 'status' in err;
-}
+};

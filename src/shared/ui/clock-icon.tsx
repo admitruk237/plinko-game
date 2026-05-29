@@ -1,7 +1,14 @@
 'use client';
 
 import { motion, type Transition, useAnimation, type Variants } from 'motion/react';
-import { forwardRef, type HTMLAttributes, useCallback, useImperativeHandle, useRef } from 'react';
+import {
+  forwardRef,
+  type HTMLAttributes,
+  type MouseEvent,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 
 import { cn } from '@/shared/lib/utils';
 
@@ -65,7 +72,7 @@ const ClockIcon = forwardRef<ClockIconHandle, Props>(
     });
 
     const handleMouseEnter = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
+      (e: MouseEvent<HTMLDivElement>) => {
         if (isControlledRef.current) {
           onMouseEnter?.(e);
         } else {
@@ -76,7 +83,7 @@ const ClockIcon = forwardRef<ClockIconHandle, Props>(
     );
 
     const handleMouseLeave = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
+      (e: MouseEvent<HTMLDivElement>) => {
         if (isControlledRef.current) {
           onMouseLeave?.(e);
         } else {

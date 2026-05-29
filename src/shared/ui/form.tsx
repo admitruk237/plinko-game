@@ -25,18 +25,20 @@ interface FormFieldContextValue<
 
 const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFieldContextValue);
 
-function FormField<
+const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->({ ...props }: ControllerProps<TFieldValues, TName>) {
+>({
+  ...props
+}: ControllerProps<TFieldValues, TName>) => {
   return (
     <FormFieldContext.Provider value={{ name: props.name }}>
       <Controller {...props} />
     </FormFieldContext.Provider>
   );
-}
+};
 
-function useFormField() {
+const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext);
 
   if (!fieldContext.name) {
@@ -58,7 +60,7 @@ function useFormField() {
     formMessageId: `${id}-form-item-message`,
     ...fieldState,
   };
-}
+};
 
 interface FormItemContextValue {
   id: string;

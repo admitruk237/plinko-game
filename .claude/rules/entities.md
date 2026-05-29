@@ -20,6 +20,10 @@ entities/
 
 - An entity MUST NOT import from another entity — zero cross-entity coupling
 - An entity owns its Zustand store; no other layer writes directly to it except via the store's actions
-- Stores use `persist` middleware when state must survive page reload (e.g. `useSessionStore` → `'session-storage'`)
+- Stores use `persist` middleware when state must survive page reload
 - Export only what other layers need through the slice's `index.ts` — keep internals private
 - Cross-entity coordination belongs in `features/`, not here
+
+## Zustand selector optimization
+
+Для об'єктних селекторів обов'язково використовуй `useShallow` — див. деталі в `pitfalls.md`.

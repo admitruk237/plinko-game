@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import type { ReactElement } from 'react';
 import { Volume2, X, Zap } from 'lucide-react';
 import {
+  Button,
   Dialog,
   DialogClose,
   DialogDescription,
@@ -32,7 +33,7 @@ const LABELS = {
 } as const;
 
 interface Props {
-  trigger: React.ReactElement;
+  trigger: ReactElement;
 }
 
 export const SettingsDialog = ({ trigger }: Props) => {
@@ -54,7 +55,7 @@ export const SettingsDialog = ({ trigger }: Props) => {
           </div>
           <DialogClose
             render={
-              <button className="text-white/40 hover:text-white/70 transition-colors p-1 cursor-pointer" />
+              <Button variant="icon" size="none" className="p-1" aria-label="Close settings" />
             }
           >
             <X size={ICON_SIZE} />
@@ -96,8 +97,6 @@ export const SettingsDialog = ({ trigger }: Props) => {
             <Switch checked={animationsEnabled} onCheckedChange={setAnimationsEnabled} />
           </div>
         </div>
-
-        {/* Divider */}
         <div className="border-t border-auth-border pt-6 flex flex-col gap-1.5 text-[14px] text-text-muted">
           <div>
             {LABELS.VERSION_PREFIX}

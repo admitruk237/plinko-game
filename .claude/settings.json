@@ -8,7 +8,7 @@
           {
             "type": "agent",
             "if": "Bash(git commit*)",
-            "prompt": "Run pre-commit checks before the commit proceeds:\n1. Run `npm run lint` — if it fails, output the errors and block the commit\n2. Run tests: `npm run test -- --passWithNoTests 2>/dev/null || true` — if tests fail, report and block\n3. If all checks pass, allow the commit to proceed",
+            "prompt": "Run pre-commit checks before the commit proceeds:\n1. Run `npm run lint` — if it fails, output the errors and block the commit\n2. Run tests: `npm run test -- --passWithNoTests 2>/dev/null || true` — if tests fail, report and block\n3. Check for forbidden native HTML elements in TSX files: run `grep -rn '<button' src --include='*.tsx'`. If any matches are found, block the commit and list every file+line. The rule is: NEVER use native `<button>` — always use `Button` from `@/shared/ui`. Same check for `<img` — must use Next.js `Image` instead.\n4. If all checks pass, allow the commit to proceed",
             "timeout": 120,
             "statusMessage": "Running pre-commit checks (lint + tests)..."
           }

@@ -19,7 +19,7 @@ export interface LoginError {
 
 export type LoginActionResult = LoginSuccess | LoginError;
 
-export async function loginAction(values: LoginFormValues): Promise<LoginActionResult> {
+export const loginAction = async (values: LoginFormValues): Promise<LoginActionResult> => {
   try {
     const { accessToken, refreshToken } = await authApi.login(values);
     await setRefreshToken(refreshToken);
@@ -32,4 +32,4 @@ export async function loginAction(values: LoginFormValues): Promise<LoginActionR
     }
     return { ok: false, error: 'Server error, try again' };
   }
-}
+};

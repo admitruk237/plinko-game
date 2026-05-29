@@ -1,43 +1,15 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
 import { Button } from '@/shared/ui/button';
-import { type RegisterFormValues, registerSchema } from '../model/schemas';
-import { registerAction } from '../actions/register.action';
-import { useSessionStore } from '@/entities/session';
 import { AuthCard } from './AuthCard';
 import { ROUTES } from '@/shared/config';
+import { useRegisterForm } from '../model/useRegisterForm';
 
 export const RegisterForm = () => {
-  const router = useRouter();
-  const setSession = useSessionStore((s) => s.setSession);
-
-  const form = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: { email: '', password: '' },
-  });
-
-  const { mutate: register, isPending } = useMutation({
-    mutationFn: (values: RegisterFormValues) => registerAction(values),
-    onSuccess: (result) => {
-      if (!result.ok) {
-        if (result.field === 'email') {
-          form.setError('email', { message: result.error });
-        } else {
-          form.setError('root', { message: result.error });
-        }
-        return;
-      }
-      setSession(result.accessToken, result.user);
-      router.push(ROUTES.GAME);
-    },
-  });
+  const { form, register, isPending } = useRegisterForm();
 
   return (
     <AuthCard subtitle="Create your account">

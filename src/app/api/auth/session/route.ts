@@ -15,7 +15,7 @@ interface SessionData {
   user: User;
 }
 
-export async function GET(): Promise<NextResponse<SessionData> | NextResponse<null>> {
+export const GET = async (): Promise<NextResponse<SessionData> | NextResponse<null>> => {
   const accessToken = await getAccessToken();
   const refreshToken = await getRefreshToken();
 
@@ -45,4 +45,4 @@ export async function GET(): Promise<NextResponse<SessionData> | NextResponse<nu
     }
     return NextResponse.json(null, { status: 401 });
   }
-}
+};

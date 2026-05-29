@@ -3,15 +3,38 @@ paths: ["src/**/*.tsx", "src/**/*.ts"]
 ---
 # Component Rules
 
-## Export style
+## Server vs Client — Next.js App Router
 
-Always `export const`, never `export default`:
+Every component is a **Server Component by default**. Add `'use client'` only when you need:
+- React hooks (`useState`, `useEffect`, `useRef`, etc.)
+- Browser APIs (`window`, `document`, etc.)
+- Event handlers (`onClick`, `onChange`, etc.)
+- Zustand stores or React Query
 
 ```tsx
-// ✅
+// ✅ Server Component — no directive needed
+export const UserCard = ({ user }: Props) => <div>{user.name}</div>
+
+// ✅ Client Component — directive required
+'use client'
+export const BetButton = ({ onDrop }: Props) => {
+  const isBallAnimating = useGameStore((s) => s.isPlaying)
+  return <Button disabled={isBallAnimating} onClick={onDrop}>Drop</Button>
+}
+```
+
+Never add `'use client'` to a component just because its parent is a client component — Next.js propagates it automatically.
+
+## Export style
+
+Always `export const`, never `export default` (exception: Next.js file conventions — `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx` use `export default`):
+
+```tsx
+// ✅ slice components
 export const BetDetailDrawer = ({ bet, onClose }: Props) => { ... }
-// ❌
-export default function BetDetailDrawer() { }
+
+// ✅ Next.js pages/layouts — export default is correct here
+export default function GamePage() { ... }
 ```
 
 ## Props
@@ -23,6 +46,20 @@ interface Props {
   value: number
   onClick: () => void
 }
+```
+
+## Refs — React 19
+
+`forwardRef` is **deprecated in React 19**. `ref` is now a plain prop:
+
+```tsx
+// ❌ old pattern — do not use
+const Input = forwardRef<HTMLInputElement, Props>((props, ref) => ...)
+
+// ✅ React 19 — ref is just a prop
+const Input = ({ ref, ...props }: Props & { ref?: React.Ref<HTMLInputElement> }) => (
+  <input ref={ref} {...props} />
+)
 ```
 
 ## Clean JSX — zero business logic in components
@@ -43,7 +80,6 @@ NEVER use `style={}` prop in JSX — use Tailwind classes only:
 ```tsx
 // ❌
 <div style={{ color: 'red', marginTop: 8 }}>...</div>
-<div style={dynamicStyle}>...</div>
 
 // ✅
 <div className="text-red-500 mt-2">...</div>
@@ -52,16 +88,42 @@ NEVER use `style={}` prop in JSX — use Tailwind classes only:
 
 If a color or value isn't in Tailwind — add it as a CSS variable in `globals.css` and use it via a semantic class.
 
-## shadcn/ui first
+## shadcn/ui first — NEVER use native HTML primitives
 
-Before writing any UI primitive — check `src/shared/ui/` for an existing shadcn component.
-Use `Button`, `Input`, `Card`, `Dialog`, `Switch`, `Tabs`, `Form`/`FormField`/`FormItem` etc. whenever applicable.
-Do NOT write custom alternatives to what shadcn already provides.
-If you need custom styles or variants, extend the existing shadcn component in `src/shared/ui/` by adding a new variant with `cva` and forwarding props instead of inline styles or bespoke classes.
+NEVER use native HTML elements when a shadcn component exists:
 
-## Working with Images
+```tsx
+// ❌ FORBIDDEN — always blocked by pre-commit
+<button onClick={...}>Click</button>
+<img src={...} />
 
-NEVER use the native `<img>` HTML element. Always use the Next.js `Image` component (`import Image from 'next/image'`) to ensure proper image optimization, lazy loading, and layout responsiveness.
+// ✅ REQUIRED
+<Button variant="icon" onClick={...}>Click</Button>
+<Image src={...} alt={...} fill />
+```
+
+**`<button>` → `Button` mapping:**
+- Icon-only action → `variant="icon"`, `size="icon-xs"` / `size="icon"`
+- Toggle tab option → `variant="betModeOption"`, `size="none"`
+- Drop zone / custom shape → `variant="ghost"`, `size="none"` + `className`
+- Inside `DialogClose render={...}` → `render={<Button variant="icon" size="none" />}`
+- Need a new style? Add a `cva` variant to `src/shared/ui/button.tsx` — do NOT use native `<button>`
+
+## Accessibility
+
+Every interactive element must be keyboard-accessible and have a label:
+
+```tsx
+// ❌
+<Button onClick={onClose}><X /></Button>
+
+// ✅
+<Button onClick={onClose} aria-label="Close dialog"><X /></Button>
+```
+
+- Icon-only buttons **must** have `aria-label`
+- Use semantic HTML inside Server Components (`<nav>`, `<main>`, `<section>`, `<header>`)
+- `Dialog` / `DialogPopup` must have `DialogTitle` and `DialogDescription` (even if visually hidden)
 
 ## Size limit
 

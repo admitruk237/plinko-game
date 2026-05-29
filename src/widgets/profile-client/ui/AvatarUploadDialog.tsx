@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { type ChangeEvent, type DragEvent, useRef } from 'react';
 import { Upload, X } from 'lucide-react';
 import {
   Button,
@@ -7,6 +7,8 @@ import {
   DialogDescription,
   DialogPopup,
   DialogTitle,
+  UploadIcon,
+  type UploadIconHandle,
 } from '@/shared/ui';
 import { cn } from '@/shared/lib/utils';
 
@@ -30,18 +32,19 @@ export const AvatarUploadDialog = ({
   onUpload,
 }: Props) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const uploadIconRef = useRef<UploadIconHandle | null>(null);
 
   const handleDropZoneClick = () => fileInputRef.current?.click();
 
-  const handleDragOver = (e: React.DragEvent) => e.preventDefault();
+  const handleDragOver = (e: DragEvent) => e.preventDefault();
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = (e: DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
     if (file) onFileSelect(file);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) onFileSelect(file);
     e.target.value = '';
@@ -64,29 +67,26 @@ export const AvatarUploadDialog = ({
               Choose a profile picture (max 5MB)
             </DialogDescription>
           </div>
-          <DialogClose
-            render={
-              <button
-                type="button"
-                className="text-white/40 hover:text-white/70 transition-colors"
-              />
-            }
-          >
+          <DialogClose render={<Button variant="icon" size="none" aria-label="Close dialog" />}>
             <X size={16} />
           </DialogClose>
         </div>
 
         <div className="flex flex-col gap-4">
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="none"
             onClick={handleDropZoneClick}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
+            onMouseEnter={() => uploadIconRef.current?.startAnimation()}
+            onMouseLeave={() => uploadIconRef.current?.stopAnimation()}
             className={cn(
-              'flex h-[168px] w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-[10px] border-2 border-dashed border-panel-border transition-colors hover:border-border-hover'
+              'flex h-[168px] w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-[10px] border-2 border-dashed border-panel-border transition-colors hover:border-border-hover hover:bg-transparent'
             )}
           >
-            <Upload className="h-12 w-12 text-text-muted" />
+            <UploadIcon ref={uploadIconRef} size={48} className="text-text-muted" />
             {pendingFile ? (
               <p className="text-sm font-medium text-success">{pendingFile.name}</p>
             ) : (
@@ -95,7 +95,7 @@ export const AvatarUploadDialog = ({
                 <p className="text-xs text-text-tertiary">PNG, JPG up to 5MB</p>
               </>
             )}
-          </button>
+          </Button>
 
           <input
             ref={fileInputRef}

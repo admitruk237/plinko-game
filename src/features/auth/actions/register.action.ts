@@ -20,7 +20,7 @@ export interface RegisterError {
 
 export type RegisterActionResult = RegisterSuccess | RegisterError;
 
-export async function registerAction(values: RegisterFormValues): Promise<RegisterActionResult> {
+export const registerAction = async (values: RegisterFormValues): Promise<RegisterActionResult> => {
   try {
     const { accessToken, refreshToken } = await authApi.register(values);
     await setRefreshToken(refreshToken);
@@ -33,4 +33,4 @@ export async function registerAction(values: RegisterFormValues): Promise<Regist
     }
     return { ok: false, error: 'Server error, try again' };
   }
-}
+};

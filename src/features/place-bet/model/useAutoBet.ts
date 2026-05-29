@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { type ChangeEvent, useCallback, useEffect } from 'react';
 import type { Risk } from '@/entities/game';
 import { MAX_BET, MIN_BET, parseCredits } from '@/shared/lib/credits';
 import { BET_MODES, type BetMode, MAX_NUM_BETS } from '@/shared/config';
@@ -21,9 +21,9 @@ interface UseAutoBetResult {
   isAutoBetting: boolean;
   currentBetCount: number;
   handleBet: () => void;
-  handleNumBetsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleStopProfitChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleStopLossChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleNumBetsChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleStopProfitChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleStopLossChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const useAutoBet = ({
@@ -132,7 +132,7 @@ export const useAutoBet = ({
     onPlaceBet,
   ]);
 
-  const handleNumBetsChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNumBetsChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const digits = e.target.value.replace(/[^0-9]/g, '');
     const num = parseInt(digits, 10);
     if (digits === '') {
@@ -142,7 +142,7 @@ export const useAutoBet = ({
     }
   }, []);
 
-  const handleStopProfitChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleStopProfitChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     let clean = e.target.value.replace(/[^0-9.]/g, '');
     const dots = clean.split('.');
     if (dots.length > 2) {
@@ -151,7 +151,7 @@ export const useAutoBet = ({
     setStopProfitInput(clean);
   }, []);
 
-  const handleStopLossChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleStopLossChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     let clean = e.target.value.replace(/[^0-9.]/g, '');
     const dots = clean.split('.');
     if (dots.length > 2) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import { type ChangeEvent } from 'react';
 import { Label } from '@/shared/ui/label';
 import { Input } from '@/shared/ui/input';
 import { MAX_NUM_BETS } from '@/shared/config';
@@ -16,9 +16,9 @@ interface Props {
   stopProfitInput: string;
   stopLossInput: string;
   isAutoBetting: boolean;
-  onNumBetsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onStopProfitChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onStopLossChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onNumBetsChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onStopProfitChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onStopLossChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const AutoBetSettings = ({

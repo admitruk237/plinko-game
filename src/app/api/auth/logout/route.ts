@@ -8,7 +8,7 @@ import {
 
 const API_BASE = process.env.API_BASE_URL ?? 'https://plinko-be-stanish.fly.dev';
 
-export async function POST(): Promise<NextResponse> {
+export const POST = async (): Promise<NextResponse> => {
   const accessToken = await getAccessToken();
   const refreshToken = await getRefreshToken();
 
@@ -31,4 +31,4 @@ export async function POST(): Promise<NextResponse> {
   await deleteRefreshToken();
 
   return new NextResponse(null, { status: 204 });
-}
+};

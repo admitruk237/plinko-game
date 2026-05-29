@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { cn } from '@/shared/lib/utils';
 
-function Card({
+const Card = ({
   className,
   size = 'default',
   variant = 'default',
@@ -10,7 +10,7 @@ function Card({
 }: React.ComponentProps<'div'> & {
   size?: 'default' | 'sm';
   variant?: 'default' | 'login' | 'sidebar';
-}) {
+}) => {
   return (
     <div
       data-slot="card"
@@ -29,7 +29,7 @@ function Card({
       {...props}
     />
   );
-}
+};
 
 const CardHeader = ({ className, ...props }: React.ComponentProps<'div'>) => {
   return (

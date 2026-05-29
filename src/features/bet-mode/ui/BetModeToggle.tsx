@@ -1,6 +1,7 @@
 'use client';
 
 import { BET_MODES, type BetMode } from '@/shared/config';
+import { Button } from '@/shared/ui';
 import { cn } from '@/shared/lib/utils';
 
 interface Props {
@@ -24,18 +25,17 @@ export const BetModeToggle = ({ value, onChange, disabled }: Props) => {
         )}
       />
       {([BET_MODES.MANUAL, BET_MODES.AUTO] as BetMode[]).map((mode) => (
-        <button
+        <Button
           key={mode}
           type="button"
-          onClick={() => !disabled && onChange(mode)}
+          variant="betModeOption"
+          size="none"
+          data-active={value === mode}
           disabled={disabled}
-          className={cn(
-            'relative z-10 flex-1 rounded-[11px] text-[14px] font-medium leading-[20px] tracking-[-0.15px] transition-colors duration-300 ease-in-out',
-            value === mode ? 'text-neutral-50' : 'text-neutral-400 hover:text-neutral-50'
-          )}
+          onClick={() => !disabled && onChange(mode)}
         >
           {mode === BET_MODES.MANUAL ? 'Manual' : 'Auto'}
-        </button>
+        </Button>
       ))}
     </div>
   );

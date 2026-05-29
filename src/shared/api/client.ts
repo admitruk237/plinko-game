@@ -4,10 +4,10 @@ interface ApiError {
   error?: string;
 }
 
-export async function apiClient<T>(
+export const apiClient = async <T>(
   path: string,
   options: RequestInit & { token?: string } = {}
-): Promise<T> {
+): Promise<T> => {
   const { token, headers: customHeaders, ...fetchOptions } = options;
 
   const headers: HeadersInit = {
@@ -33,4 +33,4 @@ export async function apiClient<T>(
   }
 
   return data as T;
-}
+};

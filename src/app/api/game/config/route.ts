@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 const API_BASE = process.env.API_BASE_URL ?? 'https://plinko-be-stanish.fly.dev';
 
-export async function GET(): Promise<NextResponse> {
+export const GET = async (): Promise<NextResponse> => {
   const response = await fetch(`${API_BASE}/api/v1/game/config`);
   const data = await response.json();
 
@@ -11,4 +11,4 @@ export async function GET(): Promise<NextResponse> {
   }
 
   return NextResponse.json(data);
-}
+};
