@@ -57,8 +57,10 @@ export const AvatarUploadDialog = ({
       <DialogPopup className="w-full max-w-[512px] rounded-[10px] border border-panel-border bg-panel p-[25px] shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]">
         <div className="mb-6 flex items-start justify-between">
           <div className="flex flex-col gap-2">
-            <DialogTitle className="text-xl font-bold text-white">Upload Avatar</DialogTitle>
-            <DialogDescription className="text-sm text-text-muted">
+            <DialogTitle className="text-lg sm:text-xl font-bold text-white">
+              Upload Avatar
+            </DialogTitle>
+            <DialogDescription className="text-xs sm:text-sm text-text-muted">
               Choose a profile picture (max 5MB)
             </DialogDescription>
           </div>

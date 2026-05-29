@@ -27,16 +27,18 @@ const DialogPopup = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <DialogPortal>
     <DialogBackdrop />
-    <DialogPrimitive.Popup
-      ref={ref}
-      className={cn(
-        'fixed left-[50%] top-[50%] z-50 w-full max-w-[440px] translate-x-[-50%] translate-y-[-50%] rounded-[16px] bg-panel-dark border border-panel-border p-6 shadow-2xl transition-all duration-200 focus:outline-none focus-visible:outline-none',
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </DialogPrimitive.Popup>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+      <DialogPrimitive.Popup
+        ref={ref}
+        className={cn(
+          'pointer-events-auto relative w-full max-w-[440px] rounded-[16px] bg-panel-dark border border-panel-border p-6 shadow-2xl transition-all duration-200 focus:outline-none focus-visible:outline-none',
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </DialogPrimitive.Popup>
+    </div>
   </DialogPortal>
 ));
 DialogPopup.displayName = 'DialogPopup';

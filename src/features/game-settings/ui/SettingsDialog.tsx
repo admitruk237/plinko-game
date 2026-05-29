@@ -45,10 +45,10 @@ export const SettingsDialog = ({ trigger }: Props) => {
       <DialogPopup className="bg-auth-card-bg border border-auth-border border-t-auth-border-top text-white rounded-[16px] w-full max-w-[448px] p-[33px] shadow-2xl focus:outline-none focus-visible:outline-none">
         <div className="flex justify-between items-start mb-[32px]">
           <div>
-            <DialogTitle className="text-3xl font-bold text-white leading-none mb-2">
+            <DialogTitle className="text-2xl sm:text-3xl font-bold text-white leading-none mb-2">
               {LABELS.TITLE}
             </DialogTitle>
-            <DialogDescription className="text-base text-text-muted">
+            <DialogDescription className="text-sm sm:text-base text-text-muted">
               {LABELS.DESCRIPTION}
             </DialogDescription>
           </div>
@@ -68,8 +68,12 @@ export const SettingsDialog = ({ trigger }: Props) => {
                 <Volume2 size={ICON_SIZE} />
               </div>
               <div className="flex flex-col">
-                <span className="text-[16px] font-bold text-white">{LABELS.SOUND_TITLE}</span>
-                <span className="text-[12px] text-text-muted">{LABELS.SOUND_DESC}</span>
+                <span className="text-[14px] sm:text-[16px] font-bold text-white">
+                  {LABELS.SOUND_TITLE}
+                </span>
+                <span className="text-[11px] sm:text-[12px] text-text-muted">
+                  {LABELS.SOUND_DESC}
+                </span>
               </div>
             </div>
             <Switch checked={soundEffectsEnabled} onCheckedChange={setSoundEffectsEnabled} />
@@ -81,8 +85,12 @@ export const SettingsDialog = ({ trigger }: Props) => {
                 <Zap size={ICON_SIZE} />
               </div>
               <div className="flex flex-col">
-                <span className="text-[16px] font-bold text-white">{LABELS.ANIM_TITLE}</span>
-                <span className="text-[12px] text-text-muted">{LABELS.ANIM_DESC}</span>
+                <span className="text-[14px] sm:text-[16px] font-bold text-white">
+                  {LABELS.ANIM_TITLE}
+                </span>
+                <span className="text-[11px] sm:text-[12px] text-text-muted">
+                  {LABELS.ANIM_DESC}
+                </span>
               </div>
             </div>
             <Switch checked={animationsEnabled} onCheckedChange={setAnimationsEnabled} />

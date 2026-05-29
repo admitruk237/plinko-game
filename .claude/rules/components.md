@@ -36,6 +36,22 @@ Components render only. Logic lives elsewhere:
 | API calls | `api/` in the slice |
 | Constants | top of file or `shared/config/constants.ts` |
 
+## No inline styles
+
+NEVER use `style={}` prop in JSX — use Tailwind classes only:
+
+```tsx
+// ❌
+<div style={{ color: 'red', marginTop: 8 }}>...</div>
+<div style={dynamicStyle}>...</div>
+
+// ✅
+<div className="text-red-500 mt-2">...</div>
+<div className={cn('base', isActive && 'text-green-500')}>...</div>
+```
+
+If a color or value isn't in Tailwind — add it as a CSS variable in `globals.css` and use it via a semantic class.
+
 ## shadcn/ui first
 
 Before writing any UI primitive — check `src/shared/ui/` for an existing shadcn component.
