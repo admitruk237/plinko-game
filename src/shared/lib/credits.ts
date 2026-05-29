@@ -20,10 +20,8 @@ export const parseCredits = (input: string): bigint => {
   return whole + frac;
 };
 
-export const creditsToDisplay = (raw: string): string => {
-  return formatCredits(raw);
-};
-
-export const displayToCredits = (display: string): string => {
-  return parseCredits(display).toString();
+export const sanitizeDecimalInput = (raw: string): string => {
+  const clean = raw.replace(/[^0-9.]/g, '');
+  const dots = clean.split('.');
+  return dots.length > 2 ? `${dots[0]}.${dots.slice(1).join('')}` : clean;
 };

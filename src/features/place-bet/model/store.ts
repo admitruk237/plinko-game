@@ -4,13 +4,12 @@ import {
   type BetMode,
   DEFAULT_BET_AMOUNT,
   DEFAULT_NUM_BETS,
+  DEFAULT_ROWS,
   DEFAULT_STOP_LOSS,
   DEFAULT_STOP_PROFIT,
   RISK_LEVELS,
 } from '@/shared/config';
 import type { Risk } from '@/entities/game';
-
-const DEFAULT_ROWS = 12;
 
 interface PlaceBetState {
   betAmount: string;

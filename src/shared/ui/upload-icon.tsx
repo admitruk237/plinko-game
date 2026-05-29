@@ -2,7 +2,14 @@
 
 import { cn } from '@/shared/lib/utils';
 import { domMin, LazyMotion, m, useAnimation, useReducedMotion, type Variants } from 'motion/react';
-import { forwardRef, type HTMLAttributes, useCallback, useImperativeHandle, useRef } from 'react';
+import {
+  forwardRef,
+  type HTMLAttributes,
+  type MouseEvent,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 
 export interface UploadIconHandle {
   startAnimation: () => void;
@@ -52,18 +59,18 @@ const UploadIcon = forwardRef<UploadIconHandle, UploadIconProps>(
     });
 
     const handleEnter = useCallback(
-      (e?: React.MouseEvent<HTMLDivElement>) => {
+      (e: MouseEvent<HTMLDivElement>) => {
         if (!isAnimated || reduced) return;
         if (!isControlled.current) controls.start('animate');
-        else onMouseEnter?.(e as any);
+        else onMouseEnter?.(e);
       },
       [controls, reduced, isAnimated, onMouseEnter]
     );
 
     const handleLeave = useCallback(
-      (e?: React.MouseEvent<HTMLDivElement>) => {
+      (e: MouseEvent<HTMLDivElement>) => {
         if (!isControlled.current) controls.start('normal');
-        else onMouseLeave?.(e as any);
+        else onMouseLeave?.(e);
       },
       [controls, onMouseLeave]
     );

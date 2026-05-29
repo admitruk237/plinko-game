@@ -18,11 +18,11 @@ widgets/game-client/
 **Main composite game component.** `useGameClient` aggregates:
 - `useGameConfig()` — loads game config
 - `useCurrentUser()` + session store — user balance
-- `useGameStore` — `isPlaying`, `setPlaying`
+- `useGameStore` — `setPlaying`
 - `useGamePlay()` — bet logic (`currentAnimations`, `handlePlaceBet`, `handleAnimationEnd`)
-- local `rows` / `risk` state, `payoutTable` derivation, logout handlers
+- logout handlers, sound hooks
 
-`GameClient.tsx` renders only — composes `Header` + `GameSidebar` + `PlinkoBoard` + `RecentResults` from the values returned by `useGameClient`.
+`GameClient.tsx` renders only — composes `Header` + `GameSidebar` + `PlinkoBoard` + `CompactBetController` from the values returned by `useGameClient`.
 
 ---
 
@@ -92,17 +92,6 @@ widgets/bottom-nav/
 ```
 
 Fixed footer with four tabs (Game / Progress / History / Profile). Active tab is derived from `usePathname()`; an animated indicator bar slides between tabs via `motion` `layoutId`. Each icon is ref-controlled (`*IconHandle`) so hover triggers its animation. Tab clicks play a click sound via `useSound()`.
-
----
-
-### `recent-results` — recent results strip
-
-```
-widgets/recent-results/
-  RecentResults.tsx
-```
-
-Shows last 4 bet results (`useGameStore.recentResults`). Colors by multiplier via `getMultiplierColor()`.
 
 ---
 

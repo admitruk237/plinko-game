@@ -43,9 +43,9 @@ features/game/
 ```
 
 **`useGamePlay`** — central gameplay hook:
-- Accepts `{ isPlaying, setPlaying }`
-- `handlePlaceBet(amount, rows, risk)` → mutation → awaits `animResolveRef` → `addResult` → `queryClient.setQueryData(['me'])`
-- `handleAnimationEnd()` → resolves the animation Promise
+- Accepts `{ setPlaying }`
+- `handlePlaceBet(amount, rows, risk)` → mutation → awaits Promise from `animResolveMap` → toast → `queryClient.setQueryData(['me'])`
+- `handleAnimationEnd(id)` → resolves the animation Promise for that ball; `isPlaying` set to `false` only when all animations complete
 - Balance updated via `queryClient.setQueryData` without refetch
 
 ---

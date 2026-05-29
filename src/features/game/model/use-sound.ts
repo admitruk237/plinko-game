@@ -3,6 +3,7 @@
 import { useCallback, useEffect } from 'react';
 
 import { useSettingsStore } from '@/entities/settings';
+import { BIG_WIN_MULTIPLIER } from '@/shared/config';
 import { SoundEngine } from '@/shared/lib/sound-engine';
 import { Howler } from 'howler';
 
@@ -24,7 +25,7 @@ export const useSound = () => {
   const playResult = useCallback(
     (multiplier: number) => {
       if (!soundEffectsEnabled) return;
-      if (multiplier >= 5) {
+      if (multiplier >= BIG_WIN_MULTIPLIER) {
         SoundEngine.playBigWin();
       } else if (multiplier >= 1) {
         SoundEngine.playWin();

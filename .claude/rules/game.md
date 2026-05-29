@@ -7,16 +7,16 @@ Core plinko gameplay. Spans: `entities/game` (state), `features/game` (orchestra
 
 ## Game flow — `useGamePlay`
 
-The central hook that orchestrates a single bet round:
+The central hook that orchestrates bet rounds. Supports multiple concurrent balls.
 
-1. `handlePlaceBet(amount, rows, risk)` called → sets `isPlaying = true`
+1. `handlePlaceBet(amount, rows, risk)` called → increments `activeCount`, sets `isPlaying = true`
 2. Calls `POST /api/bets` via `usePlaceBet` mutation
 3. Backend returns `{ path, bucketIndex, multiplier, payout, balanceAfter, ... }`
-4. **Animation promise**: creates a `Promise` resolved by `animResolveRef` — waits until the ball animation completes on canvas
-5. `handleAnimationEnd()` fires from the canvas component → resolves the promise
-6. `addResult(...)` adds to `useGameStore.recentResults` (capped at 4)
+4. **Animation promise**: creates a `Promise` resolved by `animResolveMap` keyed by `betId` — waits until the ball animation completes on canvas
+5. `handleAnimationEnd(id)` fires from the canvas component → resolves the promise for that ball
+6. Shows toast with multiplier and payout
 7. Balance updated optimistically: `queryClient.setQueryData(['me'], ...)` — no refetch needed
-8. `isPlaying = false`
+8. Decrements `activeCount`; sets `isPlaying = false` only when `activeCount === 0`
 
 ## Amounts — BigInt credits
 
@@ -29,20 +29,20 @@ All monetary values are **strings representing integer cents** (e.g. `"100"` = 1
 ## Game state — `useGameStore`
 
 ```ts
-recentResults: BetResult[]  // last 4 results, newest first
 isPlaying: boolean
 ```
 
-`isPlaying` is the single source of truth for disabling UI during animation.
+`isPlaying` is `true` while at least one ball is animating. Used to gate auto-bet loop.
 
 ## Bet form — `useBetForm`
 
-Controlled via `react-hook-form`. Provides `handleHalf`, `handleDouble`, `handleMax` — all clamp to `[MIN_BET, min(balance, MAX_BET)]`.
+Controlled via `react-hook-form`. Provides `handleHalf`, `handleDouble`, `handleMax` — all clamp to `[MIN_BET, min(balance, MAX_BET)]`. Writes to `usePlaceBetStore.betAmount` directly in each handler (no `useEffect` mirror).
 
 ## Rules
 
-- `isPlaying` guard MUST be checked before placing a bet — `handlePlaceBet` returns early if true
+- Multiple balls can be in flight simultaneously — `handlePlaceBet` does NOT return early if `isPlaying`
+- `isPlaying` becomes `false` only when all active animations complete (`activeCount === 0`)
 - Balance update goes through `queryClient.setQueryData(['me'])` — do NOT call `setSession` or invalidate the query
 - `path` from bet response is a binary string of L/R moves, length = `rows`
 - `bucketIndex` is 0-based, used to highlight the landing bucket
-- Auto-bet (`useAutoBet`) loops `handlePlaceBet` with a configurable delay — respects `isPlaying` state
+- Auto-bet (`useAutoBet`) loops `handlePlaceBet` and checks `isWaitingForBet` to avoid stacking bets

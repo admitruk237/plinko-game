@@ -1,15 +1,14 @@
 import { useCallback } from 'react';
-import { type GameConfig, type Risk, useGameStore } from '@/entities/game';
+import { type Risk, useGameStore } from '@/entities/game';
 import { useAutoBet, useBetForm, usePlaceBetStore } from '@/features/place-bet';
 import { useSound } from '@/features/game';
 
 interface Props {
-  config: GameConfig;
   balance: string;
   onPlaceBet: (amount: string, rows: number, risk: Risk) => Promise<void> | void;
 }
 
-export const useGameSidebar = ({ config: _config, balance, onPlaceBet }: Props) => {
+export const useGameSidebar = ({ balance, onPlaceBet }: Props) => {
   const mode = usePlaceBetStore((state) => state.mode);
   const setMode = usePlaceBetStore((state) => state.setMode);
   const rows = usePlaceBetStore((state) => state.rows);

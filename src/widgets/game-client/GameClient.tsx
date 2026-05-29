@@ -43,12 +43,15 @@ export const GameClient = () => {
 
   return (
     <div className="flex flex-col h-[100dvh] overflow-hidden">
-      <div
+      <Button
+        variant="ghost"
+        size="none"
         className={cn(
           'md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-300',
           isSidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         )}
         onClick={handleCloseSettings}
+        tabIndex={-1}
       />
       <div className="flex-1 flex min-h-0 overflow-hidden md:flex-row flex-col relative">
         <div

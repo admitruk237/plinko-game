@@ -29,7 +29,7 @@ Use these terms consistently. Do not replace them with generic synonyms.
 | `stake` | Amount wagered | bet input field |
 | `balance` | Player's credit balance | user state |
 | `credits` | Internal monetary unit | formatting, arithmetic |
-| `recentResults` | Last 4 bet results in game store | store field name (established) |
+| `currentAnimations` | Active ball animations array | `useGamePlay` state |
 | `seed` | Provably fair seed data | crypto fairness feature |
 
 ---
@@ -104,7 +104,7 @@ interface Props { onDrop: () => void }
 // ✅ Precise, affirmative, domain-rooted
 isPlaying              // game store — source of truth for ball animation gate
 isDropPending          // not isLoading (for bet mutation)
-recentResults          // game store field — established name, do not rename
+currentAnimations      // useGamePlay state — active ball animations
 activeSlot             // not bucketIndex (in animation context)
 stakeInput             // not betInput
 rowCount               // not rows (local variable)

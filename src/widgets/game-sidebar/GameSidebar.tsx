@@ -58,7 +58,7 @@ const GameSidebarInner = ({
     handleNumBetsChange,
     handleStopProfitChange,
     handleStopLossChange,
-  } = useGameSidebar({ config, balance, onPlaceBet });
+  } = useGameSidebar({ balance, onPlaceBet });
 
   const isAutoDisabled = isAutoBetting ? false : isPlaying;
   const isBetButtonDisabled = mode === BET_MODES.AUTO ? isAutoDisabled : false;
@@ -67,12 +67,15 @@ const GameSidebarInner = ({
   return (
     <Card
       variant="sidebar"
-      className="md:h-full md:w-[320px] md:min-w-[320px] md:!overflow-y-auto md:[scrollbar-width:thin] md:[scrollbar-color:var(--color-panel-border)_transparent] md:[&::-webkit-scrollbar]:w-1 md:[&::-webkit-scrollbar-track]:bg-transparent md:[&::-webkit-scrollbar-thumb]:bg-panel-border md:[&::-webkit-scrollbar-thumb]:rounded-full max-md:w-full max-md:min-w-0 max-md:min-h-full max-md:border-none max-md:bg-transparent max-md:p-0 max-md:shadow-none z-10 shrink-0"
+      className="md:h-full md:w-[320px] md:min-w-[320px] md:overflow-y-auto md:[scrollbar-width:thin] md:[scrollbar-color:var(--color-panel-border)_transparent] md:[&::-webkit-scrollbar]:w-1 md:[&::-webkit-scrollbar-track]:bg-transparent md:[&::-webkit-scrollbar-thumb]:bg-panel-border md:[&::-webkit-scrollbar-thumb]:rounded-full max-md:w-full max-md:min-w-0 max-md:min-h-full max-md:border-none max-md:bg-transparent max-md:p-0 max-md:shadow-none z-10 shrink-0"
     >
       <Form {...form}>
         <form
           id="sidebar-form"
-          onSubmit={form.handleSubmit(handleBet)}
+          onSubmit={form.handleSubmit(() => {
+            handleBet();
+            onClose?.();
+          })}
           className="flex flex-col gap-4 min-h-full shrink-0"
         >
           <div className="flex items-center gap-3 w-full shrink-0">

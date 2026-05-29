@@ -28,7 +28,7 @@
       "doc": ".claude/docs/entities.md",
       "rules": ".claude/rules/entities.md",
       "layer": "entities",
-      "description": "Zustand stores: session (auth), game (isPlaying, recentResults), settings (sound/animations)"
+      "description": "Zustand stores: session (auth), game (isPlaying), settings (sound/animations)"
     },
     {
       "pattern": "src/entities/session/**",
@@ -42,7 +42,7 @@
       "doc": ".claude/docs/entities.md",
       "rules": ".claude/rules/game.md",
       "layer": "entities/game",
-      "description": "Game state — isPlaying, recentResults (last 4), BetResult and BallAnimation types"
+      "description": "Game state — isPlaying (true while any ball animates), BallAnimation type"
     },
     {
       "pattern": "src/features/**",

@@ -1,6 +1,7 @@
 import { type ChangeEvent, useCallback, useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import type { Risk } from '@/entities/game';
-import { MAX_BET, MIN_BET, parseCredits } from '@/shared/lib/credits';
+import { MAX_BET, MIN_BET, parseCredits, sanitizeDecimalInput } from '@/shared/lib/credits';
 import { BET_MODES, type BetMode, MAX_NUM_BETS } from '@/shared/config';
 import { usePlaceBetStore } from './store';
 
@@ -50,7 +51,24 @@ export const useAutoBet = ({
     setStartBalance,
     isWaitingForBet,
     setIsWaitingForBet,
-  } = usePlaceBetStore();
+  } = usePlaceBetStore(
+    useShallow((s) => ({
+      numBetsInput: s.numBetsInput,
+      setNumBetsInput: s.setNumBetsInput,
+      stopProfitInput: s.stopProfitInput,
+      setStopProfitInput: s.setStopProfitInput,
+      stopLossInput: s.stopLossInput,
+      setStopLossInput: s.setStopLossInput,
+      isAutoBetting: s.isAutoBetting,
+      setIsAutoBetting: s.setIsAutoBetting,
+      currentBetCount: s.currentBetCount,
+      setCurrentBetCount: s.setCurrentBetCount,
+      startBalance: s.startBalance,
+      setStartBalance: s.setStartBalance,
+      isWaitingForBet: s.isWaitingForBet,
+      setIsWaitingForBet: s.setIsWaitingForBet,
+    }))
+  );
 
   const balanceBigInt = BigInt(balance || '0');
 
@@ -142,23 +160,19 @@ export const useAutoBet = ({
     }
   }, []);
 
-  const handleStopProfitChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    let clean = e.target.value.replace(/[^0-9.]/g, '');
-    const dots = clean.split('.');
-    if (dots.length > 2) {
-      clean = `${dots[0]}.${dots.slice(1).join('')}`;
-    }
-    setStopProfitInput(clean);
-  }, []);
+  const handleStopProfitChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setStopProfitInput(sanitizeDecimalInput(e.target.value));
+    },
+    [setStopProfitInput]
+  );
 
-  const handleStopLossChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    let clean = e.target.value.replace(/[^0-9.]/g, '');
-    const dots = clean.split('.');
-    if (dots.length > 2) {
-      clean = `${dots[0]}.${dots.slice(1).join('')}`;
-    }
-    setStopLossInput(clean);
-  }, []);
+  const handleStopLossChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setStopLossInput(sanitizeDecimalInput(e.target.value));
+    },
+    [setStopLossInput]
+  );
 
   const handleBet = useCallback(() => {
     let amount = 0n;

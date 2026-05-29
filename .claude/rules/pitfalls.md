@@ -110,9 +110,9 @@ if (rows !== config.rows[0] && someCondition) setRows(config.rows[0])
 
 ## Animation promise
 
-`animResolveRef.current?.()` in `handleAnimationEnd` resolves the bet flow Promise.
-If you call `setPlaying(false)` before the animation ends, the ball will disappear mid-flight.
-Always wait for `handleAnimationEnd` before finalising the bet result.
+`animResolveMap.current.get(id)?.()` in `handleAnimationEnd(id)` resolves the per-ball Promise.
+`isPlaying` is set to `false` only when `activeCount` reaches 0 (all balls landed).
+Never call `setPlaying(false)` directly — let `useGamePlay` manage it via `activeCount`.
 
 ## Zustand — useShallow для об'єктних селекторів
 
@@ -122,14 +122,14 @@ Always wait for `handleAnimationEnd` before finalising the bet result.
 import { useShallow } from 'zustand/react/shallow'
 
 // ❌ новий об'єкт щоразу — ре-рендер на кожен store update
-const { addResult, setPlaying } = useGameStore((s) => ({
-  addResult: s.addResult,
+const { isPlaying, setPlaying } = useGameStore((s) => ({
+  isPlaying: s.isPlaying,
   setPlaying: s.setPlaying,
 }))
 
 // ✅ shallow comparison — ре-рендер тільки якщо значення змінились
-const { addResult, setPlaying } = useGameStore(
-  useShallow((s) => ({ addResult: s.addResult, setPlaying: s.setPlaying }))
+const { isPlaying, setPlaying } = useGameStore(
+  useShallow((s) => ({ isPlaying: s.isPlaying, setPlaying: s.setPlaying }))
 )
 
 // ✅ примітив — useShallow не потрібен
@@ -148,5 +148,5 @@ import { useSessionStore } from '@/entities/session'
 
 // ✅ coordinate in features/game/model/useGamePlay.ts
 const user = useCurrentUser()
-const addResult = useGameStore((s) => s.addResult)
+const setPlaying = useGameStore((s) => s.setPlaying)
 ```

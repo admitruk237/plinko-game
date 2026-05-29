@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { useShallow } from 'zustand/react/shallow';
 
 const STORAGE_DAYS = 365;
 
@@ -35,12 +36,12 @@ export const useSettingsStore = create<SettingsState>()((set) => ({
   },
 }));
 
-export const useSettings = () => {
-  const store = useSettingsStore();
-  return {
-    soundEffectsEnabled: store.soundEffectsEnabled,
-    animationsEnabled: store.animationsEnabled,
-    setSoundEffectsEnabled: store.setSoundEffectsEnabled,
-    setAnimationsEnabled: store.setAnimationsEnabled,
-  };
-};
+export const useSettings = () =>
+  useSettingsStore(
+    useShallow((s) => ({
+      soundEffectsEnabled: s.soundEffectsEnabled,
+      animationsEnabled: s.animationsEnabled,
+      setSoundEffectsEnabled: s.setSoundEffectsEnabled,
+      setAnimationsEnabled: s.setAnimationsEnabled,
+    }))
+  );

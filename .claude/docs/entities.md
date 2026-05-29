@@ -45,26 +45,14 @@ entities/game/
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `recentResults` | `BetResult[]` | Last 4 results, newest first |
-| `isPlaying` | `boolean` | Whether the ball is currently animating |
-| `addResult(result)` | action | Prepends result, trims to 4 |
-| `setPlaying(bool)` | action | Controlled by `useGamePlay` |
-| `clearResults()` | action | Reset on exit |
+| `isPlaying` | `boolean` | Whether any ball is currently animating |
+| `setPlaying(bool)` | action | Set to `true` on first ball drop, `false` when all animations complete |
 
 **Types:**
 
 ```ts
-interface BetResult {
-  betId: string
-  multiplier: number   // number, not string
-  payout: string       // credit string
-  path: string         // binary L/R string
-  bucketIndex: number  // 0-based bucket index
-  rows: number
-  risk: Risk
-}
-
 interface BallAnimation {
+  id: string
   path: string
   bucketIndex: number
   startTime: number
@@ -104,7 +92,7 @@ export type { User } from './session'
 
 // entities/game
 export { useGameStore } from './game'
-export type { BetResult, BallAnimation, GameConfig, Risk, BetResponse } from './game'
+export type { BallAnimation, GameConfig, Risk, BetResponse } from './game'
 
 // entities/settings
 export { useSettings, useSettingsStore } from './settings'

@@ -79,7 +79,6 @@ beforeEach(() => {
   mockUseGameStore.mockReturnValue({
     isPlaying: false,
     setPlaying: jest.fn(),
-    addResult:  jest.fn(),
   })
 })
 ```

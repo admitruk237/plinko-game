@@ -44,9 +44,12 @@ export const CompactBetController = ({ onOpenSettings }: Props) => {
 
   return (
     <div className="absolute bottom-4 left-4 right-4 z-30 flex flex-col gap-3 rounded-[16px] border border-panel-border bg-panel/95 p-3.5 shadow-[0_8px_32px_rgba(0,0,0,0.5)] backdrop-blur-sm md:hidden">
-      <div
+      <Button
+        variant="ghost"
+        size="none"
         onClick={onOpenSettings}
-        className="flex cursor-pointer items-center gap-3 transition-opacity hover:opacity-80"
+        className="flex cursor-pointer items-center gap-3 transition-opacity hover:opacity-80 w-full text-left"
+        aria-label="Open bet settings"
       >
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-panel-border/40 text-text-muted border border-white/5">
           <SlidersHorizontal size={SLIDERS_ICON_SIZE} />
@@ -54,7 +57,7 @@ export const CompactBetController = ({ onOpenSettings }: Props) => {
         <span className="text-sm font-medium tracking-wide text-neutral-300">
           {betAmount} • {String(risk).toUpperCase()} • {rows} rows
         </span>
-      </div>
+      </Button>
 
       <Button
         type="submit"
