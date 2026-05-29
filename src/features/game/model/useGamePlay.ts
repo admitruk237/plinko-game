@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { type BallAnimation, type Risk, useGameStore } from '@/entities/game';
+import type { BallAnimation, Risk } from '@/entities/game';
 import type { User } from '@/entities/session';
 import { formatCredits } from '@/shared/lib/credits';
 import { BffError } from '@/shared/api';
@@ -20,7 +20,6 @@ interface UseGamePlayResult {
 
 export const useGamePlay = ({ setPlaying }: Props): UseGamePlayResult => {
   const queryClient = useQueryClient();
-  const addResult = useGameStore((s) => s.addResult);
   const { playDrop, playResult } = useSound();
 
   const [currentAnimations, setCurrentAnimations] = useState<BallAnimation[]>([]);
@@ -58,16 +57,6 @@ export const useGamePlay = ({ setPlaying }: Props): UseGamePlayResult => {
 
         const payout = formatCredits(bet.payout);
 
-        addResult({
-          betId: bet.betId,
-          multiplier,
-          payout: bet.payout,
-          path: bet.path,
-          bucketIndex: bet.bucketIndex,
-          rows: bet.rows,
-          risk: bet.risk,
-        });
-
         playResult(multiplier);
 
         if (multiplier >= 1) {
@@ -90,7 +79,7 @@ export const useGamePlay = ({ setPlaying }: Props): UseGamePlayResult => {
         if (activeCount.current === 0) setPlaying(false);
       }
     },
-    [setPlaying, addResult, queryClient, placeBetMutation, playDrop, playResult]
+    [setPlaying, queryClient, placeBetMutation, playDrop, playResult]
   );
 
   const handleAnimationEnd = useCallback((id: string) => {
