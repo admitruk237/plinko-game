@@ -17,7 +17,7 @@ export const PageTransition = ({ isVisible }: Props) => (
         exit={{ opacity: 0 }}
         transition={{ duration: 0.25, ease: 'easeInOut' }}
       >
-        <div className="absolute inset-0" style={{ background: '#0F1219' }} />
+        <div className="absolute inset-0 bg-sidebar-bg" />
         <div className="absolute inset-0">
           <Image
             src="/transition-bg.svg"
@@ -34,10 +34,7 @@ export const PageTransition = ({ isVisible }: Props) => (
           exit={{ scale: 1.1, opacity: 0 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}
         >
-          <div
-            className="rounded-3xl p-3 shadow-[0_0_40px_rgba(168,85,247,0.4)]"
-            style={{ background: 'linear-gradient(135deg, #171e2e 0%, #0F1219 100%)' }}
-          >
+          <div className="rounded-3xl p-3 shadow-[0_0_40px_rgba(168,85,247,0.4)] bg-transition-card">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width={80} height={80}>
               <circle cx="16" cy="6" r="3" fill="#f97316" />
               <circle cx="15" cy="5" r="1" fill="#fdba74" opacity="0.6" />
@@ -56,14 +53,7 @@ export const PageTransition = ({ isVisible }: Props) => (
             </svg>
           </div>
 
-          <span
-            className="text-2xl font-bold tracking-[0.3em] uppercase"
-            style={{
-              background: 'linear-gradient(90deg, #a855f7, #f97316)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
-          >
+          <span className="text-2xl font-bold tracking-[0.3em] uppercase text-gradient-brand">
             Plinko
           </span>
         </motion.div>

@@ -164,6 +164,18 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@layer utilities {
+  .bg-transition-card {
+    background: linear-gradient(135deg, #171e2e 0%, var(--color-sidebar-bg) 100%);
+  }
+  .text-gradient-brand {
+    background: linear-gradient(90deg, #a855f7, #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

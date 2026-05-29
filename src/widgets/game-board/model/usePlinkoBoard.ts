@@ -42,11 +42,8 @@ export const usePlinkoBoard = ({
   const [flashBuckets, setFlashBuckets] = useState<Map<number, number>>(new Map());
   const [dimensions, setDimensions] = useState<Dimensions>({ width: 0, height: 0 });
 
-  // introRevealedRows: how many rows are currently visible (0 = none, rows = all)
   const [introRevealedRows, setIntroRevealedRows] = useState(0);
-  // boardReady: true once all pegs are visible + extra badge delay elapsed
   const [boardReady, setBoardReady] = useState(false);
-  // Render-phase sync: detect rows change using the React derived-state pattern
   const [prevRows, setPrevRows] = useState(rows);
   if (prevRows !== rows) {
     setPrevRows(rows);
@@ -54,7 +51,6 @@ export const usePlinkoBoard = ({
     setBoardReady(false);
   }
 
-  // Track container size for responsive layout
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -67,7 +63,6 @@ export const usePlinkoBoard = ({
     return () => observer.disconnect();
   }, []);
 
-  // Stagger-reveal each row — paused while page transition overlay is visible
   useEffect(() => {
     if (isTransitioning) return;
     if (introRevealedRows >= rows) return;
@@ -79,7 +74,6 @@ export const usePlinkoBoard = ({
     return () => clearTimeout(timer);
   }, [introRevealedRows, rows, isTransitioning]);
 
-  // Once all rows visible, wait a bit then mark board ready (badges appear)
   useEffect(() => {
     if (introRevealedRows < rows) return;
 
@@ -90,7 +84,6 @@ export const usePlinkoBoard = ({
     return () => clearTimeout(timer);
   }, [introRevealedRows, rows]);
 
-  // When animations are disabled — complete all balls instantly, no canvas drawing
   useEffect(() => {
     if (animationsEnabled) return;
     for (const anim of currentAnimations) {
@@ -100,7 +93,6 @@ export const usePlinkoBoard = ({
     }
   }, [currentAnimations, animationsEnabled, onAnimationEnd]);
 
-  // Main canvas render loop
   useEffect(() => {
     if (!dimensions.width || !dimensions.height) return;
 
@@ -112,7 +104,6 @@ export const usePlinkoBoard = ({
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      // 2× pixel density for retina screens
       canvas.width = dimensions.width * 2;
       canvas.height = dimensions.height * 2;
       ctx.scale(2, 2);
@@ -121,13 +112,11 @@ export const usePlinkoBoard = ({
       const now = Date.now();
       const ballStates = new Map<string, ReturnType<typeof getBallState>>();
 
-      // Compute current state for every active ball
       for (const anim of currentAnimations) {
         if (finishedIds.has(anim.id)) continue;
         const state = getBallState(anim, now, dimensions, rows);
         ballStates.set(anim.id, state);
 
-        // Fire sound when ball gets close to a new peg
         if (state.nearPeg && onPegHit) {
           const pegKey = `${state.nearPeg.row}-${state.nearPeg.col}`;
           if (lastHitPegRef.current.get(anim.id) !== pegKey) {
@@ -141,11 +130,8 @@ export const usePlinkoBoard = ({
         }
       }
 
-      // Draw pegs with optional glow when a ball passes through
-      // Only draw rows that have been revealed by the intro animation
       const pegRadius = getPegRadius(dimensions.width);
       for (let row = 0; row < rows; row++) {
-        // Skip rows not yet revealed during intro
         if (row >= introRevealedRows) continue;
 
         for (let col = 0; col < row + 2; col++) {
@@ -167,7 +153,6 @@ export const usePlinkoBoard = ({
         }
       }
 
-      // Draw balls
       for (const anim of currentAnimations) {
         if (finishedIds.has(anim.id)) continue;
         const state = ballStates.get(anim.id);
@@ -193,9 +178,8 @@ export const usePlinkoBoard = ({
 
         ctx.save();
         ctx.globalAlpha = opacity;
-        ctx.globalCompositeOperation = 'screen'; // additive blend — glows through pegs
+        ctx.globalCompositeOperation = 'screen';
 
-        // Soft glow halo around ball
         const gradient = ctx.createRadialGradient(x, y, 0, x, y, r * 1.8);
         gradient.addColorStop(0, 'rgba(255,255,255,0.5)');
         gradient.addColorStop(0.4, 'rgba(255,255,255,0.2)');
