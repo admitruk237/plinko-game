@@ -17,17 +17,10 @@ export const GameClient = () => {
   const {
     config,
     balance,
-    isPlaying,
-    rows,
-    risk,
-    setRows,
-    setRisk,
     handlePlaceBet,
     currentAnimations,
     handleAnimationEnd,
     playPegHit,
-    animationsEnabled,
-    payoutTable,
     logoutRef,
     onLogoutMouseEnter,
     onLogoutMouseLeave,
@@ -68,11 +61,6 @@ export const GameClient = () => {
           <GameSidebar
             config={config}
             balance={balance}
-            isPlaying={isPlaying}
-            rows={rows}
-            risk={risk}
-            onRowsChange={setRows}
-            onRiskChange={setRisk}
             onPlaceBet={handlePlaceBet}
             showCloseButton
             onClose={handleCloseSettings}
@@ -110,16 +98,12 @@ export const GameClient = () => {
 
           <div className="relative flex-1 flex flex-col min-h-0 bg-transparent">
             <PlinkoBoard
-              rows={rows}
-              risk={risk}
-              payoutTable={payoutTable}
               currentAnimations={currentAnimations}
               onAnimationEnd={handleAnimationEnd}
               onPegHit={playPegHit}
-              animationsEnabled={animationsEnabled}
             />
 
-            <CompactBetController risk={risk} rows={rows} onOpenSettings={handleOpenSettings} />
+            <CompactBetController onOpenSettings={handleOpenSettings} />
           </div>
         </div>
       </div>

@@ -6,8 +6,15 @@ import { LoadingState } from '@/shared/ui';
 import { BetTable } from './BetTable';
 import { useHistory } from './model/useHistory';
 import { HistoryFilters } from './ui/HistoryFilters';
+import { motion } from 'motion/react';
+import { usePageTransition } from '@/shared/lib/page-transition-context';
 
 const LOADING_HISTORY_MESSAGE = 'Loading history...';
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0 },
+};
 
 export const HistoryClient = () => {
   const {
@@ -20,6 +27,7 @@ export const HistoryClient = () => {
     setFilterRows,
     setFilterRisk,
   } = useHistory();
+  const { isTransitioning } = usePageTransition();
 
   const renderBets = () => {
     if (isLoading) {
@@ -59,14 +67,27 @@ export const HistoryClient = () => {
       />
       <div className="flex-1 overflow-y-auto w-full bg-transparent">
         <div className="max-w-[1232px] w-full mx-auto px-4 md:px-6 xl:px-0 flex flex-col pb-10 pt-4">
-          <HistoryFilters
-            filterRisk={filterRisk}
-            filterRows={filterRows}
-            onRiskChange={setFilterRisk}
-            onRowsChange={setFilterRows}
-          />
+          <motion.div
+            variants={itemVariants}
+            initial="hidden"
+            animate={isTransitioning ? 'hidden' : 'visible'}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+          >
+            <HistoryFilters
+              filterRisk={filterRisk}
+              filterRows={filterRows}
+              onRiskChange={setFilterRisk}
+              onRowsChange={setFilterRows}
+            />
+          </motion.div>
 
-          <div className="mt-6 w-full pb-10">
+          <motion.div
+            className="mt-6 w-full pb-10"
+            variants={itemVariants}
+            initial="hidden"
+            animate={isTransitioning ? 'hidden' : 'visible'}
+            transition={{ duration: 0.35, delay: 0.1, ease: 'easeOut' }}
+          >
             {renderBets()}
 
             <div ref={sentinelRef} className="py-4 flex justify-center">
@@ -74,7 +95,7 @@ export const HistoryClient = () => {
                 <LoadingState message="" fullScreen={false} className="py-0" />
               )}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
       <BottomNav />

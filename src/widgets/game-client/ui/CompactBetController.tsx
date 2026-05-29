@@ -1,22 +1,31 @@
 'use client';
 
-import type { Risk } from '@/entities/game';
 import { SlidersHorizontal } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
 import { Button } from '@/shared/ui';
 import { BET_MODES } from '@/shared/config';
 import { usePlaceBetStore } from '@/features/place-bet';
 
 interface Props {
-  risk: Risk;
-  rows: number;
   onOpenSettings: () => void;
 }
 
 const SLIDERS_ICON_SIZE = 18;
 const FORM_ID = 'sidebar-form';
 
-export const CompactBetController = ({ risk, rows, onOpenSettings }: Props) => {
-  const { betAmount, mode, isAutoBetting, numBetsInput, currentBetCount } = usePlaceBetStore();
+export const CompactBetController = ({ onOpenSettings }: Props) => {
+  const { betAmount, mode, isAutoBetting, numBetsInput, currentBetCount, rows, risk } =
+    usePlaceBetStore(
+      useShallow((s) => ({
+        betAmount: s.betAmount,
+        mode: s.mode,
+        isAutoBetting: s.isAutoBetting,
+        numBetsInput: s.numBetsInput,
+        currentBetCount: s.currentBetCount,
+        rows: s.rows,
+        risk: s.risk,
+      }))
+    );
   const limitNumBets = parseInt(numBetsInput, 10) || 0;
 
   const disabled = false;

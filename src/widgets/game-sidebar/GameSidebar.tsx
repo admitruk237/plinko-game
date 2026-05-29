@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { X as XIcon } from 'lucide-react';
 import type { GameConfig, Risk } from '@/entities/game';
@@ -22,24 +23,14 @@ import { LABELS, ZERO } from './model/constants';
 interface Props {
   config: GameConfig;
   balance: string;
-  isPlaying: boolean;
-  rows: number;
-  risk: Risk;
-  onRowsChange: (rows: number) => void;
-  onRiskChange: (risk: Risk) => void;
   onPlaceBet: (amount: string, rows: number, risk: Risk) => Promise<void> | void;
   showCloseButton?: boolean;
   onClose?: () => void;
 }
 
-export const GameSidebar = ({
+const GameSidebarInner = ({
   config,
   balance,
-  isPlaying,
-  rows,
-  risk,
-  onRowsChange,
-  onRiskChange,
   onPlaceBet,
   showCloseButton = false,
   onClose,
@@ -47,6 +38,10 @@ export const GameSidebar = ({
   const {
     mode,
     setMode,
+    rows,
+    risk,
+    setRisk,
+    isPlaying,
     handleRowsChange,
     handleFullscreenToggle,
     form,
@@ -63,7 +58,7 @@ export const GameSidebar = ({
     handleNumBetsChange,
     handleStopProfitChange,
     handleStopLossChange,
-  } = useGameSidebar({ config, balance, isPlaying, rows, risk, onRowsChange, onPlaceBet });
+  } = useGameSidebar({ config, balance, onPlaceBet });
 
   const isAutoDisabled = isAutoBetting ? false : isPlaying;
   const isBetButtonDisabled = mode === BET_MODES.AUTO ? isAutoDisabled : false;
@@ -130,7 +125,7 @@ export const GameSidebar = ({
           <RiskSelector
             risks={config.risks}
             currentRisk={risk}
-            onChange={onRiskChange}
+            onChange={setRisk}
             disabled={isPlaying || isAutoBetting}
           />
           <RowsSelector
@@ -180,3 +175,5 @@ export const GameSidebar = ({
     </Card>
   );
 };
+
+export const GameSidebar = memo(GameSidebarInner);

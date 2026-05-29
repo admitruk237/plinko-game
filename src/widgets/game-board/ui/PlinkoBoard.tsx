@@ -1,34 +1,35 @@
 'use client';
 
-import type { BallAnimation, Risk } from '@/entities/game';
+import { memo } from 'react';
+import type { BallAnimation } from '@/entities/game';
+import { useSettingsStore } from '@/entities/settings';
+import { usePlaceBetStore } from '@/features/place-bet';
+import { useGameConfig } from '@/features/game';
+import { usePageTransition } from '@/shared/lib/page-transition-context';
 import { usePlinkoBoard } from '../model/usePlinkoBoard';
 import { BadgeBar } from './BadgeBar';
 
 interface Props {
-  rows: number;
-  risk: Risk;
-  payoutTable: number[];
   currentAnimations: BallAnimation[];
   onAnimationEnd: (id: string) => void;
   onPegHit?: () => void;
-  animationsEnabled: boolean;
 }
 
-export const PlinkoBoard = ({
-  rows,
-  risk,
-  payoutTable,
-  currentAnimations,
-  onAnimationEnd,
-  onPegHit,
-  animationsEnabled,
-}: Props) => {
-  const { canvasRef, containerRef, flashBuckets, dimensions } = usePlinkoBoard({
+const PlinkoBoardInner = ({ currentAnimations, onAnimationEnd, onPegHit }: Props) => {
+  const rows = usePlaceBetStore((s) => s.rows);
+  const risk = usePlaceBetStore((s) => s.risk);
+  const animationsEnabled = useSettingsStore((s) => s.animationsEnabled);
+  const { data: config } = useGameConfig();
+  const payoutTable = config?.payoutTables[risk]?.[rows.toString()] ?? [];
+  const { isTransitioning } = usePageTransition();
+
+  const { canvasRef, containerRef, flashBuckets, dimensions, boardReady } = usePlinkoBoard({
     rows,
     currentAnimations,
     onAnimationEnd,
     onPegHit,
     animationsEnabled,
+    isTransitioning,
   });
 
   return (
@@ -40,7 +41,10 @@ export const PlinkoBoard = ({
         risk={risk}
         flashBuckets={flashBuckets}
         dimensions={dimensions}
+        boardReady={boardReady}
       />
     </div>
   );
 };
+
+export const PlinkoBoard = memo(PlinkoBoardInner);

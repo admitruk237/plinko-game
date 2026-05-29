@@ -6,7 +6,11 @@ import {
   DEFAULT_NUM_BETS,
   DEFAULT_STOP_LOSS,
   DEFAULT_STOP_PROFIT,
+  RISK_LEVELS,
 } from '@/shared/config';
+import type { Risk } from '@/entities/game';
+
+const DEFAULT_ROWS = 12;
 
 interface PlaceBetState {
   betAmount: string;
@@ -18,6 +22,8 @@ interface PlaceBetState {
   currentBetCount: number;
   startBalance: bigint | null;
   isWaitingForBet: boolean;
+  rows: number;
+  risk: Risk;
 
   setBetAmount: (amount: string) => void;
   setMode: (mode: BetMode) => void;
@@ -28,6 +34,8 @@ interface PlaceBetState {
   setCurrentBetCount: (val: number | ((prev: number) => number)) => void;
   setStartBalance: (val: bigint | null) => void;
   setIsWaitingForBet: (val: boolean) => void;
+  setRows: (rows: number) => void;
+  setRisk: (risk: Risk) => void;
 }
 
 export const usePlaceBetStore = create<PlaceBetState>()((set) => ({
@@ -40,6 +48,8 @@ export const usePlaceBetStore = create<PlaceBetState>()((set) => ({
   currentBetCount: 0,
   startBalance: null,
   isWaitingForBet: false,
+  rows: DEFAULT_ROWS,
+  risk: RISK_LEVELS.HIGH,
 
   setBetAmount: (betAmount) => set({ betAmount }),
   setMode: (mode) => set({ mode }),
@@ -53,4 +63,6 @@ export const usePlaceBetStore = create<PlaceBetState>()((set) => ({
     })),
   setStartBalance: (startBalance) => set({ startBalance }),
   setIsWaitingForBet: (isWaitingForBet) => set({ isWaitingForBet }),
+  setRows: (rows) => set({ rows }),
+  setRisk: (risk) => set({ risk }),
 }));

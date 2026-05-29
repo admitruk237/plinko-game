@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useRef } from 'react';
+import { memo, type ReactNode, useRef } from 'react';
 import Link from 'next/link';
 import { cn } from '@/shared/lib/utils';
 import { formatCredits } from '@/shared/lib/credits';
@@ -32,7 +32,7 @@ const MOVE_LEFT_ICON_SIZE = 16;
 const ARROW_LEFT_ICON_SIZE = 28;
 const LOGOUT_ICON_SIZE = 14;
 
-export const Header = ({
+const HeaderInner = ({
   title,
   balance,
   showBalance = false,
@@ -137,3 +137,5 @@ export const Header = ({
     </header>
   );
 };
+
+export const Header = memo(HeaderInner);

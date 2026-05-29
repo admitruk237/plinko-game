@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Label } from '@/shared/ui/label';
 import { Slider } from '@/shared/ui/slider';
 
@@ -17,7 +18,7 @@ interface Props {
   disabled: boolean;
 }
 
-export const RowsSelector = ({ rows, min, max, onChange, disabled }: Props) => {
+const RowsSelectorInner = ({ rows, min, max, onChange, disabled }: Props) => {
   return (
     <div className="flex flex-col gap-3 shrink-0">
       <div className="flex items-center justify-between">
@@ -33,7 +34,7 @@ export const RowsSelector = ({ rows, min, max, onChange, disabled }: Props) => {
         onValueChange={onChange}
         step={CONFIG.SLIDER_STEP}
         disabled={disabled}
-        thumbClassName={rows !== min ? '-ml-[3px]' : undefined}
+        thumbClassName={rows !== min ? '-ml-[5px]' : undefined}
       />
       <div className="flex justify-between text-xs text-white/30">
         <span>{min}</span>
@@ -42,3 +43,5 @@ export const RowsSelector = ({ rows, min, max, onChange, disabled }: Props) => {
     </div>
   );
 };
+
+export const RowsSelector = memo(RowsSelectorInner);

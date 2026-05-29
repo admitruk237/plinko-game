@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Button } from '@/shared/ui/button';
 import { BET_MODES, type BetMode } from '@/shared/config';
 import { LABELS, ZERO } from '../model/constants';
@@ -12,7 +13,7 @@ interface Props {
   className?: string;
 }
 
-export const BetButton = ({
+const BetButtonInner = ({
   mode,
   isAutoBetting,
   disabled,
@@ -47,3 +48,5 @@ export const BetButton = ({
     </Button>
   );
 };
+
+export const BetButton = memo(BetButtonInner);

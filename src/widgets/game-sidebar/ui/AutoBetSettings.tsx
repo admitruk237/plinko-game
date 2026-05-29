@@ -1,4 +1,4 @@
-import { type ChangeEvent } from 'react';
+import { type ChangeEvent, memo } from 'react';
 import { Label } from '@/shared/ui/label';
 import { Input } from '@/shared/ui/input';
 import { MAX_NUM_BETS } from '@/shared/config';
@@ -21,7 +21,7 @@ interface Props {
   onStopLossChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const AutoBetSettings = ({
+const AutoBetSettingsInner = ({
   numBetsInput,
   stopProfitInput,
   stopLossInput,
@@ -70,3 +70,5 @@ export const AutoBetSettings = ({
     </>
   );
 };
+
+export const AutoBetSettings = memo(AutoBetSettingsInner);

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Button } from '@/shared/ui/button';
 
 interface Props {
@@ -7,7 +8,7 @@ interface Props {
   disabled?: boolean;
 }
 
-export const QuickBetControls = ({ onHalf, onDouble, onMax, disabled }: Props) => {
+const QuickBetControlsInner = ({ onHalf, onDouble, onMax, disabled }: Props) => {
   return (
     <div className="flex justify-between gap-[8px]">
       <Button
@@ -40,3 +41,5 @@ export const QuickBetControls = ({ onHalf, onDouble, onMax, disabled }: Props) =
     </div>
   );
 };
+
+export const QuickBetControls = memo(QuickBetControlsInner);

@@ -2,7 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { BallAnimation } from '@/entities/game';
-import { BUCKET_FLASH_DURATION, PEG_GLOW_DURATION } from './constants';
+import {
+  BADGE_INTRO_DELAY,
+  BUCKET_FLASH_DURATION,
+  PEG_GLOW_DURATION,
+  PEG_INTRO_ROW_DELAY,
+} from './constants';
 import {
   type Dimensions,
   getBallRadius,
@@ -17,6 +22,7 @@ interface Props {
   onAnimationEnd: (id: string) => void;
   onPegHit?: () => void;
   animationsEnabled: boolean;
+  isTransitioning: boolean;
 }
 
 export const usePlinkoBoard = ({
@@ -25,6 +31,7 @@ export const usePlinkoBoard = ({
   onAnimationEnd,
   onPegHit,
   animationsEnabled,
+  isTransitioning,
 }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -34,6 +41,18 @@ export const usePlinkoBoard = ({
   const instantCompletedRef = useRef<Set<string>>(new Set());
   const [flashBuckets, setFlashBuckets] = useState<Map<number, number>>(new Map());
   const [dimensions, setDimensions] = useState<Dimensions>({ width: 0, height: 0 });
+
+  // introRevealedRows: how many rows are currently visible (0 = none, rows = all)
+  const [introRevealedRows, setIntroRevealedRows] = useState(0);
+  // boardReady: true once all pegs are visible + extra badge delay elapsed
+  const [boardReady, setBoardReady] = useState(false);
+  // Render-phase sync: detect rows change using the React derived-state pattern
+  const [prevRows, setPrevRows] = useState(rows);
+  if (prevRows !== rows) {
+    setPrevRows(rows);
+    setIntroRevealedRows(0);
+    setBoardReady(false);
+  }
 
   // Track container size for responsive layout
   useEffect(() => {
@@ -47,6 +66,29 @@ export const usePlinkoBoard = ({
     observer.observe(container);
     return () => observer.disconnect();
   }, []);
+
+  // Stagger-reveal each row — paused while page transition overlay is visible
+  useEffect(() => {
+    if (isTransitioning) return;
+    if (introRevealedRows >= rows) return;
+
+    const timer = setTimeout(() => {
+      setIntroRevealedRows((prev) => prev + 1);
+    }, PEG_INTRO_ROW_DELAY);
+
+    return () => clearTimeout(timer);
+  }, [introRevealedRows, rows, isTransitioning]);
+
+  // Once all rows visible, wait a bit then mark board ready (badges appear)
+  useEffect(() => {
+    if (introRevealedRows < rows) return;
+
+    const timer = setTimeout(() => {
+      setBoardReady(true);
+    }, BADGE_INTRO_DELAY);
+
+    return () => clearTimeout(timer);
+  }, [introRevealedRows, rows]);
 
   // When animations are disabled — complete all balls instantly, no canvas drawing
   useEffect(() => {
@@ -100,8 +142,12 @@ export const usePlinkoBoard = ({
       }
 
       // Draw pegs with optional glow when a ball passes through
+      // Only draw rows that have been revealed by the intro animation
       const pegRadius = getPegRadius(dimensions.width);
       for (let row = 0; row < rows; row++) {
+        // Skip rows not yet revealed during intro
+        if (row >= introRevealedRows) continue;
+
         for (let col = 0; col < row + 2; col++) {
           const pos = getPegPosition(row, col, dimensions, rows);
           const hitTime = pegGlowRef.current.get(`${row}-${col}`);
@@ -172,7 +218,15 @@ export const usePlinkoBoard = ({
 
     animFrameRef.current = requestAnimationFrame(render);
     return () => cancelAnimationFrame(animFrameRef.current);
-  }, [dimensions, rows, currentAnimations, onAnimationEnd, onPegHit, animationsEnabled]);
+  }, [
+    dimensions,
+    rows,
+    currentAnimations,
+    onAnimationEnd,
+    onPegHit,
+    animationsEnabled,
+    introRevealedRows,
+  ]);
 
-  return { canvasRef, containerRef, flashBuckets, dimensions };
+  return { canvasRef, containerRef, flashBuckets, dimensions, boardReady };
 };

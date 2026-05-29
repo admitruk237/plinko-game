@@ -1,40 +1,33 @@
 import { useCallback } from 'react';
-import type { GameConfig, Risk } from '@/entities/game';
+import { type GameConfig, type Risk, useGameStore } from '@/entities/game';
 import { useAutoBet, useBetForm, usePlaceBetStore } from '@/features/place-bet';
 import { useSound } from '@/features/game';
 
 interface Props {
   config: GameConfig;
   balance: string;
-  isPlaying: boolean;
-  rows: number;
-  risk: Risk;
-  onRowsChange: (rows: number) => void;
   onPlaceBet: (amount: string, rows: number, risk: Risk) => Promise<void> | void;
 }
 
-export const useGameSidebar = ({
-  config: _config,
-  balance,
-  isPlaying,
-  rows,
-  risk,
-  onRowsChange,
-  onPlaceBet,
-}: Props) => {
+export const useGameSidebar = ({ config: _config, balance, onPlaceBet }: Props) => {
   const mode = usePlaceBetStore((state) => state.mode);
   const setMode = usePlaceBetStore((state) => state.setMode);
+  const rows = usePlaceBetStore((state) => state.rows);
+  const risk = usePlaceBetStore((state) => state.risk);
+  const setRows = usePlaceBetStore((state) => state.setRows);
+  const setRisk = usePlaceBetStore((state) => state.setRisk);
+  const isPlaying = useGameStore((state) => state.isPlaying);
   const { playRowsChange } = useSound();
 
   const handleRowsChange = useCallback(
     (val: number | readonly number[]) => {
       const v = Array.isArray(val) ? val[0] : val;
       if (typeof v === 'number' && v !== rows) {
-        onRowsChange(v);
+        setRows(v);
         playRowsChange();
       }
     },
-    [rows, onRowsChange, playRowsChange]
+    [rows, setRows, playRowsChange]
   );
 
   const handleFullscreenToggle = useCallback(() => {
@@ -73,6 +66,10 @@ export const useGameSidebar = ({
   return {
     mode,
     setMode,
+    rows,
+    risk,
+    setRisk,
+    isPlaying,
     handleRowsChange,
     handleFullscreenToggle,
     form,

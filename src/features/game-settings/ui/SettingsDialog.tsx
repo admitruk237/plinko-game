@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactElement } from 'react';
+import { memo, type ReactElement } from 'react';
 import { Volume2, X, Zap } from 'lucide-react';
 import {
   Button,
@@ -36,7 +36,7 @@ interface Props {
   trigger: ReactElement;
 }
 
-export const SettingsDialog = ({ trigger }: Props) => {
+const SettingsDialogInner = ({ trigger }: Props) => {
   const { soundEffectsEnabled, animationsEnabled, setSoundEffectsEnabled, setAnimationsEnabled } =
     useSettings();
 
@@ -111,3 +111,5 @@ export const SettingsDialog = ({ trigger }: Props) => {
     </Dialog>
   );
 };
+
+export const SettingsDialog = memo(SettingsDialogInner);

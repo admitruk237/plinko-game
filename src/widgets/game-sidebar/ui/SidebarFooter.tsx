@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Maximize2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { SettingsIcon } from '@/shared/ui/settings-icon';
@@ -10,7 +11,7 @@ interface Props {
   onFullscreenToggle: () => void;
 }
 
-export const SidebarFooter = ({ onFullscreenToggle }: Props) => {
+const SidebarFooterInner = ({ onFullscreenToggle }: Props) => {
   return (
     <div className="flex items-center justify-between gap-2 shrink-0">
       <Button
@@ -32,3 +33,5 @@ export const SidebarFooter = ({ onFullscreenToggle }: Props) => {
     </div>
   );
 };
+
+export const SidebarFooter = memo(SidebarFooterInner);

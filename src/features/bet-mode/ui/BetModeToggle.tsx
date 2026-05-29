@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { BET_MODES, type BetMode } from '@/shared/config';
 import { Button } from '@/shared/ui';
 import { cn } from '@/shared/lib/utils';
@@ -10,7 +11,7 @@ interface Props {
   disabled?: boolean;
 }
 
-export const BetModeToggle = ({ value, onChange, disabled }: Props) => {
+const BetModeToggleInner = ({ value, onChange, disabled }: Props) => {
   return (
     <div
       className={cn(
@@ -40,3 +41,5 @@ export const BetModeToggle = ({ value, onChange, disabled }: Props) => {
     </div>
   );
 };
+
+export const BetModeToggle = memo(BetModeToggleInner);

@@ -1,4 +1,7 @@
+'use client';
+
 import type { CSSProperties } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import type { Risk } from '@/entities/game';
 import { getMultiplierHex } from '@/shared/lib/multiplier-color';
 import {
@@ -33,12 +36,15 @@ import {
 } from '../model/constants';
 import { type Dimensions, getColSpacing, getSideMargin } from '../model/physics';
 
+const BADGE_STAGGER_DELAY = 0.03;
+
 interface Props {
   payoutTable: number[];
   rows: number;
   risk: Risk;
   flashBuckets: Map<number, number>;
   dimensions: Dimensions;
+  boardReady: boolean;
 }
 
 const getBadgeStyle = (
@@ -109,7 +115,14 @@ const getGapClass = (dims: Dimensions, rows: number): string => {
   return getColSpacing(width, rows) < BADGE_SPACING_MEDIUM ? 'gap-[2px]' : 'gap-1';
 };
 
-export const BadgeBar = ({ payoutTable, rows, risk, flashBuckets, dimensions }: Props) => {
+export const BadgeBar = ({
+  payoutTable,
+  rows,
+  risk,
+  flashBuckets,
+  dimensions,
+  boardReady,
+}: Props) => {
   const badgeOffset =
     dimensions.width < MOBILE_BREAKPOINT ? MOBILE_BADGE_BOTTOM_OFFSET : DESKTOP_BADGE_BOTTOM_OFFSET;
   const sideMargin = getSideMargin(dimensions.width) / 2;
@@ -124,15 +137,26 @@ export const BadgeBar = ({ payoutTable, rows, risk, flashBuckets, dimensions }: 
         paddingRight: sideMargin,
       }}
     >
-      {payoutTable.map((multiplier, index) => (
-        <div
-          key={`${risk}-${rows}-${index}`}
-          className="flex flex-1 items-center justify-center border font-bold leading-none tracking-[-0.15px] transition-all duration-200"
-          style={getBadgeStyle(multiplier, index, rows, flashBuckets, dimensions)}
-        >
-          {multiplier}x
-        </div>
-      ))}
+      <AnimatePresence mode="sync">
+        {boardReady &&
+          payoutTable.map((multiplier, index) => (
+            <motion.div
+              key={`${risk}-${rows}-${index}`}
+              className="flex flex-1 items-center justify-center border font-bold leading-none tracking-[-0.15px] transition-[transform,filter] duration-200"
+              style={getBadgeStyle(multiplier, index, rows, flashBuckets, dimensions)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                duration: 0.2,
+                ease: 'easeOut',
+                delay: index * BADGE_STAGGER_DELAY,
+              }}
+            >
+              {multiplier}x
+            </motion.div>
+          ))}
+      </AnimatePresence>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { Risk } from '@/entities/game';
 import { Label } from '@/shared/ui/label';
 import { Button } from '@/shared/ui/button';
@@ -23,7 +24,7 @@ interface Props {
   disabled: boolean;
 }
 
-export const RiskSelector = ({ risks, currentRisk, onChange, disabled }: Props) => {
+const RiskSelectorInner = ({ risks, currentRisk, onChange, disabled }: Props) => {
   return (
     <div className="flex flex-col gap-3 shrink-0">
       <Label>{LABELS.TITLE}</Label>
@@ -46,3 +47,5 @@ export const RiskSelector = ({ risks, currentRisk, onChange, disabled }: Props) 
     </div>
   );
 };
+
+export const RiskSelector = memo(RiskSelectorInner);

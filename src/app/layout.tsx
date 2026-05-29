@@ -6,6 +6,7 @@ import './globals.css';
 import { QueryProvider } from './providers/QueryProvider';
 import { SessionProvider } from './providers/SessionProvider';
 import { SettingsProvider } from './providers/SettingsProvider';
+import { PageTransitionProvider } from './providers/PageTransitionProvider';
 import { Toaster } from '@/shared/ui/sonner';
 import type { User } from '@/entities/session';
 
@@ -55,19 +56,21 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
     <html lang="en" className={`${inter.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <QueryProvider>
-          <SettingsProvider
-            soundEffectsEnabled={soundEffectsEnabled}
-            animationsEnabled={animationsEnabled}
-          >
-            {accessToken && user ? (
-              <SessionProvider accessToken={accessToken} user={user}>
-                {children}
-              </SessionProvider>
-            ) : (
-              children
-            )}
-          </SettingsProvider>
-          <Toaster position="top-right" />
+          <PageTransitionProvider>
+            <SettingsProvider
+              soundEffectsEnabled={soundEffectsEnabled}
+              animationsEnabled={animationsEnabled}
+            >
+              {accessToken && user ? (
+                <SessionProvider accessToken={accessToken} user={user}>
+                  {children}
+                </SessionProvider>
+              ) : (
+                children
+              )}
+            </SettingsProvider>
+            <Toaster position="top-right" />
+          </PageTransitionProvider>
         </QueryProvider>
       </body>
     </html>

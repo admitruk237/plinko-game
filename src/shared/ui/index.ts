@@ -25,3 +25,4 @@ export { ErrorState } from './error-state';
 export { ProgressBar } from './progress-bar';
 export { CameraIcon, type CameraIconHandle } from './camera-icon';
 export { UploadIcon, type UploadIconHandle } from './upload-icon';
+export { PageTransition } from './page-transition';

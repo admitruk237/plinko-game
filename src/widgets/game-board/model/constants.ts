@@ -39,3 +39,6 @@ export const BUCKET_FLASH_DURATION = 500;
 export const PEG_GLOW_DURATION = 380;
 export const HOP_HEIGHT = 9;
 export const BASE_STEP_MS = 420;
+
+export const PEG_INTRO_ROW_DELAY = 35;
+export const BADGE_INTRO_DELAY = 80;

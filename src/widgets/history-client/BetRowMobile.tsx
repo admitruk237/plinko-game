@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { memo, type ReactNode } from 'react';
 import { flexRender, type Row } from '@tanstack/react-table';
 
 import type { BetResponse } from '@/entities/game';
@@ -9,7 +9,7 @@ interface Props {
   row: Row<BetResponse>;
 }
 
-export const BetRowMobile = ({ row }: Props) => {
+const BetRowMobileInner = ({ row }: Props) => {
   const cells = row.getVisibleCells();
 
   return (
@@ -52,3 +52,5 @@ export const BetRowMobile = ({ row }: Props) => {
     </div>
   );
 };
+
+export const BetRowMobile = memo(BetRowMobileInner);

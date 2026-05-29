@@ -1,11 +1,12 @@
 'use client';
 
+import { memo } from 'react';
 import Link from 'next/link';
 import { motion } from 'motion/react';
 import { cn } from '@/shared/lib/utils';
 import { useBottomNav } from './model/useBottomNav';
 
-export const BottomNav = () => {
+const BottomNavInner = () => {
   const { navItems } = useBottomNav();
 
   return (
@@ -44,3 +45,5 @@ export const BottomNav = () => {
     </footer>
   );
 };
+
+export const BottomNav = memo(BottomNavInner);
