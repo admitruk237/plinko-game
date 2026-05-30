@@ -103,7 +103,9 @@ export const useAutoBet = ({
           setIsAutoBetting(false);
           return;
         }
-      } catch {}
+      } catch {
+        // invalid threshold input → treat as disabled, continue loop
+      }
     }
 
     try {
@@ -150,15 +152,18 @@ export const useAutoBet = ({
     onPlaceBet,
   ]);
 
-  const handleNumBetsChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const digits = e.target.value.replace(/[^0-9]/g, '');
-    const num = parseInt(digits, 10);
-    if (digits === '') {
-      setNumBetsInput('');
-    } else if (!isNaN(num)) {
-      setNumBetsInput(String(Math.min(num, MAX_NUM_BETS)));
-    }
-  }, []);
+  const handleNumBetsChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const digits = e.target.value.replace(/[^0-9]/g, '');
+      const num = parseInt(digits, 10);
+      if (digits === '') {
+        setNumBetsInput('');
+      } else if (!isNaN(num)) {
+        setNumBetsInput(String(Math.min(num, MAX_NUM_BETS)));
+      }
+    },
+    [setNumBetsInput]
+  );
 
   const handleStopProfitChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {

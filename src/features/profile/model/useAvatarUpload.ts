@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { useUploadAvatar } from '@/features/profile/api';
+import { useUploadAvatar } from '../api';
 import { BffError } from '@/shared/api';
 
 interface AvatarUpload {

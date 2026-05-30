@@ -2,7 +2,6 @@
 
 import type { CSSProperties } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import type { Risk } from '@/entities/game';
 import { getMultiplierHex } from '@/shared/lib/multiplier-color';
 import {
   BADGE_HEIGHT,
@@ -41,7 +40,6 @@ const BADGE_STAGGER_DELAY = 0.03;
 interface Props {
   payoutTable: number[];
   rows: number;
-  risk: Risk;
   flashBuckets: Map<number, number>;
   dimensions: Dimensions;
   boardReady: boolean;
@@ -57,7 +55,12 @@ const getBadgeStyle = (
   const hex = getMultiplierHex(multiplier);
   const { width } = dims;
 
-  if (!width) return { backgroundColor: `${hex}33`, borderColor: hex, color: hex };
+  if (!width)
+    return {
+      backgroundColor: `color-mix(in oklch, ${hex} 20%, transparent)`,
+      borderColor: hex,
+      color: hex,
+    };
 
   const colSpacing = getColSpacing(width, rows);
   const isFlashing = flashBuckets.has(index);
@@ -95,7 +98,7 @@ const getBadgeStyle = (
   }
 
   return {
-    backgroundColor: `${hex}33`,
+    backgroundColor: `color-mix(in oklch, ${hex} 20%, transparent)`,
     borderColor: hex,
     color: hex,
     fontSize: `${fontSize}px`,
@@ -115,14 +118,7 @@ const getGapClass = (dims: Dimensions, rows: number): string => {
   return getColSpacing(width, rows) < BADGE_SPACING_MEDIUM ? 'gap-[2px]' : 'gap-1';
 };
 
-export const BadgeBar = ({
-  payoutTable,
-  rows,
-  risk: _risk,
-  flashBuckets,
-  dimensions,
-  boardReady,
-}: Props) => {
+export const BadgeBar = ({ payoutTable, rows, flashBuckets, dimensions, boardReady }: Props) => {
   const badgeOffset =
     dimensions.width < MOBILE_BREAKPOINT ? MOBILE_BADGE_BOTTOM_OFFSET : DESKTOP_BADGE_BOTTOM_OFFSET;
   const sideMargin = getSideMargin(dimensions.width) / 2;

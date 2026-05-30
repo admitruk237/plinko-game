@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { BffError } from '@/shared/api';
-import { useUpdateProfile } from '@/features/profile/api';
+import { useUpdateProfile } from '../api';
 import { nicknameSchema } from './schemas';
 
 interface NicknameEdit {

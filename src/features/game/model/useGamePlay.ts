@@ -24,22 +24,20 @@ export const useGamePlay = ({ setPlaying }: Props): UseGamePlayResult => {
 
   const [currentAnimations, setCurrentAnimations] = useState<BallAnimation[]>([]);
   const animResolveMap = useRef<Map<string, () => void>>(new Map());
-  const betResultMap = useRef<Map<string, number>>(new Map());
   const activeCount = useRef(0);
 
   const placeBetMutation = usePlaceBet();
 
   const handlePlaceBet = useCallback(
     async (amount: string, rows: number, risk: Risk) => {
+      activeCount.current += 1;
+      setPlaying(true);
       try {
         const bet = await placeBetMutation.mutateAsync({ amount, rows, risk });
 
         playDrop();
-        activeCount.current += 1;
-        setPlaying(true);
 
         const multiplier = Number(bet.multiplier);
-        betResultMap.current.set(bet.betId, multiplier);
 
         await new Promise<void>((resolve) => {
           const id = bet.betId;
@@ -85,7 +83,6 @@ export const useGamePlay = ({ setPlaying }: Props): UseGamePlayResult => {
   const handleAnimationEnd = useCallback((id: string) => {
     animResolveMap.current.get(id)?.();
     animResolveMap.current.delete(id);
-    betResultMap.current.delete(id);
     setCurrentAnimations((prev) => prev.filter((a) => a.id !== id));
   }, []);
 

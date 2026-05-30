@@ -38,7 +38,6 @@ const PlinkoBoardInner = ({ currentAnimations, onAnimationEnd, onPegHit }: Props
       <BadgeBar
         payoutTable={payoutTable}
         rows={rows}
-        risk={risk}
         flashBuckets={flashBuckets}
         dimensions={dimensions}
         boardReady={boardReady}
