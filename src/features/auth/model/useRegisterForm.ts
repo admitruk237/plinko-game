@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useSessionStore } from '@/entities/session';
+import { usePageTransition } from '@/shared/lib/page-transition-context';
 import { ROUTES } from '@/shared/config';
 import { type RegisterFormValues, registerSchema } from './schemas';
 import { registerAction } from '../actions/register.action';
@@ -12,6 +13,7 @@ import { registerAction } from '../actions/register.action';
 export const useRegisterForm = () => {
   const router = useRouter();
   const setSession = useSessionStore((s) => s.setSession);
+  const { triggerTransition } = usePageTransition();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -30,6 +32,7 @@ export const useRegisterForm = () => {
         return;
       }
       setSession(result.accessToken, result.user);
+      triggerTransition();
       router.push(ROUTES.GAME);
     },
   });

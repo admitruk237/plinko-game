@@ -25,6 +25,10 @@
 AGENTS.md
 .claude/settings.local.json
 
+# Generated artifacts
+.precommit-result.json
+REVIEW.md
+
 
 # misc
 .DS_Store

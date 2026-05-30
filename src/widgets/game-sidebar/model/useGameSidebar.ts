@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { type Risk, useGameStore } from '@/entities/game';
 import { useAutoBet, useBetForm, usePlaceBetStore } from '@/features/place-bet';
 import { useSound } from '@/features/game';
+import { type BetMode } from '@/shared/config';
 
 interface Props {
   balance: string;
@@ -16,7 +17,23 @@ export const useGameSidebar = ({ balance, onPlaceBet }: Props) => {
   const setRows = usePlaceBetStore((state) => state.setRows);
   const setRisk = usePlaceBetStore((state) => state.setRisk);
   const isPlaying = useGameStore((state) => state.isPlaying);
-  const { playRowsChange } = useSound();
+  const { playRowsChange, playClick } = useSound();
+
+  const handleRiskSelect = useCallback(
+    (r: Risk) => {
+      setRisk(r);
+      playClick();
+    },
+    [setRisk, playClick]
+  );
+
+  const handleModeChange = useCallback(
+    (m: BetMode) => {
+      setMode(m);
+      playClick();
+    },
+    [setMode, playClick]
+  );
 
   const handleRowsChange = useCallback(
     (val: number | readonly number[]) => {
@@ -30,17 +47,37 @@ export const useGameSidebar = ({ balance, onPlaceBet }: Props) => {
   );
 
   const handleFullscreenToggle = useCallback(() => {
+    playClick();
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(() => {});
     } else {
       document.exitFullscreen().catch(() => {});
     }
-  }, []);
+  }, [playClick]);
 
-  const { form, betInput, handleHalf, handleDouble, handleMax, handleInputChange } = useBetForm({
-    balance,
-    disabled: false,
-  });
+  const {
+    form,
+    betInput,
+    handleHalf: handleHalfBase,
+    handleDouble: handleDoubleBase,
+    handleMax: handleMaxBase,
+    handleInputChange,
+  } = useBetForm({ balance, disabled: false });
+
+  const handleHalf = useCallback(() => {
+    handleHalfBase();
+    playClick();
+  }, [handleHalfBase, playClick]);
+
+  const handleDouble = useCallback(() => {
+    handleDoubleBase();
+    playClick();
+  }, [handleDoubleBase, playClick]);
+
+  const handleMax = useCallback(() => {
+    handleMaxBase();
+    playClick();
+  }, [handleMaxBase, playClick]);
 
   const {
     numBetsInput,
@@ -64,10 +101,10 @@ export const useGameSidebar = ({ balance, onPlaceBet }: Props) => {
 
   return {
     mode,
-    setMode,
+    handleModeChange,
     rows,
     risk,
-    setRisk,
+    handleRiskSelect,
     isPlaying,
     handleRowsChange,
     handleFullscreenToggle,

@@ -118,7 +118,7 @@ const getGapClass = (dims: Dimensions, rows: number): string => {
 export const BadgeBar = ({
   payoutTable,
   rows,
-  risk,
+  risk: _risk,
   flashBuckets,
   dimensions,
   boardReady,
@@ -141,7 +141,7 @@ export const BadgeBar = ({
         {boardReady &&
           payoutTable.map((multiplier, index) => (
             <motion.div
-              key={`${risk}-${rows}-${index}`}
+              key={index}
               className="flex flex-1 items-center justify-center border font-bold leading-none tracking-[-0.15px] transition-[transform,filter] duration-200"
               style={getBadgeStyle(multiplier, index, rows, flashBuckets, dimensions)}
               initial={{ opacity: 0 }}

@@ -44,11 +44,16 @@ export const usePlinkoBoard = ({
 
   const [introRevealedRows, setIntroRevealedRows] = useState(0);
   const [boardReady, setBoardReady] = useState(false);
+  const [hasRevealed, setHasRevealed] = useState(false);
   const [prevRows, setPrevRows] = useState(rows);
   if (prevRows !== rows) {
     setPrevRows(rows);
-    setIntroRevealedRows(0);
-    setBoardReady(false);
+    if (hasRevealed) {
+      setIntroRevealedRows(rows);
+    } else {
+      setIntroRevealedRows(0);
+      setBoardReady(false);
+    }
   }
 
   useEffect(() => {
@@ -79,6 +84,7 @@ export const usePlinkoBoard = ({
 
     const timer = setTimeout(() => {
       setBoardReady(true);
+      setHasRevealed(true);
     }, BADGE_INTRO_DELAY);
 
     return () => clearTimeout(timer);
