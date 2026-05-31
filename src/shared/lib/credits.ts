@@ -2,7 +2,7 @@ const DECIMALS = 6n;
 const UNIT = 10n ** DECIMALS;
 
 export const MIN_BET = 1_000_000n;
-export const MAX_BET = 1_000_000_000_000n;
+export const MAX_BET = 10_000_000_000n;
 
 export const formatCredits = (raw: string): string => {
   const v = BigInt(raw);

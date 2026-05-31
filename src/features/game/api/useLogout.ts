@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { bffApi } from '@/shared/api';
 import { useSessionStore } from '@/entities/session';
@@ -7,21 +7,22 @@ import { ROUTES } from '@/shared/config';
 
 export const useLogout = () => {
   const clearSession = useSessionStore((s) => s.clearSession);
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { triggerTransition } = usePageTransition();
+
+  const reset = () => {
+    clearSession();
+    queryClient.clear();
+    router.replace(ROUTES.LOGIN);
+  };
 
   return useMutation<void, Error, void>({
     mutationFn: () => {
       triggerTransition();
       return bffApi.logout();
     },
-    onSuccess: () => {
-      clearSession();
-      router.replace(ROUTES.LOGIN);
-    },
-    onError: () => {
-      clearSession();
-      router.replace(ROUTES.LOGIN);
-    },
+    onSuccess: reset,
+    onError: reset,
   });
 };

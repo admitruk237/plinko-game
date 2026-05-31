@@ -2,9 +2,9 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useSessionStore } from '@/entities/session';
+import { type User, useSessionStore } from '@/entities/session';
 import { usePageTransition } from '@/shared/lib/page-transition-context';
 import { ROUTES } from '@/shared/config';
 import { type LoginFormValues, loginSchema } from './schemas';
@@ -13,6 +13,7 @@ import { loginAction } from '../actions/login.action';
 export const useLoginForm = () => {
   const router = useRouter();
   const setSession = useSessionStore((s) => s.setSession);
+  const queryClient = useQueryClient();
   const { triggerTransition } = usePageTransition();
 
   const form = useForm<LoginFormValues>({
@@ -28,6 +29,7 @@ export const useLoginForm = () => {
         return;
       }
       setSession(result.accessToken, result.user);
+      queryClient.setQueryData<User>(['me'], result.user);
       triggerTransition();
       router.push(ROUTES.GAME);
     },
