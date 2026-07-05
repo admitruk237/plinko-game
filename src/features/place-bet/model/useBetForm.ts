@@ -1,4 +1,4 @@
-import { type ChangeEvent, useCallback } from 'react';
+import { type ChangeEvent, useCallback, useEffect } from 'react';
 import { useForm, type UseFormReturn } from 'react-hook-form';
 import {
   formatCredits,
@@ -29,10 +29,12 @@ interface UseBetFormResult {
   handleDouble: () => void;
   handleMax: () => void;
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleInputFocus: () => void;
 }
 
 export const useBetForm = ({ balance, disabled }: Props): UseBetFormResult => {
   const balanceBigInt = BigInt(balance || '0');
+  const maxAllowed = balanceBigInt < MAX_BET ? balanceBigInt : MAX_BET;
   const setBetAmount = usePlaceBetStore((state) => state.setBetAmount);
 
   const form = useForm<BetFormValues>({
@@ -43,6 +45,23 @@ export const useBetForm = ({ balance, disabled }: Props): UseBetFormResult => {
 
   const betInput = form.watch(BET_FIELD);
 
+  useEffect(() => {
+    try {
+      const current = parseCredits(form.getValues(BET_FIELD));
+      if (current > maxAllowed) {
+        const clamped = maxAllowed < MIN_BET ? MIN_BET : maxAllowed;
+        const formatted = formatCredits(clamped.toString());
+        form.setValue(BET_FIELD, formatted);
+        setBetAmount(formatted);
+      }
+    } catch {}
+  }, [maxAllowed, form, setBetAmount]);
+
+  const handleInputFocus = useCallback(() => {
+    form.setValue(BET_FIELD, '');
+    setBetAmount('');
+  }, [form, setBetAmount]);
+
   const handleInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const clean = sanitizeDecimalInput(e.target.value);
@@ -50,7 +69,6 @@ export const useBetForm = ({ balance, disabled }: Props): UseBetFormResult => {
       if (clean) {
         try {
           const parsed = parseCredits(clean);
-          const maxAllowed = balanceBigInt < MAX_BET ? balanceBigInt : MAX_BET;
           if (parsed > maxAllowed) {
             const clamped = formatCredits(maxAllowed.toString());
             form.setValue(BET_FIELD, clamped);
@@ -62,7 +80,7 @@ export const useBetForm = ({ balance, disabled }: Props): UseBetFormResult => {
       form.setValue(BET_FIELD, clean);
       setBetAmount(clean);
     },
-    [balanceBigInt, form, setBetAmount]
+    [maxAllowed, form, setBetAmount]
   );
 
   const handleHalf = useCallback(() => {
@@ -79,21 +97,19 @@ export const useBetForm = ({ balance, disabled }: Props): UseBetFormResult => {
     if (disabled) return;
     const current = parseCredits(betInput);
     const doubled = current * 2n;
-    const maxAllowed = balanceBigInt < MAX_BET ? balanceBigInt : MAX_BET;
     const clamped = doubled > maxAllowed ? maxAllowed : doubled;
     const formatted = formatCredits(clamped.toString());
     form.setValue(BET_FIELD, formatted);
     setBetAmount(formatted);
-  }, [betInput, balanceBigInt, form, disabled, setBetAmount]);
+  }, [betInput, maxAllowed, form, disabled, setBetAmount]);
 
   const handleMax = useCallback(() => {
     if (disabled) return;
-    const maxAllowed = balanceBigInt < MAX_BET ? balanceBigInt : MAX_BET;
     const clamped = maxAllowed < MIN_BET ? MIN_BET : maxAllowed;
     const formatted = formatCredits(clamped.toString());
     form.setValue(BET_FIELD, formatted);
     setBetAmount(formatted);
-  }, [balanceBigInt, form, disabled, setBetAmount]);
+  }, [maxAllowed, form, disabled, setBetAmount]);
 
   return {
     form,
@@ -102,5 +118,6 @@ export const useBetForm = ({ balance, disabled }: Props): UseBetFormResult => {
     handleDouble,
     handleMax,
     handleInputChange,
+    handleInputFocus,
   };
 };

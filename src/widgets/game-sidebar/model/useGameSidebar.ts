@@ -62,6 +62,7 @@ export const useGameSidebar = ({ balance, onPlaceBet }: Props) => {
     handleDouble: handleDoubleBase,
     handleMax: handleMaxBase,
     handleInputChange,
+    handleInputFocus,
   } = useBetForm({ balance, disabled: false });
 
   const handleHalf = useCallback(() => {
@@ -114,6 +115,7 @@ export const useGameSidebar = ({ balance, onPlaceBet }: Props) => {
     handleDouble,
     handleMax,
     handleInputChange,
+    handleInputFocus,
     numBetsInput,
     stopProfitInput,
     stopLossInput,

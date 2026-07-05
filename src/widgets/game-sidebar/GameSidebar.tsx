@@ -49,6 +49,7 @@ const GameSidebarInner = ({
     handleDouble,
     handleMax,
     handleInputChange,
+    handleInputFocus,
     numBetsInput,
     stopProfitInput,
     stopLossInput,
@@ -111,6 +112,7 @@ const GameSidebarInner = ({
                         disabled={isAutoBetting}
                         className="pl-8 pr-3 bg-sidebar-bg border border-white/10 focus-visible:border-green-500/50 focus-visible:border-t-green-500/50"
                         onChange={handleInputChange}
+                        onFocus={handleInputFocus}
                       />
                     </FormControl>
                   </div>

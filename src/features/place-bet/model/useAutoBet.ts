@@ -183,7 +183,7 @@ export const useAutoBet = ({
     let amount = 0n;
     try {
       amount = parseCredits(betInput);
-      if (amount < MIN_BET || amount > MAX_BET) return;
+      if (amount < MIN_BET || amount > MAX_BET || amount > balanceBigInt) return;
     } catch {
       return;
     }
