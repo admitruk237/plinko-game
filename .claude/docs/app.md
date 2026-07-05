@@ -24,7 +24,7 @@ src/app/
     SettingsProvider.tsx  ← initializes useSettingsStore from cookies
   api/
     auth/session/route.ts ← GET: token validation + refresh
-    auth/logout/route.ts  ← POST: clear cookies
+    auth/logout/route.ts  ← POST: backend logout (best-effort) + clear cookies → 204
     bets/route.ts         ← GET (list) + POST (place bet)
     bets/[id]/route.ts    ← GET: bet details
     game/config/route.ts  ← GET: game config (rows, risks, payoutTables)
@@ -56,7 +56,7 @@ All protected route handlers use `getValidAccessToken()` from `@/shared/lib/auth
 | Route | Method | Description |
 |-------|--------|-------------|
 | `/api/auth/session` | GET | Validate access token, refresh if expired |
-| `/api/auth/logout` | POST | Delete accessToken + refreshToken cookies |
+| `/api/auth/logout` | POST | Notify backend logout (best-effort, errors ignored), delete accessToken + refreshToken cookies, respond 204 |
 | `/api/bets` | GET | Bet list with cursor-based pagination |
 | `/api/bets` | POST | Place a bet |
 | `/api/bets/[id]` | GET | Bet details |
