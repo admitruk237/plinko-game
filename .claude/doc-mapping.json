@@ -1,0 +1,139 @@
+{
+  "version": "1.0",
+  "description": "Maps file path patterns to FSD layer documentation. Use this to find the right doc when working in a specific area of the codebase.",
+  "mappings": [
+    {
+      "pattern": "src/app/**",
+      "doc": ".claude/docs/app.md",
+      "rules": ".claude/rules/app.md",
+      "layer": "app",
+      "description": "Next.js routing, layout, SSR hydration, API route handlers (BFF)"
+    },
+    {
+      "pattern": "src/app/api/**",
+      "doc": ".claude/docs/app.md",
+      "rules": ".claude/rules/bff.md",
+      "layer": "app/api",
+      "description": "BFF proxy layer — auth tokens, protected route handlers"
+    },
+    {
+      "pattern": "src/shared/**",
+      "doc": ".claude/docs/shared.md",
+      "rules": ".claude/rules/shared.md",
+      "layer": "shared",
+      "description": "shadcn/ui components, utilities, BFF client, config constants"
+    },
+    {
+      "pattern": "src/entities/**",
+      "doc": ".claude/docs/entities.md",
+      "rules": ".claude/rules/entities.md",
+      "layer": "entities",
+      "description": "Zustand stores: session (auth), game (isPlaying), settings (sound/animations)"
+    },
+    {
+      "pattern": "src/entities/session/**",
+      "doc": ".claude/docs/entities.md",
+      "rules": ".claude/rules/auth.md",
+      "layer": "entities/session",
+      "description": "User session state — accessToken + user, no persist (mirrors httpOnly cookies)"
+    },
+    {
+      "pattern": "src/entities/game/**",
+      "doc": ".claude/docs/entities.md",
+      "rules": ".claude/rules/game.md",
+      "layer": "entities/game",
+      "description": "Game state — isPlaying (true while any ball animates), BallAnimation type"
+    },
+    {
+      "pattern": "src/features/**",
+      "doc": ".claude/docs/features.md",
+      "rules": ".claude/rules/features.md",
+      "layer": "features",
+      "description": "Interactive features: auth, game, place-bet, bet-mode, bet-history, game-settings"
+    },
+    {
+      "pattern": "src/features/auth/**",
+      "doc": ".claude/docs/features.md",
+      "rules": ".claude/rules/auth.md",
+      "layer": "features/auth",
+      "description": "Login/register/logout Server Actions, zod schemas, auth UI forms"
+    },
+    {
+      "pattern": "src/features/game/**",
+      "doc": ".claude/docs/features.md",
+      "rules": ".claude/rules/game.md",
+      "layer": "features/game",
+      "description": "Game orchestration: useGamePlay (bet→animation Promise→result→balance update)"
+    },
+    {
+      "pattern": "src/features/place-bet/**",
+      "doc": ".claude/docs/features.md",
+      "rules": ".claude/rules/game.md",
+      "layer": "features/place-bet",
+      "description": "Bet form (BigInt amounts, ½/×/Max), auto-bet loop with stop-profit/loss"
+    },
+    {
+      "pattern": "src/features/bet-history/**",
+      "doc": ".claude/docs/features.md",
+      "rules": ".claude/rules/features.md",
+      "layer": "features/bet-history",
+      "description": "Infinite query for bet history with cursor-based pagination"
+    },
+    {
+      "pattern": "src/widgets/**",
+      "doc": ".claude/docs/widgets.md",
+      "rules": ".claude/rules/widgets.md",
+      "layer": "widgets",
+      "description": "Composed UI blocks: game-client, game-board (canvas), game-sidebar, history-client"
+    },
+    {
+      "pattern": "src/widgets/game-board/**",
+      "doc": ".claude/docs/widgets.md",
+      "rules": ".claude/rules/game.md",
+      "layer": "widgets/game-board",
+      "description": "Canvas Plinko board — animates ball via path string, calls onAnimationEnd when done"
+    },
+    {
+      "pattern": "src/widgets/game-sidebar/**",
+      "doc": ".claude/docs/widgets.md",
+      "rules": ".claude/rules/widgets.md",
+      "layer": "widgets/game-sidebar",
+      "description": "Sidebar with bet form, risk selector, rows slider, auto-bet settings, bet button"
+    },
+    {
+      "pattern": "src/widgets/history-client/**",
+      "doc": ".claude/docs/widgets.md",
+      "rules": ".claude/rules/widgets.md",
+      "layer": "widgets/history-client",
+      "description": "History page: filter by rows, infinite scroll table, bet detail drawer"
+    },
+    {
+      "pattern": "src/**",
+      "doc": null,
+      "rules": ".claude/rules/naming.md",
+      "layer": "global",
+      "description": "Domain naming conventions — Plinko vocabulary, anti-patterns, handler/state/prop naming rules"
+    },
+    {
+      "pattern": "src/**",
+      "doc": null,
+      "rules": ".claude/rules/pitfalls.md",
+      "layer": "global",
+      "description": "Project-specific gotchas: credits BigInt, balance update, server-only imports, animation promise"
+    },
+    {
+      "pattern": "src/**/*.test.ts",
+      "doc": null,
+      "rules": ".claude/rules/testing.md",
+      "layer": "tests",
+      "description": "Test patterns: renderHook, bffApi mocks, Zustand mocks, pure function tests"
+    },
+    {
+      "pattern": "src/**/*.test.tsx",
+      "doc": null,
+      "rules": ".claude/rules/testing.md",
+      "layer": "tests",
+      "description": "Test patterns: renderHook, bffApi mocks, Zustand mocks, component interaction tests"
+    }
+  ]
+}

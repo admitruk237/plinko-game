@@ -1,0 +1,123 @@
+import { type ChangeEvent, useCallback, useEffect } from 'react';
+import { useForm, type UseFormReturn } from 'react-hook-form';
+import {
+  formatCredits,
+  MAX_BET,
+  MIN_BET,
+  parseCredits,
+  sanitizeDecimalInput,
+} from '@/shared/lib/credits';
+
+import { DEFAULT_BET_AMOUNT } from '@/shared/config';
+import { usePlaceBetStore } from './store';
+
+interface Props {
+  balance: string;
+  disabled?: boolean;
+}
+
+const BET_FIELD = 'betInput' as const;
+
+interface BetFormValues {
+  betInput: string;
+}
+
+interface UseBetFormResult {
+  form: UseFormReturn<BetFormValues>;
+  betInput: string;
+  handleHalf: () => void;
+  handleDouble: () => void;
+  handleMax: () => void;
+  handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleInputFocus: () => void;
+}
+
+export const useBetForm = ({ balance, disabled }: Props): UseBetFormResult => {
+  const balanceBigInt = BigInt(balance || '0');
+  const maxAllowed = balanceBigInt < MAX_BET ? balanceBigInt : MAX_BET;
+  const setBetAmount = usePlaceBetStore((state) => state.setBetAmount);
+
+  const form = useForm<BetFormValues>({
+    defaultValues: {
+      betInput: DEFAULT_BET_AMOUNT,
+    },
+  });
+
+  const betInput = form.watch(BET_FIELD);
+
+  useEffect(() => {
+    try {
+      const current = parseCredits(form.getValues(BET_FIELD));
+      if (current > maxAllowed) {
+        const clamped = maxAllowed < MIN_BET ? MIN_BET : maxAllowed;
+        const formatted = formatCredits(clamped.toString());
+        form.setValue(BET_FIELD, formatted);
+        setBetAmount(formatted);
+      }
+    } catch {}
+  }, [maxAllowed, form, setBetAmount]);
+
+  const handleInputFocus = useCallback(() => {
+    form.setValue(BET_FIELD, '');
+    setBetAmount('');
+  }, [form, setBetAmount]);
+
+  const handleInputChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const clean = sanitizeDecimalInput(e.target.value);
+
+      if (clean) {
+        try {
+          const parsed = parseCredits(clean);
+          if (parsed > maxAllowed) {
+            const clamped = formatCredits(maxAllowed.toString());
+            form.setValue(BET_FIELD, clamped);
+            setBetAmount(clamped);
+            return;
+          }
+        } catch {}
+      }
+      form.setValue(BET_FIELD, clean);
+      setBetAmount(clean);
+    },
+    [maxAllowed, form, setBetAmount]
+  );
+
+  const handleHalf = useCallback(() => {
+    if (disabled) return;
+    const current = parseCredits(betInput);
+    const halved = current / 2n;
+    const clamped = halved < MIN_BET ? MIN_BET : halved;
+    const formatted = formatCredits(clamped.toString());
+    form.setValue(BET_FIELD, formatted);
+    setBetAmount(formatted);
+  }, [betInput, form, disabled, setBetAmount]);
+
+  const handleDouble = useCallback(() => {
+    if (disabled) return;
+    const current = parseCredits(betInput);
+    const doubled = current * 2n;
+    const clamped = doubled > maxAllowed ? maxAllowed : doubled;
+    const formatted = formatCredits(clamped.toString());
+    form.setValue(BET_FIELD, formatted);
+    setBetAmount(formatted);
+  }, [betInput, maxAllowed, form, disabled, setBetAmount]);
+
+  const handleMax = useCallback(() => {
+    if (disabled) return;
+    const clamped = maxAllowed < MIN_BET ? MIN_BET : maxAllowed;
+    const formatted = formatCredits(clamped.toString());
+    form.setValue(BET_FIELD, formatted);
+    setBetAmount(formatted);
+  }, [maxAllowed, form, disabled, setBetAmount]);
+
+  return {
+    form,
+    betInput,
+    handleHalf,
+    handleDouble,
+    handleMax,
+    handleInputChange,
+    handleInputFocus,
+  };
+};
