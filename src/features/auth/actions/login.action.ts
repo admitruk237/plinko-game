@@ -3,6 +3,7 @@
 import { authApi } from '@/shared/api/auth.api';
 import { setAccessToken, setRefreshToken } from '@/shared/lib/session';
 import { isApiError } from '@/shared/lib/api-error';
+import { AUTH_ERRORS } from '../model/error-messages';
 import type { LoginFormValues } from '../model/schemas';
 import type { User } from '@/entities/session';
 
@@ -27,9 +28,19 @@ export const loginAction = async (values: LoginFormValues): Promise<LoginActionR
     const user = await authApi.getMe(accessToken);
     return { ok: true, accessToken, user };
   } catch (err: unknown) {
-    if (isApiError(err) && err.status === 401) {
-      return { ok: false, error: 'Invalid credentials' };
+    if (isApiError(err)) {
+      if (err.status === 401) {
+        return { ok: false, error: AUTH_ERRORS.INVALID_CREDENTIALS };
+      }
+      if (err.status === 429) {
+        return { ok: false, error: AUTH_ERRORS.TOO_MANY_ATTEMPTS };
+      }
+      if (err.status === 400 && err.message) {
+        // backend validation details (e.g. "email must be an email") are user-readable
+        const message = Array.isArray(err.message) ? err.message.join('. ') : err.message;
+        return { ok: false, error: message };
+      }
     }
-    return { ok: false, error: 'Server error, try again' };
+    return { ok: false, error: AUTH_ERRORS.SERVER_ERROR };
   }
 };

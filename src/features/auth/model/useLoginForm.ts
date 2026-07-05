@@ -23,6 +23,7 @@ export const useLoginForm = () => {
 
   const { mutate: login, isPending } = useMutation({
     mutationFn: (values: LoginFormValues) => loginAction(values),
+    onMutate: () => form.clearErrors('root'),
     onSuccess: (result) => {
       if (!result.ok) {
         form.setError('root', { message: result.error });

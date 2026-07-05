@@ -3,6 +3,7 @@
 import { authApi } from '@/shared/api/auth.api';
 import { setAccessToken, setRefreshToken } from '@/shared/lib/session';
 import { isApiError } from '@/shared/lib/api-error';
+import { AUTH_ERRORS } from '../model/error-messages';
 import type { RegisterFormValues } from '../model/schemas';
 import type { User } from '@/entities/session';
 
@@ -28,9 +29,19 @@ export const registerAction = async (values: RegisterFormValues): Promise<Regist
     const user = await authApi.getMe(accessToken);
     return { ok: true, accessToken, user };
   } catch (err: unknown) {
-    if (isApiError(err) && err.status === 409) {
-      return { ok: false, error: 'Email already registered', field: 'email' };
+    if (isApiError(err)) {
+      if (err.status === 409) {
+        return { ok: false, error: AUTH_ERRORS.EMAIL_TAKEN, field: 'email' };
+      }
+      if (err.status === 429) {
+        return { ok: false, error: AUTH_ERRORS.TOO_MANY_ATTEMPTS };
+      }
+      if (err.status === 400 && err.message) {
+        // backend validation details (e.g. password rules) are user-readable
+        const message = Array.isArray(err.message) ? err.message.join('. ') : err.message;
+        return { ok: false, error: message };
+      }
     }
-    return { ok: false, error: 'Server error, try again' };
+    return { ok: false, error: AUTH_ERRORS.SERVER_ERROR };
   }
 };

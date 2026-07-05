@@ -43,7 +43,7 @@ export const LoginForm = () => {
           />
 
           {form.formState.errors.root && (
-            <p className="text-sm text-red-500 mt-[16px]">{form.formState.errors.root.message}</p>
+            <p className="text-sm text-danger mt-[16px]">{form.formState.errors.root.message}</p>
           )}
 
           <Button type="submit" disabled={isPending} variant="primary" className="mt-[16px]">

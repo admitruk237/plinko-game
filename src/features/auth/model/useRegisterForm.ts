@@ -23,6 +23,7 @@ export const useRegisterForm = () => {
 
   const { mutate: register, isPending } = useMutation({
     mutationFn: (values: RegisterFormValues) => registerAction(values),
+    onMutate: () => form.clearErrors('root'),
     onSuccess: (result) => {
       if (!result.ok) {
         if (result.field === 'email') {
